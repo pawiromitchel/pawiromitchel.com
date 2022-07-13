@@ -1,3 +1,19 @@
 site_name: Mitchel Pawirodinomo
+repo_url: https://github.com/pawiromitchel/pawiromitchel.com
+repo_name: pawiromitchel/pawiromitchel.com
+
 theme:
   name: material
+  features:
+    - header.autohide
+    - navigation.tracking
+    - toc.follow
+    - toc.integrate
+    - navigation.top
+  icon:
+    repo: fontawesome/brands/git-alt 
+
+plugins:
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: datetime

@@ -4,3 +4,4 @@ This will be my home of all my knowledge, findings and collections of resources.
 
 This site is created with [MkDocs](https://www.mkdocs.org/) and hosted on [Github](https://github.com/pawiromitchel/pawiromitchel.com)
 
+Enjoy!
