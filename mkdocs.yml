@@ -5,6 +5,10 @@ repo_name: pawiromitchel/pawiromitchel.com
 
 theme:
   name: material
+  palette:
+    scheme: slate
+    primary: black
+    accent: indigo
   features:
     - header.autohide
     - navigation.tracking
@@ -12,9 +16,19 @@ theme:
     - toc.integrate
     - navigation.top
   icon:
-    repo: fontawesome/brands/git-alt 
+    repo: fontawesome/brands/github 
 
 plugins:
+  - search
   - git-revision-date-localized:
       enable_creation_date: true
       type: datetime
+
+extra:
+  social:
+    - icon: fontawesome/brands/github 
+      link: https://github.com/pawiromitchel
+    - icon: fontawesome/brands/twitter 
+      link: https://twitter.com/pawiromitchel
+    - icon: fontawesome/brands/linkedin 
+      link: https://www.linkedin.com/in/mitchel-pawirodinomo/
