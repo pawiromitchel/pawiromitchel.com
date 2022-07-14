@@ -13,7 +13,7 @@ theme:
     - header.autohide
     - navigation.tracking
     - toc.follow
-    - toc.integrate
+    # - toc.integrate
     - navigation.top
   icon:
     repo: fontawesome/brands/github 
@@ -32,3 +32,8 @@ extra:
       link: https://twitter.com/pawiromitchel
     - icon: fontawesome/brands/linkedin 
       link: https://www.linkedin.com/in/mitchel-pawirodinomo/
+
+markdown_extensions:
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji 
+      emoji_generator: !!python/name:materialx.emoji.to_svg
