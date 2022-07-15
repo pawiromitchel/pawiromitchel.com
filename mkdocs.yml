@@ -24,10 +24,12 @@ theme:
         name: Switch to system preference
   features:
     - header.autohide
-    - navigation.tracking
     - toc.follow
     # - toc.integrate
     - navigation.top
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
   icon:
     repo: fontawesome/brands/github 
 
