@@ -15,6 +15,7 @@ There are so many places where you can sign up, create a profile and start searc
 
 ### Crypto jobs
 This is a great place to start for anyone transitioning from the web2 space to web3. There are technical and non-technical jobs, and you can apply for them.
+
 1. [Anthony Pompliano job board](https://pompcryptojobs.com/)
 1. [Cryptocurrencyjobs](https://cryptocurrencyjobs.co/)
 1. [Buildspace](https://buildspace.so/jobs)
@@ -34,6 +35,7 @@ Write down your achievements, skills, and projects in bullet points. The recruit
 
 ### Technical (Written and verbal)
 For technical interviews, it's best to know and practice similar questions beforehand. Get to know the company's tech stack, environment, and position in the market.
+
 - [Practice code challenges](https://www.interviewbit.com/practice/)
 - [Tips and Tricks](https://www.freecodecamp.org/news/interviewing-prep-tips-and-tricks/)
 
@@ -46,6 +48,7 @@ They'll also ask you for a desired salary, so keep this in mind. Research what t
 How will you get the money? Excellent question :laugh:
 
 I use these platforms:
+
 - [Payoneer](http://share.payoneer.com/nav/fQlm0pv7pQ7q4NRC_SLkwPXWJVe1murssnn1-imwpN5SO-vDQFCbzJYOJg5iq4YoBF-rXR3zsYKx2r5LnxgF9g2)
 - [Wise, formerly TransferWise](https://wise.com/invite/u/mitchelp7)
 
