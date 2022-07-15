@@ -1,24 +1,54 @@
 ---
 title: How to get a remote job
-description: Companies are transitioning more and more to remote work, and this is the way to go.
+description: Companies are transitioning more and more to remote work, which is the way to go.
 ---
 
-# How to get a remote job (WIP)
+# How to get a remote job
 
-Working from home became the standard for most developers so getting a remote job is crucial. Nobody likes working in an office anymore lol
-
-There are so many places where you can sign up, create a profile and start searching for gigs or applying for jobs
+Working from home has become the standard for most developers so getting a remote job is crucial. Nobody likes working in an office anymore lol
+There are so many places where you can sign up, create a profile and start searching for gigs or applying for jobs.
 
 ## General job searching
-1. [UpWork](https://upwork.com/)
+1. [UpWork](https://upwork.com/); UpWork is a great place to get familiar with doing freelance jobs. People and companies submit jobs, apply for them, and get paid via Payoneer or Wired Transfer.
 1. [Angel.co](https://angel.co/l/2xoy8S)
 1. [Fiverr](http://www.fiverr.com/s2/ff13bb51bd)
 
-## Crypto jobs
+### Crypto jobs
+This is a great place to start for anyone transitioning from the web2 space to web3. There are technical and non-technical jobs, and you can apply for them.
 1. [Anthony Pompliano job board](https://pompcryptojobs.com/)
 1. [Cryptocurrencyjobs](https://cryptocurrencyjobs.co/)
 1. [Buildspace](https://buildspace.so/jobs)
 
-## Preparing for interviews
+Even if you're not conifdent enough, read through the requirements and learn the basics. There are so many free resources to help you learn.
 
-https://www.interviewbit.com/practice/
+> Just do it. Whatever happens, happens.
+
+## Preparing for interviews
+Preparation for interviews is critical for anyone who wants to get a job. Many resources and tools are available to help you prepare for interviews. Most of the time, interviews are split into parts.
+
+### Introduction
+There's a link that has helped me ace the introduction to interviews.
+[Ultimate List of Interview Questions](https://www.gqrgm.com/ultimate-list-interview-questions-2018/)
+
+Write down your achievements, skills, and projects in bullet points. The recruiter expects you to be quick and concise.
+
+### Technical (Written and verbal)
+For technical interviews, it's best to know and practice similar questions beforehand. Get to know the company's tech stack, environment, and position in the market.
+- [Practice code challenges](https://www.interviewbit.com/practice/)
+- [Tips and Tricks](https://www.freecodecamp.org/news/interviewing-prep-tips-and-tricks/)
+
+### Final interview
+The recruiter will give you a summary of their thoughts and your experience throughout the process. During the discussion, you'll get a feeling if you're in or not. 
+
+They'll also ask you for a desired salary, so keep this in mind. Research what the average pay is for the position you're applying for. [Average pay of a Software Engineer](https://letmegooglethat.com/?q=average+pay+as+a+software+engineer)
+
+## Getting paid :moneybag:
+How will you get the money? Excellent question :laugh:
+
+I use these platforms:
+- [Payoneer](http://share.payoneer.com/nav/fQlm0pv7pQ7q4NRC_SLkwPXWJVe1murssnn1-imwpN5SO-vDQFCbzJYOJg5iq4YoBF-rXR3zsYKx2r5LnxgF9g2)
+- [Wise, formerly TransferWise](https://wise.com/invite/u/mitchelp7)
+
+I might do a seperate guide for this topic, so stay tuned.
+
+Thank you very much :raised_hands:
