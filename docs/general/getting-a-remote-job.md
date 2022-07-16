@@ -9,9 +9,17 @@ Working from home has become the standard for most developers so getting a remot
 There are so many places where you can sign up, create a profile and start searching for gigs or applying for jobs.
 
 ## General job searching
-1. [UpWork](https://upwork.com/); UpWork is a great place to get familiar with doing freelance jobs. People and companies submit jobs, apply for them, and get paid via Payoneer or Wired Transfer.
-1. [Angel.co](https://angel.co/l/2xoy8S)
-1. [Fiverr](http://www.fiverr.com/s2/ff13bb51bd)
+1. [UpWork](https://upwork.com/)
+
+> UpWork is a great place to get familiar with doing freelance jobs. People and companies submit jobs, apply for them, and get paid via Payoneer or Wired Transfer.
+
+2. [Angel.co](https://angel.co/l/2xoy8S)
+
+> Angel.co is for actual job searching, full-time jobs. There are a veriety of different job types such as web3 development, devops, data science jobs, and more.
+
+3. [Fiverr](http://www.fiverr.com/s2/ff13bb51bd)
+
+> Fiverr is a little bit different, people need to reach out to you. Normally, it's the other way around.
 
 ### Crypto jobs
 This is a great place to start for anyone transitioning from the web2 space to web3. There are technical and non-technical jobs, and you can apply for them.
