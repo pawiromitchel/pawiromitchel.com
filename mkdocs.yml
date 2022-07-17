@@ -50,6 +50,11 @@ extra:
       link: https://www.linkedin.com/in/mitchel-pawirodinomo/
 
 markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
   - def_list
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji 
