@@ -55,7 +55,7 @@ Open the project with VSCode. If you don't have the `code` available on your PAT
 code .
 ```
 
-### Let's code :keyboard:
+### Let's code
 Alright, we're done setting up the project. Let's start coding! We'll use a local news website called [Starnieuws](https://www.starnieuws.com/) as our example.
 
 #### Basics
@@ -88,7 +88,7 @@ const url = 'https://www.starnieuws.com/';
 
 Run it with `node <filename>.js` via your VSCode Terminal. Voila, a browser should open and you should be able to see the website.
 
-#### Catch errors with the try catch block
+#### Catch errors (try catch)
 
 We'll add a `try catch` block to catch any errors that might occur within the `async` function
 ```js
@@ -154,7 +154,7 @@ console.log(data)
 #### Complete source code
 Your complete code should look like this
 
-```js
+```js title="app.js"
 const puppeteer = require('puppeteer');
 const url = 'https://www.starnieuws.com/';
 
@@ -206,3 +206,19 @@ const url = 'https://www.starnieuws.com/';
 ```
 
 Run it! `node app.js` and you should see something like this
+
+#### Storing your results
+1. As a file. We can achieve this by storing the output to a file with the `fs` module. Read more about it [here](https://nodejs.dev/learn/the-nodejs-fs-module)
+2. In a Database (DB), you can use MongoDB, MySQL, PostgreSQL, etc.
+
+## Wrapping up
+
+So, what have we learned?
+
+
+- Setting up a `git` repo and initializing `npm`
+- Getting started with Puppeteer
+- Catching errors with `try catch` blocks
+- Scraping data
+
+Thank you so much for reading and following along, see you soon :heart:
