@@ -49,6 +49,9 @@ extra:
       link: https://twitter.com/pawiromitchel
     - icon: fontawesome/brands/linkedin 
       link: https://www.linkedin.com/in/mitchel-pawirodinomo/
+  analytics:
+    provider: google
+    property: G-CS8HZ8FXVR
 
 markdown_extensions:
   - pymdownx.highlight:
