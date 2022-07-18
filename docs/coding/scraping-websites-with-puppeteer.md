@@ -130,6 +130,7 @@ Let's scrape something now. We want the title of the news article and the URL. L
 Scraping contents looks like this in `puppeteer`, read more about `evaluate()` [here](https://pptr.dev/api/puppeteer.page.evaluate)
 
 The element looks like this `<a href="https://www.starnieuws.com/index.php/welcome/index/nieuwsitem/71066">LVV: Stijgend waterpeil Nannizwamp wordt gemonitord</a>` so we want the `href` attribute, and the text content. Add this function under the `await page.goto(url);` code block
+![image](https://user-images.githubusercontent.com/11035568/179430456-5289269d-617c-46eb-9c9c-35ced0fd892c.png)
 
 ```js
 let data = await page.evaluate(() => {
@@ -206,6 +207,7 @@ const url = 'https://www.starnieuws.com/';
 ```
 
 Run it! `node app.js` and you should see something like this
+![image](https://user-images.githubusercontent.com/11035568/179430423-ac100a09-2d9e-4c5d-aae8-d48dfaf9d9d0.png)
 
 #### Storing your results
 1. As a file. We can achieve this by storing the output to a file with the `fs` module. Read more about it [here](https://nodejs.dev/learn/the-nodejs-fs-module)
