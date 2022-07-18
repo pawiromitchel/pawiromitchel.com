@@ -26,7 +26,7 @@ theme:
   features:
     - header.autohide
     - toc.follow
-    # - toc.integrate
+    - toc.integrate
     - navigation.top
     - navigation.tracking
     # - navigation.sections
