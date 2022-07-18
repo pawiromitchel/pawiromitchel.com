@@ -6,6 +6,7 @@ repo_name: pawiromitchel/pawiromitchel.com
 
 theme:
   name: material
+  custom_dir: overrides
   palette:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
