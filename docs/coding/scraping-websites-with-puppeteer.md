@@ -28,23 +28,9 @@ A MVP of a simple scraper that can scrape a website and return the data in a JSO
 
 ### Project setup
 
-Create a folder and navigate to it, if you're a CLI geek like me then you can just your Terminal for everything :laughing:
+> [Please follow this guide to set up a Node.js project.](/coding/nodejs-proj-setup/)
 
-```bash
-mkdir starnieuws-scraper && cd starnieuws-scraper
-```
-
-(Optional) Add the folder to a local `git` repo
-```bash
-git init
-```
-
-(Optional) Create a file called `.gitignore` and add the following line
-```
-node_modules/
-```
-
-Run the following command to inittialize `npm` and install `puppeteer` :magic_wand:
+Install `puppeteer` :magic_wand:
 ```bash
 npm init -y && npm install puppeteer
 ```
