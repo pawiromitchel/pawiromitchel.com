@@ -32,7 +32,7 @@ A MVP of a simple scraper that can scrape a website and return the data in a JSO
 
 Install `puppeteer` :magic_wand:
 ```bash
-npm init -y && npm install puppeteer
+npm install puppeteer
 ```
 
 Open the project with VSCode. If you don't have the `code` available on your PATH, please follow [this guide](https://vscode-docs.readthedocs.io/en/latest/editor/setup/) 
