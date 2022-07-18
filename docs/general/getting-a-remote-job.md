@@ -8,6 +8,11 @@ description: Companies are transitioning more and more to remote work, which is 
 Working from home has become the standard for most developers so getting a remote job is crucial. Nobody likes working in an office anymore lol
 There are so many places where you can sign up, create a profile and start searching for gigs or applying for jobs.
 
+Before applying to jobs, please put some work into your online profile and CV. 
+
+1. Keep your LinkedIn profile up to date, you can use [my profile](https://www.linkedin.com/in/mitchel-pawirodinomo/) as reference if you want
+2. Use a [Resume builder](https://rxresu.me/) like this one to get a nice looking CV
+
 ## General job searching
 1. [UpWork](https://upwork.com/)
 
@@ -34,6 +39,8 @@ Even if you're not conifdent enough, read through the requirements and learn the
 
 ## Preparing for interviews
 Preparation for interviews is critical for anyone who wants to get a job. Many resources and tools are available to help you prepare for interviews. Most of the time, interviews are split into parts.
+
+[This Youtube Channel](https://youtube.com/c/andylacivita) really helped to get a nice overview of how these remote interviews are 
 
 ### Introduction
 There's a link that has helped me ace the introduction to interviews.
