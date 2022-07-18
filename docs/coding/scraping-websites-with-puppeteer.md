@@ -3,7 +3,7 @@ title: Scraping websites with puppeteer
 description: Scraping websites has never been easier, and puppeteer is one of the best tool to use for it.
 ---
 
-# Scraping websites with puppeteer
+# Scraping with Puppeteer
 
 Not going into the details of explaining what Puppeteer is, go read that on [their website](https://pptr.dev/). We just want to code :laughing: 
 
