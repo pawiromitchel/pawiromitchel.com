@@ -15,6 +15,8 @@ We'll build two things during this project
 1. A Telegram bot that takes an input, runs a function and returns the output
 2. Connect our app to a Web3 RPC Node, in this cause we'll use Quicknode so please go ahead and make an account on [Quicknode.io](https://www.quicknode.com?tap_a=67226-09396e&tap_s=3027754-c56695&utm_source=affiliate&utm_campaign=generic&utm_content=affiliate_landing_page&utm_medium=generic)
 
+![CleanShot 2022-07-21 at 21 51 00](https://user-images.githubusercontent.com/11035568/180338603-665ce902-849e-4055-9b42-79b36fd70e07.png)
+
 ## Project setup
 
 1. [Please follow this guide to set up a Node.js project.](/coding/nodejs-proj-setup/)
@@ -31,15 +33,8 @@ BotFather is the official way of creating bots on Telegram.
 4. (optional) you can set a description and a profile picture
 
 After you've followed this proces, you should get this text from him.
-```
-Done! Congratulations on your new bot. You will find it at t.me/AutoSignalsBot. You can now add a description, about section and profile picture for your bot, see /help for a list of commands. By the way, when you've finished creating your cool bot, ping our Bot Support if you want a better username for it. Just make sure the bot is fully operational before you do this.
+![CleanShot 2022-07-21 at 21 51 51](https://user-images.githubusercontent.com/11035568/180338719-83813ab9-f327-4d8a-bd9b-29c660cd3ff5.png)
 
-Use this token to access the HTTP API:
-1212945564:AAEpUlWEXkgPDc2asVwjSZjX820IUzGhDds
-Keep your token secure and store it safely, it can be used by anyone to control your bot.
-
-For a description of the Bot API, see this page: https://core.telegram.org/bots/api
-```
 
 ### Project setup
 I'm assuming you've followed [this guide](/coding/nodejs-proj-setup/) to setup your Node.js environment. I'll call my project `telegram-bot-example`.
@@ -73,6 +68,8 @@ touch .env
 TELEGRAM_TOKEN=<INSERT_YOUR_TOKEN_HERE>
 WEB3_PROVIDER_URL=<INSERT_YOUR_WEB3_PROVIDER_URL_HERE>
 ```
+Copy and paste the URL from Quicknode and paste it in `WEB3_PROVIDER_URL`
+![CleanShot 2022-07-21 at 21 52 59](https://user-images.githubusercontent.com/11035568/180338786-ed08d0cd-12ac-4802-82a3-a17e4621e157.png)
 
 ### Part 1: Create the Telegram bot
 
@@ -96,8 +93,8 @@ bot.on('message', async (msg) => {
 ```bash
 node app.js
 ```
+![CleanShot 2022-07-21 at 21 54 27](https://user-images.githubusercontent.com/11035568/180338919-a2ce46d5-0dd4-4732-b6f4-7b969de44975.png)
 
-> insert screenshot here
 
 ### Part 2: Connect to the Web3 RPC Node
 
@@ -161,6 +158,8 @@ if (text.includes('/getLatestBlock')) {
     bot.sendMessage(chatId, 'getting latest block...');
 }
 ```
+
+![CleanShot 2022-07-21 at 21 54 55](https://user-images.githubusercontent.com/11035568/180338955-015b2ee8-dd6e-4ef6-8a37-69211ac8abec.png)
 
 ### Part 4: Connect the bot to the Web3 RPC Node
 First we need to add the module we made earlier to the `app.js` file
