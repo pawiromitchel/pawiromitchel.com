@@ -3,7 +3,7 @@ title: Creating Telegram bots with Node.js
 description: Telegram bots are awesome and pretty easy to make. The complexity is equal to the features you want to add.
 ---
 
-# Telegram Bots
+# Telegram Bots with Node.js
 Telegram has been my go to chat platform for a couple of years now. I've been able to automate A LOT of things with it such as
 
 - [Taking trades on FTX](https://github.com/pawiromitchel/ftx-telegram-trader)
