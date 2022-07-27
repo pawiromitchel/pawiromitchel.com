@@ -26,11 +26,11 @@ theme:
   features:
     - header.autohide
     - toc.follow
-    - toc.integrate
+    # - toc.integrate
     - navigation.top
     - navigation.tracking
     # - navigation.sections
-    - navigation.tabs
+    # - navigation.tabs
     - navigation.expand
   icon:
     repo: fontawesome/brands/github 
