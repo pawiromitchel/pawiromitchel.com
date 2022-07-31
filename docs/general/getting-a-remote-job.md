@@ -55,9 +55,8 @@ The recruiter will give you a summary of their thoughts and your experience thro
 
 They'll also ask you for a desired salary, so keep this in mind. Research what the average pay is for the position you're applying for. [Average pay of a Software Engineer](https://letmegooglethat.com/?q=average+pay+as+a+software+engineer)
 
-## Getting paid :moneybag:
-How will you get the money? Excellent question :laugh:
-
+## Getting paid
+How will you get the money? Excellent question :laughing:
 I use these platforms:
 
 - [Payoneer](http://share.payoneer.com/nav/fQlm0pv7pQ7q4NRC_SLkwPXWJVe1murssnn1-imwpN5SO-vDQFCbzJYOJg5iq4YoBF-rXR3zsYKx2r5LnxgF9g2)
