@@ -15,12 +15,12 @@ Before applying to jobs, please put some work into your online profile and CV.
 
 ## General job searching
 
-1. [UpWork](https://upwork.com/), UpWork is a great place to get familiar with doing freelance jobs. People and companies submit jobs, apply for them, and get paid via Payoneer or Wired Transfer.
-2. [Angel.co](https://angel.co/l/2xoy8S), Angel.co is for actual job searching, full-time jobs. There are a veriety of different job types such as web3 development, devops, data science jobs, and more.
-3. [Fiverr](http://www.fiverr.com/s2/ff13bb51bd), Fiverr is a little bit different, people need to reach out to you. Normally, it's the other way around.
-4. [Linkedin](https://www.linkedin.com/jobs/)
-5. [Stackoverflow](https://stackoverflow.com/jobs/companies)
-6. [Indeed](https://www.indeed.com/)
+1. [UpWork](https://upwork.com/)
+1. [Angel.co](https://angel.co/l/2xoy8S)
+1. [Fiverr](http://www.fiverr.com/s2/ff13bb51bd)
+1. [Linkedin](https://www.linkedin.com/jobs/)
+1. [Stackoverflow](https://stackoverflow.com/jobs/companies)
+1. [Indeed](https://www.indeed.com/)
 
 ### Crypto jobs
 This is a great place to start for anyone transitioning from the web2 space to web3. There are technical and non-technical jobs, and you can apply for them.
@@ -28,6 +28,7 @@ This is a great place to start for anyone transitioning from the web2 space to w
 1. [Anthony Pompliano job board](https://pompcryptojobs.com/)
 1. [Cryptocurrencyjobs](https://cryptocurrencyjobs.co/)
 1. [Buildspace](https://buildspace.so/jobs)
+1. [Bankless](https://bankless.pallet.com/jobs)
 
 Even if you're not conifdent enough, read through the requirements and learn the basics. There are so many free resources to help you learn.
 
