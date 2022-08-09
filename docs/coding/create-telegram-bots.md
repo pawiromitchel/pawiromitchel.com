@@ -214,6 +214,8 @@ async function getBlock() {
 module.exports = { getBlock };
 ```
 
+You can view the full project code [here](https://github.com/pawiromitchel/pawiromitchel-repos/tree/main/telegram-bot-example)
+
 ## Conclusion
 What have we learned?
 
