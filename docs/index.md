@@ -1,3 +1,9 @@
+---
+hide:
+  - navigation
+  - toc
+---
+
 # Welcome
 
 Hey :wave:, I'm Mitchel Pawirodinomo, a Software Engineer from Suriname. I've been coding since 2014, participated in many Hackathons and Coding challenges. I love challenging myself so the transition from trad web2 tech to web3 has been a blast so far!
