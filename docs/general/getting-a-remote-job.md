@@ -1,11 +1,11 @@
 ---
-title: How to get a remote job
+title: Scoring a remote job
 description: Companies are transitioning more and more to remote work, which is the way to go.
 ---
 
-# How to get a remote job
+# Scoring a remote job
 
-Working from home has become the standard for most developers so getting a remote job is crucial. Nobody likes working in an office anymore lol
+Working from home has become the standard for most developers so getting a remote job is crucial. Nobody likes working in an office anymore lol.
 There are so many places where you can sign up, create a profile and start searching for gigs or applying for jobs.
 
 Before applying to jobs, please put some work into your online profile and CV. 
@@ -22,13 +22,14 @@ Before applying to jobs, please put some work into your online profile and CV.
 1. [Stackoverflow](https://stackoverflow.com/jobs/companies)
 1. [Indeed](https://www.indeed.com/)
 
-### Crypto jobs
+### Web3 Specific
 This is a great place to start for anyone transitioning from the web2 space to web3. There are technical and non-technical jobs, and you can apply for them.
 
 1. [Anthony Pompliano job board](https://pompcryptojobs.com/)
 1. [Cryptocurrencyjobs](https://cryptocurrencyjobs.co/)
 1. [Buildspace](https://buildspace.so/jobs)
 1. [Bankless](https://bankless.pallet.com/jobs)
+1. [Startup](https://startup.jobs/)
 
 Even if you're not conifdent enough, read through the requirements and learn the basics. There are so many free resources to help you learn.
 
