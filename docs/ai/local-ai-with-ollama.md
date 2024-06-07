@@ -4,7 +4,7 @@ description: Ollama
 ---
 
 # Ollama
-Ollama is a way of running large language model locally, it's like running ChatGPT on your own machine. Of course, this means that the answers are generated on your machine, so you'll need a beefy one.
+Ollama :llama: is a way of running large language model locally, it's like running ChatGPT on your own machine. Of course, this means that the answers are generated on your machine, so you'll need a beefy one.
 
 My `screenfetch` output:
 ```
@@ -29,16 +29,17 @@ An example output of running Ollama
 ![image](https://github.com/pawiromitchel/pawiromitchel.com/assets/11035568/cd5c31f8-fa83-44f7-9131-6727cf1fa875)
 
 
-# Installation
-Go to the download page of Ollama https://ollama.com/download and choose your operating system. Then, follow the instructions for installation.
-- macOS: https://ollama.com/download/Ollama-darwin.zip
-- windows: https://ollama.com/download/OllamaSetup.exe
-- linux: `curl -fsSL https://ollama.com/install.sh | sh`
+## Installation
+Go to the [download page of Ollama](https://ollama.com/download) and choose your operating system. Then, follow the instructions for installation.
 
-# Usage
-After the installation, you should be able to use it immidiately. You can find all available models here https://ollama.com/library
+- :simple-apple: [macOS](https://ollama.com/download/Ollama-darwin.zip)
+- :window: [windows](https://ollama.com/download/OllamaSetup.exe)
+- :simple-linux: linux: `curl -fsSL https://ollama.com/install.sh | sh`
 
-We'll be using Llama 3 in this example https://ollama.com/library/llama3 `ollama pull llama3`
+## Usage
+After the installation, you should be able to use it immidiately. You can find all available models [here](https://ollama.com/library)
+
+We'll be using [Llama 3](https://ollama.com/library/llama3) in this example  `ollama pull llama3`
 You should be seeing something like this
 ```
 ollama pull llama3                                                                      ✔ 
@@ -57,10 +58,10 @@ success
 Now you can run the `llama3` model `ollama run llama3` and ask it whatever you want
 ![image](https://github.com/pawiromitchel/pawiromitchel.com/assets/11035568/e44ef7bc-8922-48a7-8133-a1ef39ef090f)
 
-# Next steps
+## Next steps
 With this running, possibilities are endless 🚀 
 
-## REST API
+### REST API
 https://github.com/ollama/ollama/blob/main/docs/api.md
 ```
 curl -X POST http://localhost:11434/api/generate -d '{
@@ -69,17 +70,17 @@ curl -X POST http://localhost:11434/api/generate -d '{
  }'
 ```
 
-## Github Copilot alternative
+### Github Copilot alternative
 There's this VSCode extension that you can configure to use Ollama to become your Github Copilot replacement. https://www.continue.dev/docs/setup/overview
 
 After installing it you should be seeing a new icon in your sidebar to ask questions related to your code (give it time to index)
 ![image](https://github.com/pawiromitchel/pawiromitchel.com/assets/11035568/7665000a-7fa1-488f-a581-75672b8e780d)
 
-## ChatGPT UI
-You can run your own WebUI https://github.com/open-webui/open-webui that has Retrieval Augmented Generation (RAG) support and more.
+### ChatGPT UI
+You can run your own [WebUI](https://github.com/open-webui/open-webui) that has Retrieval Augmented Generation (RAG) support and more.
 
-## SDK's
-There are SDKs available if you want to integrate the models into your existing apps https://github.com/ollama/ollama/blob/main/README.md#libraries
+### SDK's
+There are [SDKs](https://github.com/ollama/ollama/blob/main/README.md#libraries) available if you want to integrate the models into your existing apps 
 
-# Conclusion
-It's so easy to run a complex AI model locally nowaways, have a look into https://huggingface.co/ as well. 
+## Conclusion
+It's so easy to run a complex AI model locally nowaways, have a look into [Huggingface](https://huggingface.co/) as well. 

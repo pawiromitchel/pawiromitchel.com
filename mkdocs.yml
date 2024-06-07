@@ -26,10 +26,10 @@ theme:
   features:
     - header.autohide
     - toc.follow
-    # - toc.integrate
+    - toc.integrate
     - navigation.top
     - navigation.tracking
-    # - navigation.sections
+    - navigation.sections
     - navigation.tabs
     - navigation.expand
   icon:
@@ -37,10 +37,6 @@ theme:
 
 plugins:
   - search
-  - git-authors
-  - git-revision-date-localized:
-      enable_creation_date: true
-      type: datetime
 
 extra:
   social:
@@ -50,9 +46,6 @@ extra:
       link: https://twitter.com/pawiromitchel
     - icon: fontawesome/brands/linkedin 
       link: https://www.linkedin.com/in/mitchel-pawirodinomo/
-  analytics:
-    provider: google
-    property: G-CS8HZ8FXVR
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -61,7 +54,7 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
   - def_list
-  - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji 
-      emoji_generator: !!python/name:materialx.emoji.to_svg
   - meta
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
