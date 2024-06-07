@@ -39,10 +39,10 @@ Go to the [download page of Ollama](https://ollama.com/download) and choose your
 ## Usage
 After the installation, you should be able to use it immidiately. You can find all available models [here](https://ollama.com/library)
 
-We'll be using [Llama 3](https://ollama.com/library/llama3) in this example  `ollama pull llama3`
+We'll be using [Llama 3](https://ollama.com/library/llama3) in this example run `ollama pull llama3`
 You should be seeing something like this
 ```
-ollama pull llama3                                                                      ✔ 
+ollama pull llama3
 pulling manifest 
 pulling 6a0746a1ec1a... 100% ▕███████████████████████████████████████▏ 4.7 GB                         
 pulling 4fa551d4f938... 100% ▕███████████████████████████████████████▏  12 KB                         
@@ -71,7 +71,7 @@ curl -X POST http://localhost:11434/api/generate -d '{
 ```
 
 ### Github Copilot alternative
-There's this VSCode extension that you can configure to use Ollama to become your Github Copilot replacement. https://www.continue.dev/docs/setup/overview
+There's this VSCode extension that you can configure to use Ollama to become your Github Copilot replacement called [Continue](https://docs.continue.dev/how-to-use-continue#easily-understand-code-sections)
 
 After installing it you should be seeing a new icon in your sidebar to ask questions related to your code (give it time to index)
 ![image](https://github.com/pawiromitchel/pawiromitchel.com/assets/11035568/7665000a-7fa1-488f-a581-75672b8e780d)
