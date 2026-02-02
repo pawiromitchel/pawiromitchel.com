@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Container } from "../layout/Container";
 import { Button } from "../ui/Button";
@@ -26,15 +27,13 @@ export function Hero() {
           {/* Left side - Profile Image */}
           <div className="flex justify-center lg:justify-start animate-fade-in-up order-1 lg:order-1">
             <div className="relative w-64 h-64 lg:w-96 lg:h-96 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border-8 border-primary/30 flex items-center justify-center shadow-2xl overflow-hidden">
-              <p className="text-8xl lg:text-9xl">👨‍💻</p>
-              {/* Uncomment when image is available */}
-              {/* <Image
-                src={profileImage}
+              <Image
+                src="/pfp.jpg"
                 alt="Pawiro Mitchel"
                 fill
                 className="object-cover"
                 priority
-              /> */}
+              />
             </div>
           </div>
 
