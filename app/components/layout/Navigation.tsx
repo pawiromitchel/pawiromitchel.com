@@ -31,8 +31,8 @@ export function Navigation() {
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-white shadow-sm"
-          : "bg-white/90 backdrop-blur-md"
+          ? "bg-background shadow-sm"
+          : "bg-background/90 backdrop-blur-md"
       }`}
     >
       <Container className="flex items-center justify-between h-16">
@@ -88,7 +88,7 @@ export function Navigation() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white border-t border-border animate-slide-in-left">
+        <div className="md:hidden bg-background border-t border-border animate-slide-in-left">
           <Container className="py-4 flex flex-col gap-4">
             {navItems.map((item) => (
               <Link
