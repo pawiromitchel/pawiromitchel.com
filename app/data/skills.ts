@@ -58,6 +58,18 @@ export const skills: Skill[] = [
     years: 2,
   },
   {
+    name: "C#",
+    category: "languages",
+    proficiency: 3,
+    years: 3,
+  },
+  {
+    name: "PHP",
+    category: "languages",
+    proficiency: 4,
+    years: 6,
+  },
+  {
     name: "Shell/Bash",
     category: "languages",
     proficiency: 4,
@@ -105,6 +117,24 @@ export const skills: Skill[] = [
     name: "Tailwind CSS",
     category: "frameworks",
     proficiency: 4,
+    years: 2,
+  },
+  {
+    name: "WordPress",
+    category: "frameworks",
+    proficiency: 4,
+    years: 6,
+  },
+  {
+    name: "Joomla",
+    category: "frameworks",
+    proficiency: 3,
+    years: 2,
+  },
+  {
+    name: "Magento",
+    category: "frameworks",
+    proficiency: 3,
     years: 2,
   },
 
@@ -257,15 +287,52 @@ export const skills: Skill[] = [
     proficiency: 4,
     years: 4,
   },
+  {
+    name: "Zendesk",
+    category: "tools",
+    proficiency: 4,
+    years: 3,
+  },
+  {
+    name: "Discord",
+    category: "tools",
+    proficiency: 4,
+    years: 3,
+  },
+  {
+    name: "Slack",
+    category: "tools",
+    proficiency: 4,
+    years: 3,
+  },
+  {
+    name: "Telegram",
+    category: "tools",
+    proficiency: 4,
+    years: 3,
+  },
+  {
+    name: "Pentaho",
+    category: "tools",
+    proficiency: 3,
+    years: 4,
+  },
 ];
 
 export const certifications: Certification[] = [
   {
-    name: "Certified Ethical Hacker (CEH)",
-    issuer: "EC-Council",
-    year: 2020,
-    credentialId: "ECC-123456",
+    name: "Certified Ethical Hacker",
+    issuer: "Secured by Design",
+    year: 2018,
+    credentialId: "CEH-2018",
     logo: "/images/certifications/ceh.png",
+  },
+  {
+    name: "Essentials in JavaScript ES6",
+    issuer: "Udemy",
+    year: 2019,
+    credentialId: "UDEMY-JS-ES6",
+    logo: "/images/certifications/udemy.png",
   },
 ];
 
