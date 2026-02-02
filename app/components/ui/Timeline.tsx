@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 
 interface TimelineItemProps {
-  title: string;
+  title: string | ReactNode;
   subtitle?: string;
   description?: string;
   date?: string;
