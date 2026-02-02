@@ -28,7 +28,7 @@ A MVP of a simple scraper that can scrape a website and return the data in a JSO
 
 ### Project setup
 
-> [Please follow this guide to set up a Node.js project.](/blog/nodejs-proj-setup/)
+> [Please follow this guide to set up a Node.js project.](nodejs-proj-setup.md)
 
 Install `puppeteer` :magic_wand:
 ```bash

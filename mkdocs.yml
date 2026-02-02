@@ -38,6 +38,20 @@ theme:
 plugins:
   - search
 
+nav:
+  - Home: index.md
+  - Experience: experience/index.md
+  - Projects: projects/index.md
+  - Skills: skills/index.md
+  - Education: education/index.md
+  - Blog:
+    - Overview: blog/index.md
+    - Local AI with Ollama: blog/local-ai-with-ollama.md
+    - Telegram Bots: blog/create-telegram-bots.md
+    - Node.js Setup: blog/nodejs-proj-setup.md
+    - Web Scraping: blog/scraping-websites-with-puppeteer.md
+    - Remote Jobs: blog/getting-a-remote-job.md
+
 extra:
   social:
     - icon: fontawesome/brands/github 

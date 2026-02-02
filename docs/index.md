@@ -1,42 +1,39 @@
 # Welcome
 
-Hey :wave:, I'm Mitchel Pawirodinomo, a Software Engineer from [Suriname](https://en.wikipedia.org/wiki/Suriname). I've been coding since 2014, participated in many Hackathons and Coding challenges. I love challenging myself so the transition from trad web2 tech to web3 has been a blast so far!
+Hey :wave:, I'm **Mitchel Pawirodinomo**, a Software Engineer from [Suriname](https://en.wikipedia.org/wiki/Suriname). I've been coding since 2014, and throughout my career I've worked on diverse projects spanning Web3, backend development, security, and developer tools.
 
-My socials are in the footer so feel free to reach out and have a coffee with me if you wanna pick my brain.
+I'm currently a Software Engineer at **QuickNode**, building blockchain infrastructure for developers. I love challenging myself, and the transition from traditional web2 to web3 has been incredibly rewarding.
 
-## tech()
+## Featured Sections
 
-- 2021-2024: Golang :fontawesome-brands-golang: | :material-language-typescript: Typescript | :simple-web3dotjs: Web3
-- 2017-2021: :simple-angular: Angular | :simple-nodedotjs: NodeJS
-- 2014-2017: :simple-php: PHP | :material-language-javascript: JS | :material-wordpress: Wordpress
+**[Experience](experience/index.md)** - View my professional journey and current role at QuickNode
 
-## machine()
+**[Projects](projects/index.md)** - Explore my portfolio including Web3 projects, developer tools, and more
 
-```
+**[Skills & Expertise](skills/index.md)** - See my technical skills, certifications, and achievements
 
- ██████████████████  ████████     trustm3@trustm3
- ██████████████████  ████████     OS: Manjaro 24.0.1 Wynsdey
- ██████████████████  ████████     Kernel: x86_64 Linux 6.9.2-1-MANJARO
- ██████████████████  ████████     Uptime: 12h 27m
- ████████            ████████     Packages: 1277
- ████████  ████████  ████████     Shell: zsh 5.9
- ████████  ████████  ████████     Resolution: 1920x1080
- ████████  ████████  ████████     DE: KDE
- ████████  ████████  ████████     WM: KWin
- ████████  ████████  ████████     GTK Theme: Breeze-Dark [GTK2], Breeze [GTK3]
- ████████  ████████  ████████     Icon Theme: breeze
- ████████  ████████  ████████     Disk: 313G / 920G (36%)
- ████████  ████████  ████████     CPU: 13th Gen Intel Core i5-13420H @ 12x 4.6GHz [45.0°C]
- ████████  ████████  ████████     GPU: NVIDIA GeForce RTX 3050 6GB Laptop GPU
-                                  RAM: 5901MiB / 31822MiB
-```
+**[Education](education/index.md)** - Check my education background and hackathon wins
 
-## software()
-- [VSCodium](https://vscodium.com/#), VSCode without the spyware
-    - [Continue](https://docs.continue.dev/setup/overview), AI Assistant with Ollama. Wrote a article about setting it up [here](./ai/local-ai-with-ollama/)
-    - [Thunder Client](https://www.thunderclient.com/), lightweight REST API Client
-- [DBeaver Database Tool](https://dbeaver.io/), all-in-one DB tool
-- [Brave Browser](https://brave.com/), auto block adds, cookie tracking, Tor support
-    - [Dark Reader](https://darkreader.org/), DarkMode every website
-    - [Bitwarden](https://bitwarden.com/), Password Manager that doesn't suck
-- [Transmission](https://transmissionbt.com/), lightweight Bittorrent Client
+**[Blog](blog/index.md)** - Read my technical tutorials and guides on Web3, Node.js, security, and more
+
+---
+
+## Technical Evolution
+
+- **2021-2024**: Golang :fontawesome-brands-golang: | :material-language-typescript: Typescript | :simple-web3dotjs: Web3
+- **2017-2021**: :simple-angular: Angular | :simple-nodedotjs: NodeJS
+- **2014-2017**: :simple-php: PHP | :material-language-javascript: JS | :material-wordpress: Wordpress
+
+## Setup & Tools
+
+**Development Environment**
+- [VSCodium](https://vscodium.com/#) - VSCode without the telemetry
+    - [Continue](https://docs.continue.dev/setup/overview) - AI Assistant with Ollama
+    - [Thunder Client](https://www.thunderclient.com/) - Lightweight REST API Client
+- [DBeaver](https://dbeaver.io/) - Database management
+- [Brave Browser](https://brave.com/) - Privacy-focused browsing
+    - [Dark Reader](https://darkreader.org/) - Dark mode for any website
+    - [Bitwarden](https://bitwarden.com/) - Password management
+- [Transmission](https://transmissionbt.com/) - Torrent client
+
+Feel free to reach out via the social links in the footer. Let's connect!

@@ -19,7 +19,7 @@ We'll build two things during this project
 
 ## Project setup
 
-1. [Please follow this guide to set up a Node.js project.](/blog/nodejs-proj-setup/)
+1. [Please follow this guide to set up a Node.js project.](nodejs-proj-setup.md)
 2. [Setup a free Quicknode endpoint](https://www.quicknode.com?tap_a=67226-09396e&tap_s=3027754-c56695&utm_source=affiliate&utm_campaign=generic&utm_content=affiliate_landing_page&utm_medium=generic) and choose ETH Mainnet
 
 > insert screenshot here
@@ -37,7 +37,7 @@ After you've followed this proces, you should get this text from him.
 
 
 ### Project setup
-I'm assuming you've followed [this guide](/blog/nodejs-proj-setup/) to setup your Node.js environment. I'll call my project `telegram-bot-example`.
+I'm assuming you've followed [this guide](nodejs-proj-setup.md) to setup your Node.js environment. I'll call my project `telegram-bot-example`.
 ```bash
 mkdir telegram-bot-example
 cd telegram-bot-example
