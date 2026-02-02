@@ -15,7 +15,7 @@ export default function ProjectsPage() {
   return (
     <>
       <Navigation />
-      <main className="pt-20">
+      <main className="pt-20 bg-background min-h-screen">
         <Container className="py-12">
           <SectionHeading centered subtitle="A collection of my professional and side projects">
             All Projects

@@ -11,7 +11,7 @@ export function ProjectsSection() {
   const featuredProjects = projects.filter((p) => p.featured).slice(0, 3);
 
   return (
-    <section className="py-24 bg-white">
+    <section className="py-24 bg-background">
       <Container>
         <div className="mb-16">
           <SectionHeading subtitle="A selection of my recent work and side projects">

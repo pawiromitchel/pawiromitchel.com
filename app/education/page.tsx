@@ -15,7 +15,7 @@ export default function EducationPage() {
   return (
     <>
       <Navigation />
-      <main className="pt-20">
+      <main className="pt-20 bg-background min-h-screen">
         <Container className="py-12">
           {/* Education */}
           <div className="mb-20">

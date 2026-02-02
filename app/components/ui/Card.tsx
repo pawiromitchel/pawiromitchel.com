@@ -27,7 +27,7 @@ export function Card({
     : "";
 
   const baseStyles =
-    "rounded-2xl bg-white border border-border shadow-sm transition-all duration-300";
+    "rounded-2xl bg-card-bg border border-border shadow-sm transition-all duration-300";
 
   const finalClassName = `${baseStyles} ${paddingStyles[padding]} ${hoverStyles} ${className}`;
 

@@ -15,7 +15,7 @@ export default function ExperiencePage() {
   return (
     <>
       <Navigation />
-      <main className="pt-20">
+      <main className="pt-20 bg-background min-h-screen">
         <Container className="py-12">
           <SectionHeading centered subtitle="10+ years of experience in full-stack and blockchain development">
             Professional Experience

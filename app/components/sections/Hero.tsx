@@ -6,7 +6,7 @@ import { personalInfo } from "@/app/data/personal";
 
 export function Hero() {
   return (
-    <section className="min-h-screen flex items-center justify-center py-20 bg-white">
+    <section className="min-h-screen flex items-center justify-center py-20 bg-background">
       <Container className="w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           {/* Left side - Text content */}

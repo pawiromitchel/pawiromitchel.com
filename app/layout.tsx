@@ -52,7 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.variable} ${geistMono.variable} antialiased bg-white text-foreground`}
+        className={`${poppins.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
         {children}
       </body>

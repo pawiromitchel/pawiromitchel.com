@@ -16,7 +16,7 @@ export function SkillsSection() {
   };
 
   return (
-    <section className="py-24 bg-white">
+    <section className="py-24 bg-background">
       <Container>
         <div className="mb-16">
           <SectionHeading subtitle="Technologies and tools I work with daily">
