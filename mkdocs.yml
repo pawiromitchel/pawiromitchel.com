@@ -33,7 +33,10 @@ theme:
     - navigation.tabs
     - navigation.expand
   icon:
-    repo: fontawesome/brands/github 
+    repo: fontawesome/brands/github
+
+extra_css:
+  - assets/css/custom.css
 
 plugins:
   - search
