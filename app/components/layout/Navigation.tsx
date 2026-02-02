@@ -3,14 +3,12 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Container } from "./Container";
-import { Button } from "../ui/Button";
 
 const navItems = [
   { label: "Home", href: "/" },
-  { label: "Experience", href: "/experience" },
-  { label: "Projects", href: "/projects" },
-  { label: "Skills", href: "/skills" },
-  { label: "Education", href: "/education" },
+  { label: "Experience", href: "#experience" },
+  { label: "Projects", href: "#projects" },
+  { label: "Education", href: "#education" },
   { label: "Blog", href: "/blog" },
 ];
 
@@ -26,6 +24,17 @@ export function Navigation() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+        setIsOpen(false);
+      }
+    }
+  };
 
   return (
     <nav
@@ -50,16 +59,12 @@ export function Navigation() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={(e) => handleAnchorClick(e, item.href)}
               className="text-foreground hover:text-primary transition-colors font-medium text-sm"
             >
               {item.label}
             </Link>
           ))}
-        </div>
-
-        {/* Desktop CTA Button */}
-        <div className="hidden md:block">
-          <Button size="sm">Get In Touch</Button>
         </div>
 
         {/* Mobile Menu Button */}
@@ -94,15 +99,12 @@ export function Navigation() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={(e) => handleAnchorClick(e, item.href)}
                 className="text-foreground hover:text-primary transition-colors font-medium py-2"
-                onClick={() => setIsOpen(false)}
               >
                 {item.label}
               </Link>
             ))}
-            <Button fullWidth className="mt-2">
-              Get In Touch
-            </Button>
           </Container>
         </div>
       )}

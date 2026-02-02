@@ -1,7 +1,5 @@
 import React from "react";
-import Link from "next/link";
 import { Container } from "../layout/Container";
-import { Button } from "../ui/Button";
 import { Badge } from "../ui/Badge";
 import { SectionHeading } from "../ui/SectionHeading";
 import { topSkills } from "@/app/data/skills";
@@ -16,7 +14,7 @@ export function SkillsSection() {
   };
 
   return (
-    <section className="py-24 bg-background">
+    <section id="skills" className="py-24 bg-background">
       <Container>
         <div className="mb-16">
           <SectionHeading subtitle="Technologies and tools I work with daily">
@@ -24,7 +22,7 @@ export function SkillsSection() {
           </SectionHeading>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           {Object.entries(skillsByCategory).map(([category, categorySkills]) => (
             categorySkills.length > 0 && (
               <div key={category} className="animate-fade-in-up">
@@ -45,15 +43,6 @@ export function SkillsSection() {
               </div>
             )
           ))}
-        </div>
-
-        {/* View All Button */}
-        <div className="text-center">
-          <Link href="/skills">
-            <Button variant="secondary" size="lg">
-              View All Skills →
-            </Button>
-          </Link>
         </div>
       </Container>
     </section>

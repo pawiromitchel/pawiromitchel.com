@@ -1,9 +1,7 @@
 import React from "react";
-import Link from "next/link";
 import { Container } from "../layout/Container";
-import { Button } from "../ui/Button";
 import { Card, CardTitle, CardDescription, CardImage } from "../ui/Card";
-import { Badge, BadgeGroup } from "../ui/Badge";
+import { BadgeGroup } from "../ui/Badge";
 import { SectionHeading } from "../ui/SectionHeading";
 import { projects } from "@/app/data/projects";
 
@@ -11,7 +9,7 @@ export function ProjectsSection() {
   const featuredProjects = projects.filter((p) => p.featured).slice(0, 3);
 
   return (
-    <section className="py-24 bg-background">
+    <section id="projects" className="py-24 bg-background">
       <Container>
         <div className="mb-16">
           <SectionHeading subtitle="A selection of my recent work and side projects">
@@ -19,7 +17,7 @@ export function ProjectsSection() {
           </SectionHeading>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {featuredProjects.map((project) => (
             <Card key={project.id} padding="none" hover className="flex flex-col overflow-hidden">
               {/* Image */}
@@ -72,15 +70,6 @@ export function ProjectsSection() {
               </div>
             </Card>
           ))}
-        </div>
-
-        {/* View All Button */}
-        <div className="text-center">
-          <Link href="/projects">
-            <Button variant="secondary" size="lg">
-              View All Projects →
-            </Button>
-          </Link>
         </div>
       </Container>
     </section>

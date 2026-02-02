@@ -32,7 +32,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/projects"
+                  href="#projects"
                   className="text-muted hover:text-primary transition-colors"
                 >
                   Projects
@@ -48,7 +48,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/experience"
+                  href="#experience"
                   className="text-muted hover:text-primary transition-colors"
                 >
                   Experience
