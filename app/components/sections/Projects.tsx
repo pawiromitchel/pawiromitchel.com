@@ -11,13 +11,15 @@ export function ProjectsSection() {
   const featuredProjects = projects.filter((p) => p.featured).slice(0, 3);
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-24 bg-white">
       <Container>
-        <SectionHeading subtitle="A selection of my recent work and side projects">
-          Featured Projects
-        </SectionHeading>
+        <div className="mb-16">
+          <SectionHeading subtitle="A selection of my recent work and side projects">
+            Featured Projects
+          </SectionHeading>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {featuredProjects.map((project) => (
             <Card key={project.id} padding="none" hover className="flex flex-col overflow-hidden">
               {/* Image */}
@@ -73,10 +75,10 @@ export function ProjectsSection() {
         </div>
 
         {/* View All Button */}
-        <div className="text-center mt-12">
+        <div className="text-center">
           <Link href="/projects">
             <Button variant="secondary" size="lg">
-              View All Projects
+              View All Projects →
             </Button>
           </Link>
         </div>

@@ -31,8 +31,8 @@ export function Navigation() {
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-white shadow-md"
-          : "bg-white/80 backdrop-blur-md"
+          ? "bg-white shadow-sm"
+          : "bg-white/90 backdrop-blur-md"
       }`}
     >
       <Container className="flex items-center justify-between h-16">

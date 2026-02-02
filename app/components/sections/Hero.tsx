@@ -6,9 +6,9 @@ import { personalInfo } from "@/app/data/personal";
 
 export function Hero() {
   return (
-    <section className="min-h-screen flex items-center justify-center pt-20 pb-12 bg-gradient-to-b from-white via-primary/5 to-white">
+    <section className="min-h-screen flex items-center justify-center py-20 bg-white">
       <Container className="w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           {/* Left side - Text content */}
           <div className="animate-fade-in-up">
             <div className="mb-4 flex items-center gap-2">
@@ -16,20 +16,20 @@ export function Hero() {
               <p className="text-primary font-semibold text-sm">Welcome to my portfolio</p>
             </div>
 
-            <h1 className="text-5xl md:text-6xl font-bold text-foreground leading-tight mb-4">
+            <h1 className="text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6">
               {personalInfo.name}
             </h1>
 
-            <h2 className="text-2xl md:text-3xl font-semibold text-primary mb-6">
+            <h2 className="text-2xl lg:text-3xl font-semibold text-primary mb-8">
               {personalInfo.title}
             </h2>
 
-            <p className="text-lg text-muted leading-relaxed mb-8 max-w-lg">
+            <p className="text-base lg:text-lg text-muted leading-relaxed mb-10 max-w-xl">
               {personalInfo.bio}
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
+            <div className="flex flex-col sm:flex-row gap-5 mb-16">
               <Link href="/projects">
                 <Button size="lg">View My Work</Button>
               </Link>
@@ -41,21 +41,21 @@ export function Hero() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 pt-8 border-t border-border">
+            <div className="grid grid-cols-3 gap-8 pt-12 border-t border-border">
               <div>
-                <p className="text-3xl font-bold text-primary">
+                <p className="text-3xl lg:text-4xl font-bold text-primary mb-2">
                   {personalInfo.stats.yearsExperience}+
                 </p>
                 <p className="text-sm text-muted">Years Experience</p>
               </div>
               <div>
-                <p className="text-3xl font-bold text-primary">
+                <p className="text-3xl lg:text-4xl font-bold text-primary mb-2">
                   {personalInfo.stats.projectsCompleted}+
                 </p>
                 <p className="text-sm text-muted">Projects Done</p>
               </div>
               <div>
-                <p className="text-3xl font-bold text-primary">
+                <p className="text-3xl lg:text-4xl font-bold text-primary mb-2">
                   {personalInfo.stats.companiesWorked}
                 </p>
                 <p className="text-sm text-muted">Companies</p>
@@ -64,18 +64,15 @@ export function Hero() {
           </div>
 
           {/* Right side - Illustration/Image placeholder */}
-          <div className="relative animate-slide-in-right">
-            <div className="relative w-full aspect-square">
-              {/* Decorative circles */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full blur-2xl"></div>
-
+          <div className="relative animate-slide-in-right hidden lg:block">
+            <div className="relative w-full">
               {/* Profile image placeholder - will be replaced with actual image */}
-              <div className="relative w-full h-full flex items-center justify-center">
-                <div className="w-80 h-80 rounded-2xl bg-gradient-to-br from-primary to-primary-dark/50 flex items-center justify-center shadow-2xl border-8 border-white overflow-hidden">
+              <div className="relative flex items-center justify-center">
+                <div className="w-96 h-96 rounded-3xl bg-gradient-to-br from-primary to-primary-dark/70 flex items-center justify-center shadow-2xl overflow-hidden hover:shadow-lg hover:scale-102 transition-all duration-300">
                   <div className="text-white text-center">
-                    <p className="text-6xl mb-4">👨‍💻</p>
-                    <p className="text-xl font-semibold">Pawiro Mitchel</p>
-                    <p className="text-sm opacity-90 mt-2">
+                    <p className="text-8xl mb-6">👨‍💻</p>
+                    <p className="text-2xl font-semibold">Pawiro Mitchel</p>
+                    <p className="text-base opacity-90 mt-3">
                       Infrastructure Engineer
                     </p>
                   </div>
@@ -90,18 +87,18 @@ export function Hero() {
                 </div>
               </div>
 
-              {/* Floating elements */}
-              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl"></div>
-              <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl"></div>
+              {/* Subtle floating elements */}
+              <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+              <div className="absolute -top-20 -right-20 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
             </div>
           </div>
         </div>
 
         {/* Scroll indicator */}
-        <div className="flex justify-center mt-20">
-          <div className="animate-bounce-slow">
+        <div className="flex justify-center mt-24">
+          <div className="animate-bounce-slow opacity-60">
             <svg
-              className="w-6 h-6 text-primary"
+              className="w-5 h-5 text-primary"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -109,7 +106,7 @@ export function Hero() {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
+                strokeWidth={2.5}
                 d="M19 14l-7 7m0 0l-7-7m7 7V3"
               />
             </svg>

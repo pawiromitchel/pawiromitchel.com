@@ -39,9 +39,9 @@ export function Stats() {
   ];
 
   return (
-    <section className="py-20 bg-white border-y border-border">
+    <section className="py-24 bg-white border-y border-border">
       <Container>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
           {stats.map((stat, index) => (
             <div key={index} className="animate-fade-in-up" style={{
               animationDelay: `${index * 100}ms`

@@ -23,11 +23,11 @@ export function Card({
   };
 
   const hoverStyles = hover
-    ? "hover:shadow-lg hover:scale-105 cursor-pointer"
+    ? "hover:shadow-lg hover:-translate-y-1 cursor-pointer"
     : "";
 
   const baseStyles =
-    "rounded-xl bg-white border border-border shadow-md transition-all duration-300";
+    "rounded-2xl bg-white border border-border shadow-sm transition-all duration-300";
 
   const finalClassName = `${baseStyles} ${paddingStyles[padding]} ${hoverStyles} ${className}`;
 

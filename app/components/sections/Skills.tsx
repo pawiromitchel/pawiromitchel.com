@@ -16,20 +16,22 @@ export function SkillsSection() {
   };
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-24 bg-white">
       <Container>
-        <SectionHeading subtitle="Technologies and tools I work with daily">
-          Key Skills & Expertise
-        </SectionHeading>
+        <div className="mb-16">
+          <SectionHeading subtitle="Technologies and tools I work with daily">
+            Key Skills & Expertise
+          </SectionHeading>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
           {Object.entries(skillsByCategory).map(([category, categorySkills]) => (
             categorySkills.length > 0 && (
               <div key={category} className="animate-fade-in-up">
-                <h3 className="text-lg font-semibold text-foreground mb-4 capitalize">
+                <h3 className="text-lg font-semibold text-foreground mb-5 capitalize">
                   {category}
                 </h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-3">
                   {categorySkills.map((skill) => (
                     <Badge
                       key={skill.name}
@@ -49,7 +51,7 @@ export function SkillsSection() {
         <div className="text-center">
           <Link href="/skills">
             <Button variant="secondary" size="lg">
-              View All Skills
+              View All Skills →
             </Button>
           </Link>
         </div>
