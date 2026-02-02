@@ -2,6 +2,7 @@ import { Navigation } from "../components/layout/Navigation";
 import { Footer } from "../components/layout/Footer";
 import { Container } from "../components/layout/Container";
 import { SectionHeading } from "../components/ui/SectionHeading";
+import { Timeline, TimelineItem } from "../components/ui/Timeline";
 import { BadgeGroup } from "../components/ui/Badge";
 import { experiences } from "@/app/data/experience";
 
@@ -80,43 +81,37 @@ export default function ExperiencePage() {
             Professional Experience
           </SectionHeading>
 
-          <div className="max-w-3xl mx-auto space-y-12">
-            {groupedExperiences.map((group) => (
-              <div key={group.company} className="border-l-2 border-primary pl-6">
-                {/* Company Header */}
-                <div className="mb-6">
-                  <h3 className="text-2xl font-bold text-foreground mb-1">
-                    {group.company}
-                  </h3>
-                  <p className="text-muted text-sm">
-                    {calculateDuration(group.startDate, group.endDate)} • {group.location}
-                  </p>
-                </div>
-
+          <Timeline className="max-w-3xl mx-auto">
+            {groupedExperiences.map((group, groupIdx) => (
+              <TimelineItem
+                key={group.company}
+                title={group.company}
+                subtitle={calculateDuration(group.startDate, group.endDate)}
+                date={group.location}
+                isLast={groupIdx === groupedExperiences.length - 1}
+              >
                 {/* Positions under this company */}
-                <div className="space-y-8">
+                <div className="space-y-6 mt-4">
                   {group.positions
                     .sort((a, b) => b.startDate.localeCompare(a.startDate))
                     .map((exp, idx) => (
                       <div key={exp.id}>
-                        <div className="mb-4">
-                          <h4 className="text-lg font-semibold text-foreground mb-1">
-                            {exp.position}
-                          </h4>
-                          <p className="text-sm text-muted">
-                            {exp.duration}
-                          </p>
-                        </div>
+                        <h4 className="text-base font-semibold text-foreground mb-1">
+                          {exp.position}
+                        </h4>
+                        <p className="text-sm text-muted mb-3">
+                          {exp.duration}
+                        </p>
 
-                        <p className="text-muted text-sm mb-4 leading-relaxed">
+                        <p className="text-muted text-sm mb-3 leading-relaxed">
                           {exp.description}
                         </p>
 
-                        <div className="mb-4">
-                          <p className="text-sm font-semibold text-muted mb-2">
+                        <div className="mb-3">
+                          <p className="text-xs font-semibold text-muted mb-1">
                             Key Achievements:
                           </p>
-                          <ul className="list-disc list-inside text-sm text-muted space-y-1">
+                          <ul className="list-disc list-inside text-xs text-muted space-y-0.5">
                             {exp.achievements.map((achievement, aidx) => (
                               <li key={aidx}>{achievement}</li>
                             ))}
@@ -126,14 +121,14 @@ export default function ExperiencePage() {
                         <BadgeGroup badges={exp.technologies} variant="primary" size="sm" />
 
                         {idx < group.positions.length - 1 && (
-                          <div className="mt-8 pt-8 border-t border-border" />
+                          <div className="mt-6 pt-6 border-t border-border" />
                         )}
                       </div>
                     ))}
                 </div>
-              </div>
+              </TimelineItem>
             ))}
-          </div>
+          </Timeline>
         </Container>
       </main>
       <Footer />
