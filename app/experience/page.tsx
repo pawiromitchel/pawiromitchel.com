@@ -85,18 +85,7 @@ export default function ExperiencePage() {
             {groupedExperiences.map((group, groupIdx) => (
               <TimelineItem
                 key={group.company}
-                title={
-                  <div className="flex items-center gap-3">
-                    {group.positions[0]?.logo && (
-                      <img
-                        src={group.positions[0].logo}
-                        alt={group.company}
-                        className="w-10 h-10 rounded object-contain"
-                      />
-                    )}
-                    <span>{group.company}</span>
-                  </div>
-                }
+                title={group.company}
                 subtitle={calculateDuration(group.startDate, group.endDate)}
                 date={group.location}
                 isLast={groupIdx === groupedExperiences.length - 1}
