@@ -1,0 +1,44 @@
+export const metadata = {
+  title: "Welcome to My Blog",
+  description: "The first blog post using MDX in Next.js 15",
+  date: "2025-02-02",
+  tags: ["mdx", "nextjs", "welcome"],
+};
+
+# Welcome to My Blog
+
+This is your first blog post! It's written in MDX, which means you can use both **Markdown** and **React components** together.
+
+## What is MDX?
+
+MDX lets you use JSX in your markdown content. Here are some features:
+
+- **Markdown syntax** for easy writing
+- **React components** for interactivity
+- **Full JavaScript** expressions
+
+## Getting Started
+
+You can create new blog posts by adding `.mdx` files to the `app/blogs` directory. Each file needs to export a `metadata` object with:
+
+- `title`: The blog post title
+- `description`: A short description
+- `date`: The publication date
+- `tags`: An array of tags
+
+## Example Post Structure
+
+```mdx
+export const metadata = {
+  title: "Your Title",
+  description: "Your description",
+  date: "2025-02-02",
+  tags: ["tag1", "tag2"],
+};
+
+# Your Title
+
+Your content here...
+```
+
+That's it! Your blog is now ready to use with MDX.
