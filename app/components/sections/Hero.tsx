@@ -9,13 +9,12 @@ import { personalInfo } from "@/app/data/personal";
 
 export function Hero() {
   const roles = [
+    "Software Engineer",
+    "Support Engineer",
     "Technical Operations Engineer",
-    "Senior Web3 Support Engineer",
-    "Web3 Lead Developer",
-    "Lead Software Engineer",
   ];
 
-  const topSkills = ["TypeScript", "Go", "Python", "Web3", "Kubernetes", "DevOps"];
+  const topSkills = ["TypeScript", "Go", "Python", "Kubernetes", "Docker", "Ansible"];
 
   return (
     <section className="min-h-screen flex items-center justify-center py-20 bg-gradient-to-br from-background via-primary/5 to-primary/25 relative overflow-hidden">
