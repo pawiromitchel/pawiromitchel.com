@@ -51,7 +51,7 @@ export const projects: Project[] = [
     category: "fullstack",
     githubUrl: "https://github.com/pawiromitchel/pawiromitchel.com",
     liveUrl: "https://pawiromitchel.com",
-    featured: true,
+    featured: false,
     year: 2024,
   },
   {
@@ -77,7 +77,7 @@ export const projects: Project[] = [
     technologies: ["JavaScript", "Node.js", "Telegram Bot API", "Cryptocurrency"],
     category: "fullstack",
     githubUrl: "https://github.com/pawiromitchel/ftx-telegram-trader",
-    featured: true,
+    featured: false,
     year: 2021,
   },
   {
@@ -90,7 +90,7 @@ export const projects: Project[] = [
     technologies: ["JavaScript", "Web3.js", "Blockchain", "DeFi"],
     category: "web3",
     githubUrl: "https://github.com/pawiromitchel/DefiMaxi",
-    featured: true,
+    featured: false,
     year: 2021,
   },
   {
