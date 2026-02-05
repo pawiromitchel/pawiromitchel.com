@@ -14,6 +14,19 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: "bcron",
+    title: "bcron",
+    description: "Modern task scheduler with interactive TUI for managing scheduled commands",
+    longDescription:
+      "A modern command scheduler featuring an interactive terminal UI for managing scheduled tasks on Unix-like systems. Features flexible scheduling with timezone support, background daemon for reliable execution, complete execution history, macOS desktop notifications, and concurrent task execution.",
+    image: "/images/projects/bcron.jpg",
+    technologies: ["Go", "Shell", "CLI", "TUI", "Cron"],
+    category: "infrastructure",
+    githubUrl: "https://github.com/pawiromitchel/bcron",
+    featured: true,
+    year: 2026,
+  },
+  {
     id: "pawiromitchel-com",
     title: "Personal Portfolio Website",
     description: "Professional portfolio and blog platform built with Next.js",
