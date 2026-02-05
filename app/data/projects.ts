@@ -27,6 +27,20 @@ export const projects: Project[] = [
     year: 2026,
   },
   {
+    id: "forexsu",
+    title: "ForexSU - Surinamese Exchange Rates",
+    description: "Real-time Surinamese foreign exchange rates aggregator with PWA support",
+    longDescription:
+      "A Progressive Web App that provides real-time foreign exchange rates for Suriname, aggregating current currency conversion data from multiple banks (CME, SCB, CBVS, DSB, Fina, Hakrin, Republic, VCB). Features include auto-refresh every 5 minutes, dark mode support, installable as a mobile app, and separation of cash vs wire transfer rates for USD, EUR, and EUR-USD conversions.",
+    image: "/images/projects/forexsu.jpg",
+    technologies: ["JavaScript", "PWA", "Service Workers", "Web Scraping", "API"],
+    category: "fullstack",
+    githubUrl: "https://github.com/pawiromitchel/su-exchange-aggregator-v2",
+    liveUrl: "https://forexsu.co/",
+    featured: true,
+    year: 2026,
+  },
+  {
     id: "pawiromitchel-com",
     title: "Personal Portfolio Website",
     description: "Professional portfolio and blog platform built with Next.js",
