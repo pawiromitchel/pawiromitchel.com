@@ -23,7 +23,7 @@ export function ProjectsSection() {
               {/* Image */}
               <div className="relative h-48 bg-gradient-to-br from-primary/20 to-primary/5 overflow-hidden">
                 <div className="w-full h-full flex items-center justify-center">
-                  <span className="text-6xl">🚀</span>
+                  <span className="text-6xl" role="img" aria-label={`${project.title} project icon`}>🚀</span>
                 </div>
                 {/* <CardImage src={project.image} alt={project.title} /> */}
               </div>
@@ -51,7 +51,7 @@ export function ProjectsSection() {
                       href={project.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-primary hover:text-primary-dark transition-colors text-sm font-medium"
+                      className="text-primary hover:text-primary-dark transition-colors text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:rounded-md"
                     >
                       GitHub →
                     </a>
@@ -61,7 +61,7 @@ export function ProjectsSection() {
                       href={project.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-primary hover:text-primary-dark transition-colors text-sm font-medium"
+                      className="text-primary hover:text-primary-dark transition-colors text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:rounded-md"
                     >
                       Live Demo →
                     </a>

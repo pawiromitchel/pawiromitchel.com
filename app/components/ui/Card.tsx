@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import Image from "next/image";
 
 interface CardProps {
   children: ReactNode;
@@ -26,13 +27,31 @@ export function Card({
     ? "hover:shadow-lg hover:-translate-y-1 cursor-pointer"
     : "";
 
+  const focusStyles = onClick
+    ? "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+    : "";
+
   const baseStyles =
     "rounded-2xl bg-card-bg border border-border shadow-sm transition-all duration-300";
 
-  const finalClassName = `${baseStyles} ${paddingStyles[padding]} ${hoverStyles} ${className}`;
+  const finalClassName = `${baseStyles} ${paddingStyles[padding]} ${hoverStyles} ${focusStyles} ${className}`;
+
+  // Make card keyboard accessible if it has an onClick handler
+  const interactiveProps = onClick
+    ? {
+        tabIndex: 0,
+        role: "button",
+        onKeyDown: (e: React.KeyboardEvent) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onClick();
+          }
+        },
+      }
+    : {};
 
   return (
-    <div className={finalClassName} onClick={onClick}>
+    <div className={finalClassName} onClick={onClick} {...interactiveProps}>
       {children}
     </div>
   );
@@ -46,11 +65,16 @@ interface CardImageProps {
 
 export function CardImage({ src, alt, className = "" }: CardImageProps) {
   return (
-    <img
-      src={src}
-      alt={alt}
-      className={`w-full h-48 object-cover rounded-lg mb-4 ${className}`}
-    />
+    <div className={`relative w-full h-48 rounded-lg mb-4 overflow-hidden ${className}`}>
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className="object-cover"
+        loading="lazy"
+        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+      />
+    </div>
   );
 }
 
