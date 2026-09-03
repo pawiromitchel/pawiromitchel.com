@@ -1,7 +1,6 @@
 export interface Skill {
   name: string;
-  category: "languages" | "frameworks" | "web3" | "devops" | "tools";
-  proficiency: 1 | 2 | 3 | 4 | 5;
+  category: "languages" | "frameworks" | "web3" | "devops";
   years?: number;
 }
 
@@ -15,308 +14,44 @@ export interface Certification {
 
 export const skills: Skill[] = [
   // Languages
-  {
-    name: "TypeScript",
-    category: "languages",
-    proficiency: 5,
-    years: 5,
-  },
-  {
-    name: "JavaScript",
-    category: "languages",
-    proficiency: 5,
-    years: 8,
-  },
-  {
-    name: "Go",
-    category: "languages",
-    proficiency: 5,
-    years: 3,
-  },
-  {
-    name: "Python",
-    category: "languages",
-    proficiency: 4,
-    years: 4,
-  },
-  {
-    name: "Solidity",
-    category: "languages",
-    proficiency: 4,
-    years: 3,
-  },
-  {
-    name: "SQL",
-    category: "languages",
-    proficiency: 5,
-    years: 8,
-  },
-  {
-    name: "Rust",
-    category: "languages",
-    proficiency: 3,
-    years: 2,
-  },
-  {
-    name: "C#",
-    category: "languages",
-    proficiency: 3,
-    years: 3,
-  },
-  {
-    name: "PHP",
-    category: "languages",
-    proficiency: 4,
-    years: 6,
-  },
-  {
-    name: "Shell/Bash",
-    category: "languages",
-    proficiency: 4,
-    years: 5,
-  },
+  { name: "TypeScript", category: "languages", years: 5 },
+  { name: "JavaScript", category: "languages", years: 8 },
+  { name: "Go", category: "languages", years: 3 },
+  { name: "Python", category: "languages", years: 4 },
+  { name: "Solidity", category: "languages", years: 3 },
+  { name: "SQL", category: "languages", years: 8 },
+  { name: "Shell/Bash", category: "languages", years: 5 },
+  { name: "Rust", category: "languages", years: 2 },
+  { name: "C#", category: "languages", years: 3 },
+  { name: "PHP", category: "languages", years: 6 },
 
   // Frameworks & Libraries
-  {
-    name: "Node.js",
-    category: "frameworks",
-    proficiency: 5,
-    years: 7,
-  },
-  {
-    name: "Express.js",
-    category: "frameworks",
-    proficiency: 5,
-    years: 6,
-  },
-  {
-    name: "React",
-    category: "frameworks",
-    proficiency: 4,
-    years: 5,
-  },
-  {
-    name: "Next.js",
-    category: "frameworks",
-    proficiency: 4,
-    years: 3,
-  },
-  {
-    name: "Angular",
-    category: "frameworks",
-    proficiency: 3,
-    years: 3,
-  },
-  {
-    name: "NestJS",
-    category: "frameworks",
-    proficiency: 4,
-    years: 2,
-  },
-  {
-    name: "Tailwind CSS",
-    category: "frameworks",
-    proficiency: 4,
-    years: 2,
-  },
-  {
-    name: "WordPress",
-    category: "frameworks",
-    proficiency: 4,
-    years: 6,
-  },
-  {
-    name: "Joomla",
-    category: "frameworks",
-    proficiency: 3,
-    years: 2,
-  },
-  {
-    name: "Magento",
-    category: "frameworks",
-    proficiency: 3,
-    years: 2,
-  },
+  { name: "Node.js", category: "frameworks", years: 7 },
+  { name: "Express.js", category: "frameworks", years: 6 },
+  { name: "React", category: "frameworks", years: 5 },
+  { name: "Next.js", category: "frameworks", years: 3 },
+  { name: "Angular", category: "frameworks", years: 3 },
+  { name: "NestJS", category: "frameworks", years: 2 },
+  { name: "Tailwind CSS", category: "frameworks", years: 2 },
 
   // Web3 & Blockchain
-  {
-    name: "Ethereum",
-    category: "web3",
-    proficiency: 5,
-    years: 4,
-  },
-  {
-    name: "Smart Contracts",
-    category: "web3",
-    proficiency: 4,
-    years: 3,
-  },
-  {
-    name: "Web3.js",
-    category: "web3",
-    proficiency: 5,
-    years: 4,
-  },
-  {
-    name: "Ethers.js",
-    category: "web3",
-    proficiency: 5,
-    years: 3,
-  },
-  {
-    name: "Hardhat",
-    category: "web3",
-    proficiency: 4,
-    years: 2,
-  },
-  {
-    name: "OpenZeppelin",
-    category: "web3",
-    proficiency: 4,
-    years: 2,
-  },
-  {
-    name: "DeFi Protocols",
-    category: "web3",
-    proficiency: 4,
-    years: 2,
-  },
-  {
-    name: "NFT Standards",
-    category: "web3",
-    proficiency: 4,
-    years: 2,
-  },
+  { name: "Ethereum", category: "web3", years: 4 },
+  { name: "Smart Contracts", category: "web3", years: 3 },
+  { name: "Web3.js", category: "web3", years: 4 },
+  { name: "Ethers.js", category: "web3", years: 3 },
+  { name: "Hardhat", category: "web3", years: 2 },
+  { name: "OpenZeppelin", category: "web3", years: 2 },
 
   // DevOps & Infrastructure
-  {
-    name: "Docker",
-    category: "devops",
-    proficiency: 5,
-    years: 5,
-  },
-  {
-    name: "Kubernetes",
-    category: "devops",
-    proficiency: 4,
-    years: 3,
-  },
-  {
-    name: "AWS",
-    category: "devops",
-    proficiency: 4,
-    years: 5,
-  },
-  {
-    name: "Google Cloud",
-    category: "devops",
-    proficiency: 3,
-    years: 2,
-  },
-  {
-    name: "Terraform",
-    category: "devops",
-    proficiency: 4,
-    years: 2,
-  },
-  {
-    name: "CI/CD",
-    category: "devops",
-    proficiency: 5,
-    years: 4,
-  },
-  {
-    name: "Linux",
-    category: "devops",
-    proficiency: 5,
-    years: 8,
-  },
-  {
-    name: "PostgreSQL",
-    category: "devops",
-    proficiency: 5,
-    years: 7,
-  },
-  {
-    name: "Redis",
-    category: "devops",
-    proficiency: 4,
-    years: 4,
-  },
-  {
-    name: "Prometheus",
-    category: "devops",
-    proficiency: 3,
-    years: 1,
-  },
-
-  // Tools
-  {
-    name: "Git",
-    category: "tools",
-    proficiency: 5,
-    years: 8,
-  },
-  {
-    name: "VS Code",
-    category: "tools",
-    proficiency: 5,
-    years: 5,
-  },
-  {
-    name: "Figma",
-    category: "tools",
-    proficiency: 3,
-    years: 2,
-  },
-  {
-    name: "Jira",
-    category: "tools",
-    proficiency: 4,
-    years: 4,
-  },
-  {
-    name: "GitHub",
-    category: "tools",
-    proficiency: 5,
-    years: 6,
-  },
-  {
-    name: "Postman",
-    category: "tools",
-    proficiency: 4,
-    years: 4,
-  },
-  {
-    name: "Zendesk",
-    category: "tools",
-    proficiency: 4,
-    years: 3,
-  },
-  {
-    name: "Discord",
-    category: "tools",
-    proficiency: 4,
-    years: 3,
-  },
-  {
-    name: "Slack",
-    category: "tools",
-    proficiency: 4,
-    years: 3,
-  },
-  {
-    name: "Telegram",
-    category: "tools",
-    proficiency: 4,
-    years: 3,
-  },
-  {
-    name: "Pentaho",
-    category: "tools",
-    proficiency: 3,
-    years: 4,
-  },
+  { name: "Docker", category: "devops", years: 5 },
+  { name: "Kubernetes", category: "devops", years: 3 },
+  { name: "AWS", category: "devops", years: 5 },
+  { name: "Terraform", category: "devops", years: 2 },
+  { name: "CI/CD", category: "devops", years: 4 },
+  { name: "Linux", category: "devops", years: 8 },
+  { name: "PostgreSQL", category: "devops", years: 7 },
+  { name: "Redis", category: "devops", years: 4 },
+  { name: "Prometheus", category: "devops", years: 1 },
 ];
 
 export const certifications: Certification[] = [
@@ -342,8 +77,22 @@ export const skillsByCategory = {
   frameworks: skills.filter((s) => s.category === "frameworks"),
   web3: skills.filter((s) => s.category === "web3"),
   devops: skills.filter((s) => s.category === "devops"),
-  tools: skills.filter((s) => s.category === "tools"),
 };
 
-// Top skills by proficiency for homepage display
-export const topSkills = skills.filter((s) => s.proficiency >= 4).slice(0, 12);
+// Featured core skills for homepage display
+export const topSkills = skills.filter((s) =>
+  [
+    "TypeScript",
+    "Go",
+    "Python",
+    "Node.js",
+    "React",
+    "Next.js",
+    "Ethereum",
+    "Smart Contracts",
+    "Docker",
+    "Kubernetes",
+    "AWS",
+    "PostgreSQL",
+  ].includes(s.name)
+);

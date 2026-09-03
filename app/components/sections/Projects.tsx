@@ -1,6 +1,6 @@
 import React from "react";
 import { Container } from "../layout/Container";
-import { Card, CardTitle, CardDescription, CardImage } from "../ui/Card";
+import { Card, CardTitle, CardDescription } from "../ui/Card";
 import { BadgeGroup } from "../ui/Badge";
 import { SectionHeading } from "../ui/SectionHeading";
 import { projects } from "@/app/data/projects";

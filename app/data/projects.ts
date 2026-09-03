@@ -16,11 +16,11 @@ export const projects: Project[] = [
   {
     id: "bcron",
     title: "bcron",
-    description: "Modern task scheduler with interactive TUI for managing scheduled commands",
+    description: "Task scheduler with an interactive TUI for managing scheduled background tasks",
     longDescription:
-      "A modern command scheduler featuring an interactive terminal UI for managing scheduled tasks on Unix-like systems. Features flexible scheduling with timezone support, background daemon for reliable execution, complete execution history, macOS desktop notifications, and concurrent task execution.",
+      "A modern CLI task scheduler built in Go featuring an interactive terminal UI for Unix systems. Supports timezone-aware crontab scheduling, background execution daemon, full execution logging, and desktop notifications.",
     image: "/images/projects/bcron.jpg",
-    technologies: ["Go", "Shell", "CLI", "TUI", "Cron"],
+    technologies: ["Go", "CLI", "TUI", "Cron", "Linux"],
     category: "infrastructure",
     githubUrl: "https://github.com/pawiromitchel/bcron",
     featured: true,
@@ -28,12 +28,12 @@ export const projects: Project[] = [
   },
   {
     id: "forexsu",
-    title: "ForexSU - Surinamese Exchange Rates",
-    description: "Real-time Surinamese foreign exchange rates aggregator with PWA support",
+    title: "ForexSU",
+    description: "Surinamese exchange rates aggregator PWA with real-time updates",
     longDescription:
-      "A Progressive Web App that provides real-time foreign exchange rates for Suriname, aggregating current currency conversion data from multiple banks (CME, SCB, CBVS, DSB, Fina, Hakrin, Republic, VCB). Features include auto-refresh every 5 minutes, dark mode support, installable as a mobile app, and separation of cash vs wire transfer rates for USD, EUR, and EUR-USD conversions.",
+      "A Progressive Web App aggregating real-time foreign exchange rates across major Surinamese banking institutions. Features automated 5-minute data refresh, offline caching via Service Workers, dark mode, and multi-currency transfer conversions.",
     image: "/images/projects/forexsu.jpg",
-    technologies: ["JavaScript", "PWA", "Service Workers", "Web Scraping", "API"],
+    technologies: ["TypeScript", "PWA", "Service Workers", "Node.js", "Web Scraping"],
     category: "fullstack",
     liveUrl: "https://forexsu.co/",
     featured: true,
@@ -41,12 +41,12 @@ export const projects: Project[] = [
   },
   {
     id: "pawiromitchel-com",
-    title: "Personal Portfolio Website",
-    description: "Professional portfolio and blog platform built with Next.js",
+    title: "Portfolio & Engineering Blog",
+    description: "Personal website and technical blog built with Next.js 16 and MDX",
     longDescription:
-      "Developed a responsive personal website showcasing projects, experience, and technical expertise. Built with modern web technologies for optimal performance and user experience.",
+      "A single-page developer portfolio and blog platform built with Next.js 16, TypeScript, Tailwind CSS v4, and MDX. Optimized for static site generation and deployed automatically via GitHub Actions.",
     image: "/images/projects/portfolio.jpg",
-    technologies: ["HTML", "Next.js", "TypeScript", "Tailwind CSS", "React"],
+    technologies: ["Next.js", "TypeScript", "Tailwind CSS", "React", "MDX"],
     category: "fullstack",
     githubUrl: "https://github.com/pawiromitchel/pawiromitchel.com",
     liveUrl: "https://pawiromitchel.com",
@@ -56,11 +56,11 @@ export const projects: Project[] = [
   {
     id: "ftx-api-rest-extended",
     title: "FTX API REST Extended",
-    description: "Extended version of the FTX REST API package with additional functions",
+    description: "Extended REST API client library for Node.js",
     longDescription:
-      "An extended version of the ftx-api-rest package made by askmike. Decided to write specific functions focused on spot and future trading features.",
+      "An extended open-source Node.js library for trading operations on FTX REST APIs, implementing missing spot, futures, and subaccount management helper functions.",
     image: "/images/projects/ftx-api.jpg",
-    technologies: ["JavaScript", "Node.js", "Cryptocurrency", "API"],
+    technologies: ["JavaScript", "Node.js", "REST API", "npm"],
     category: "fullstack",
     githubUrl: "https://github.com/pawiromitchel/ftx-api-rest-extended",
     liveUrl: "https://www.npmjs.com/package/ftx-api-rest-extended",
@@ -70,11 +70,11 @@ export const projects: Project[] = [
   {
     id: "ftx-telegram-trader",
     title: "FTX Telegram Trader",
-    description: "Telegram bot to create orders on FTX cryptocurrency exchange",
+    description: "Telegram interface for executing crypto exchange orders",
     longDescription:
-      "A Telegram bot that allows users to create buy and sell orders on the FTX cryptocurrency exchange through simple bot commands.",
+      "A lightweight Telegram bot interface enabling real-time order creation, account balance checks, and trade management via automated bot commands.",
     image: "/images/projects/ftx-trader.jpg",
-    technologies: ["JavaScript", "Node.js", "Telegram Bot API", "Cryptocurrency"],
+    technologies: ["JavaScript", "Node.js", "Telegram API", "Cryptocurrency"],
     category: "fullstack",
     githubUrl: "https://github.com/pawiromitchel/ftx-telegram-trader",
     featured: false,
@@ -83,11 +83,11 @@ export const projects: Project[] = [
   {
     id: "defimaxi",
     title: "DefiMaxi",
-    description: "A bot for DeFi purposes",
+    description: "DeFi automation tool for monitoring on-chain liquidity and yields",
     longDescription:
-      "A decentralized finance bot designed to assist with various DeFi operations and automation tasks.",
+      "An automated bot designed to monitor decentralized liquidity pools, track yield farm metrics, and notify users of key on-chain opportunities.",
     image: "/images/projects/defimaxi.jpg",
-    technologies: ["JavaScript", "Web3.js", "Blockchain", "DeFi"],
+    technologies: ["JavaScript", "Web3.js", "Ethereum", "DeFi"],
     category: "web3",
     githubUrl: "https://github.com/pawiromitchel/DefiMaxi",
     featured: false,
@@ -96,11 +96,11 @@ export const projects: Project[] = [
   {
     id: "gas-tracker",
     title: "Gas Tracker",
-    description: "A simple gas tracker for Ethereum",
+    description: "Ethereum real-time gas price monitor",
     longDescription:
-      "A simple utility to track Ethereum gas prices in real-time. Helps users monitor network congestion and make informed decisions about transaction timing.",
+      "A lightweight browser utility providing real-time Ethereum gas price tracking and gas cost estimates across standard, fast, and instant transaction speeds.",
     image: "/images/projects/gas-tracker.jpg",
-    technologies: ["HTML", "JavaScript", "Ethereum", "Web3.js"],
+    technologies: ["JavaScript", "Ethereum", "Web3.js", "HTML/CSS"],
     category: "web3",
     githubUrl: "https://github.com/pawiromitchel/Gas-Tracker",
     featured: false,
@@ -109,11 +109,11 @@ export const projects: Project[] = [
   {
     id: "ftx-dca-script",
     title: "FTX DCA Script",
-    description: "A DCA script for FTX exchange",
+    description: "Automated Dollar-Cost-Averaging script for exchange trading",
     longDescription:
-      "A Dollar Cost Averaging (DCA) script for automated trading on the FTX cryptocurrency exchange. Useful for implementing consistent investment strategies.",
+      "A automated trading script implementing disciplined Dollar-Cost-Averaging (DCA) strategies on exchange orderbooks with custom interval scheduling.",
     image: "/images/projects/ftx-dca.jpg",
-    technologies: ["JavaScript", "Node.js", "FTX API", "Cryptocurrency"],
+    technologies: ["JavaScript", "Node.js", "REST API", "Cryptocurrency"],
     category: "fullstack",
     githubUrl: "https://github.com/pawiromitchel/ftx-dca-script",
     featured: false,
@@ -121,10 +121,10 @@ export const projects: Project[] = [
   },
   {
     id: "suriname-fx-scraper",
-    title: "Suriname FX Exchange Data Scraper",
-    description: "Web scraper for Surinamese foreign exchange data",
+    title: "Suriname FX Exchange Scraper",
+    description: "Automated FX rate scraper and alert notification bot",
     longDescription:
-      "Responsible for designing and developing a webscraper that periodically scrapes URLs and posts the results via a Telegram bot to a private group. Useful for monitoring FX rates and market changes.",
+      "Automated web scraping service that periodically checks local exchange rates across bank portals and broadcasts rate changes to Telegram channels.",
     image: "/images/projects/fx-scraper.jpg",
     technologies: ["JavaScript", "Node.js", "Web Scraping", "Telegram API"],
     category: "fullstack",

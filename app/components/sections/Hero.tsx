@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { Container } from "../layout/Container";
 import { Button } from "../ui/Button";
 import { Badge } from "../ui/Badge";
@@ -45,7 +44,7 @@ export function Hero() {
 
             {/* Main Heading */}
             <h1 className="text-3xl lg:text-6xl font-bold text-foreground leading-tight mb-1 lg:mb-2">
-              I'm {personalInfo.name}
+              I&apos;m {personalInfo.name}
             </h1>
 
             {/* Animated Roles */}
