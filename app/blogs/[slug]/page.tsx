@@ -25,7 +25,7 @@ async function getBlogPost(slug: string): Promise<{
       content: post.default,
       metadata: post.metadata,
     };
-  } catch (error) {
+  } catch {
     throw new Error(`Blog post not found: ${slug}`);
   }
 }

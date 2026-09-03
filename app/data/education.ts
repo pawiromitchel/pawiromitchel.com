@@ -13,7 +13,7 @@ export interface EducationEntry {
 export interface TechEraEntry {
   period: string;
   startYear: number;
-  endYear: number;
+  endYear: number | "Present";
   technologies: string[];
   focus: string;
   description: string;
@@ -28,12 +28,11 @@ export const education: EducationEntry[] = [
     startYear: 2016,
     endYear: 2020,
     description:
-      "Bachelor's degree in Computer Software Engineering with focus on software development, systems design, and application development. Foundation in modern software engineering practices.",
+      "Bachelor's degree in Computer Software Engineering focusing on software architecture, algorithms, database systems, and application engineering.",
     logo: "/images/education/uast.png",
     achievements: [
-      "Completed comprehensive software engineering curriculum",
-      "Worked on multiple software development projects",
-      "NoSQL expertise developed through coursework",
+      "Completed software engineering and systems architecture curriculum",
+      "Built multiple web and database application engineering projects",
     ],
   },
   {
@@ -44,69 +43,61 @@ export const education: EducationEntry[] = [
     startYear: 2012,
     endYear: 2016,
     description:
-      "Foundation in application development. Studied programming fundamentals, database design, and web development. Prepared for higher education in computer science.",
+      "Foundation in software development, programming fundamentals, database design, and web technologies.",
     logo: "/images/education/natuurtech.png",
     achievements: [
-      "Solid foundation in programming and application development",
-      "Database design and SQL expertise",
-      "Web development fundamentals",
+      "Foundation in computer programming and software development",
+      "Database management and relational schema design",
     ],
   },
 ];
 
-// Tech evolution timeline showing the progression of technologies used
+// Tech evolution timeline showing progression of technologies
 export const techEvolution: TechEraEntry[] = [
   {
-    period: "2012-2017",
+    period: "2012–2017",
     startYear: 2012,
     endYear: 2017,
-    technologies: ["PHP", "JavaScript", "jQuery", "WordPress", "MySQL", "Joomla", "Magento"],
+    technologies: ["PHP", "JavaScript", "WordPress", "MySQL", "Ionic"],
     focus: "Web Development & CMS",
     description:
-      "Early career building traditional web applications and WordPress sites. Strong foundation in PHP and JavaScript, CMS platform development for clients. Mobile app development with Ionic.",
+      "Built web applications, client portals, and mobile client interfaces with PHP, JavaScript, and custom CMS extensions.",
   },
   {
-    period: "2017-2022",
+    period: "2017–2022",
     startYear: 2017,
     endYear: 2022,
-    technologies: ["Angular", "Node.js", "TypeScript", "React", "PostgreSQL", "Pentaho"],
-    focus: "Full-Stack JavaScript & Legacy Modernization",
+    technologies: ["Angular", "Node.js", "TypeScript", "C#", "MySQL"],
+    focus: "Full-Stack Development & Legacy Modernization",
     description:
-      "Transition to modern JavaScript frameworks and full-stack development. Led migration of legacy desktop applications to web-based platforms, achieving 3x speed improvements. Mastered Angular and React for frontend, Node.js for backend.",
+      "Led migration of desktop software to modern web platforms. Expanded full-stack JavaScript expertise across Node.js backend services and Angular/React frontends.",
   },
   {
-    period: "2022-Present",
+    period: "2022–Present",
     startYear: 2022,
-    endYear: 2025,
-    technologies: ["TypeScript", "Web3", "Solidity", "Blockchain", "Technical Support"],
-    focus: "Web3 & Blockchain Infrastructure",
+    endYear: "Present",
+    technologies: ["Go", "TypeScript", "Kubernetes", "Docker", "Web3", "Solidity"],
+    focus: "Web3 & Infrastructure Engineering",
     description:
-      "Specialization in Web3 and blockchain technology. Web3 development, smart contracts, and infrastructure support. Technical operations and developer experience optimization at QuickNode.",
+      "Focused on Web3 RPC infrastructure, DevOps workflows, container orchestration, and building Go/TypeScript developer tools at scale.",
   },
 ];
 
-// Notable achievements and wins
 export const achievements = [
   {
     title: "Hackathon Participant",
     year: 2016,
-    description: "Participated in multiple hackathons including GT&T Hackathon 2016, Hackomation 2017, and Hackathon 2018",
+    description: "Competed in GT&T Hackathon 2016, Hackomation 2017, and Suriname Hackathon 2018",
   },
   {
-    title: "10+ Years of Experience",
-    year: 2024,
-    description: "Over a decade of experience in software development from 2012 to present",
+    title: "10+ Years Engineering Experience",
+    year: 2026,
+    description: "Over a decade of software engineering, backend systems, and technical infrastructure experience",
   },
   {
-    title: "14+ Major Projects",
-    year: 2024,
+    title: "14+ Production Projects",
+    year: 2026,
     description:
-      "Led and contributed to 14+ major projects across Web3, infrastructure, and full-stack development",
-  },
-  {
-    title: "5 Companies",
-    year: 2024,
-    description:
-      "Worked with startups and established companies including QuickNode, INFINITRI, Alembo B.V., Bit Dynamics, and CareerIT",
+      "Engineered and shipped projects across Web3 infrastructure, Go tools, and full-stack web platforms",
   },
 ];

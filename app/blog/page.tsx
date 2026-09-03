@@ -36,7 +36,7 @@ async function getBlogPosts(): Promise<
           metadata: post.metadata,
         });
       } catch (error) {
-        console.error(`Error loading blog post: ${file}`);
+        console.error(`Error loading blog post ${file}:`, error);
       }
     }
   }

@@ -15,7 +15,7 @@ export function TimelineItem({
   subtitle,
   description,
   date,
-  icon,
+  icon: _icon,
   children,
   isLast = false,
 }: TimelineItemProps) {
