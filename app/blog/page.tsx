@@ -60,7 +60,7 @@ export default async function BlogPage() {
   return (
     <>
       <Navigation />
-      <main className="pt-20 bg-background min-h-screen">
+      <main id="main-content" className="pt-20 bg-background min-h-screen">
         <Container className="py-12">
           <SectionHeading
             centered
@@ -71,7 +71,11 @@ export default async function BlogPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             {posts.map((post) => (
-              <Link key={post.slug} href={`/blogs/${post.slug}`}>
+              <Link
+                key={post.slug}
+                href={`/blogs/${post.slug}`}
+                className="focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:rounded-2xl"
+              >
                 <Card
                   padding="md"
                   hover
@@ -109,8 +113,19 @@ export default async function BlogPage() {
           </div>
 
           {posts.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-muted text-lg">No blog posts yet.</p>
+            <div className="text-center py-16">
+              <div className="max-w-md mx-auto">
+                <div className="text-6xl mb-6">📝</div>
+                <h3 className="text-2xl font-bold text-foreground mb-3">
+                  Coming Soon
+                </h3>
+                <p className="text-muted text-lg mb-2">
+                  I'm currently working on some exciting content about blockchain development, infrastructure, and Web3.
+                </p>
+                <p className="text-muted">
+                  Check back soon for tutorials, insights, and technical deep dives.
+                </p>
+              </div>
             </div>
           )}
         </Container>

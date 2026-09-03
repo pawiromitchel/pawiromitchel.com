@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <>
       <Navigation />
-      <main className="pt-16">
+      <main id="main-content" className="pt-16">
         <Hero />
         <ExperienceSection />
         <ProjectsSection />

@@ -1,12 +1,17 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Image from "next/image";
 import { Container } from "../layout/Container";
 import { Button } from "../ui/Button";
 import { Badge } from "../ui/Badge";
 import { AnimatedText } from "../ui/AnimatedText";
+import { Dialog } from "../ui/Dialog";
+import { ContactForm } from "../ui/ContactForm";
 import { personalInfo } from "@/app/data/personal";
 
 export function Hero() {
+  const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
   const roles = [
     "Software Engineer",
     "Support Engineer",
@@ -73,9 +78,12 @@ export function Hero() {
 
             {/* CTA and Social */}
             <div className="flex flex-col sm:flex-row items-center gap-4 lg:gap-6">
-              <a href="mailto:pawiromitchel@gmail.com">
-                <Button size="lg">Get In Touch</Button>
-              </a>
+              <Button
+                size="lg"
+                onClick={() => setIsContactDialogOpen(true)}
+              >
+                Get In Touch
+              </Button>
 
               {/* Social Links */}
               <div className="flex gap-3 lg:gap-4">
@@ -84,7 +92,7 @@ export function Hero() {
                     href={personalInfo.social.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300"
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                     aria-label="GitHub"
                   >
                     <svg
@@ -101,7 +109,7 @@ export function Hero() {
                     href={personalInfo.social.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300"
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                     aria-label="LinkedIn"
                   >
                     <svg
@@ -118,7 +126,7 @@ export function Hero() {
                     href={personalInfo.social.twitter}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300"
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                     aria-label="Twitter"
                   >
                     <svg
@@ -154,6 +162,19 @@ export function Hero() {
           </div>
         </div>
       </Container>
+
+      {/* Contact Dialog */}
+      <Dialog
+        isOpen={isContactDialogOpen}
+        onClose={() => setIsContactDialogOpen(false)}
+        title="Get In Touch"
+        maxWidth="lg"
+      >
+        <ContactForm
+          onSuccess={() => setIsContactDialogOpen(false)}
+          onCancel={() => setIsContactDialogOpen(false)}
+        />
+      </Dialog>
     </section>
   );
 }
