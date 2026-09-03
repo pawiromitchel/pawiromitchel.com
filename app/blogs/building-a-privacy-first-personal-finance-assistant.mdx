@@ -1,0 +1,126 @@
+export const metadata = {
+  title: "Building a Privacy-First Personal Finance Assistant: Architecture & Insights",
+  description: "A technical deep dive into architecting an automated, privacy-first personal finance assistant to track budgets, categorize transactions, and generate real-time financial insights without exposing sensitive data.",
+  date: "2026-03-03",
+  tags: ["architecture", "automation", "privacy", "typescript", "fullstack"],
+};
+
+# Building a Privacy-First Personal Finance Assistant: Architecture & Insights
+
+Managing personal finances effectively requires clear visibility into cash flow, subscription costs, and long-term saving targets. However, commercial financial apps often require granting broad OAuth access to sensitive bank credentials, storing transaction histories on third-party cloud servers, and injecting targeted ad telemetry.
+
+To solve this, I designed and built a custom **Personal Finance Assistant**—a privacy-first system that automates transaction ingestion, categorizes expenses, tracks budget targets, and sends automated notifications without compromising financial privacy or data ownership.
+
+In this post, I will walk through the core architectural decisions, data pipeline design, and privacy strategies behind the project.
+
+---
+
+## Key Principles & Design Goals
+
+When building the assistant, three core principles guided the implementation:
+
+1. **Zero Raw Balance Exposure**: The assistant calculates relative metrics (e.g., `% of monthly category budget spent`, `month-over-month burn rate variance`) rather than hardcoding or broadcasting sensitive account balances.
+2. **Local Data Sovereignty**: All transaction parsing, vendor resolution, and statistical aggregation execute within isolated, self-hosted environments.
+3. **Automated Actionability**: Instead of requiring manual spreadsheet data entry, the system ingests data asynchronously and delivers actionable insights (such as subscription price hikes or budget threshold alerts) directly via private bot notifications.
+
+---
+
+## System Architecture
+
+The architecture is divided into four decoupled modules:
+
+```text
+┌───────────────────────┐
+│ Transaction Ingestion │  (CSV, Bank Exports, Webhook Payloads)
+└───────────┬───────────┘
+            │
+            ▼
+┌───────────────────────┐
+│ Categorization Engine │  (Deterministic Rules + Regex Matching)
+└───────────┬───────────┘
+            │
+            ▼
+┌───────────────────────┐
+│ Budget Analytics Core │  (Category Ratios, Monthly Burn Rates)
+└───────────┬───────────┘
+            │
+            ▼
+┌───────────────────────┐
+│ Privacy Notification  │  (Encrypted Bot Digests & Webhooks)
+└───────────────────────┘
+```
+
+### 1. Ingestion & Normalization Layer
+
+Financial institutions format statements differently—ranging from ISO-standardized CSV exports to raw text payloads. The ingestion engine standardizes incoming data into a uniform transaction interface:
+
+```typescript
+interface NormalizedTransaction {
+  id: string;
+  timestamp: string;
+  rawMerchant: string;
+  normalizedMerchant: string;
+  amount: number;
+  currency: string;
+  category: ExpenseCategory;
+  isSubscription: boolean;
+}
+```
+
+By decoupling transaction normalization from the downstream storage and analytics layers, adding a new bank statement parser requires writing a single parser module.
+
+---
+
+### 2. Rule-Based Categorization & Merchant Cleaning
+
+Raw bank transaction strings are notoriously noisy (e.g., `SQ *COFFEE SHOP #1024 SAN FRANCISCO`). The categorization engine processes merchant descriptions in two passes:
+
+- **Pass 1 (Sanitization & Normalization)**: Strips store location numbers, processor prefixes (`SQ *`, `TST*`, `PY *`), and transaction IDs using regex rules.
+- **Pass 2 (Category Mapping)**: Evaluates clean merchant tokens against deterministic rule tables and pattern groups:
+  - **Housing & Utilities**: Rent, electricity, internet, cloud services
+  - **Subscriptions & Software**: Recurring SaaS, streaming services
+  - **Transport & Mobility**: Transit cards, fuel, ride-sharing
+  - **Living & Groceries**: Supermarkets, daily supplies
+
+For recurring payments with matching amounts at identical monthly intervals, the system automatically flags the transaction as an active **Subscription** to track recurring fixed overhead.
+
+---
+
+### 3. Budget Ratios & Anomaly Detection
+
+Instead of exposing absolute net worth numbers, the analytics engine evaluates performance against proportional budget frameworks (such as target percentage distributions across Fixed Expenses, Savings, and Discretionary Spending).
+
+The engine flags two types of financial anomalies:
+- **Price Creep**: A recurring subscription whose cost increases by >5% compared to previous cycles.
+- **Budget Pacing**: Categories consuming budget allocation faster than the elapsed day-of-month percentage (e.g., using 80% of the dining budget by day 10).
+
+---
+
+### 4. Privacy-Preserving Notification Delivery
+
+To receive real-time updates without transmitting raw financial logs over external chat networks, notifications are pre-formatted into relative status summaries:
+
+> 📊 **Weekly Financial Briefing**
+> - **Fixed Overhead**: 42% of monthly target allocated
+> - **Subscriptions**: 8 active (1 price change detected)
+> - **Top Spending Category**: Groceries (Pacing normally)
+> - **Budget Health**: On track for target savings goal
+
+This abstraction ensures that even if a notification payload is intercepted, no sensitive account balances, account numbers, or geographic location details are exposed.
+
+---
+
+## Key Lessons & Next Steps
+
+Building a custom finance assistant highlighted the power of modular system design and local automation:
+
+- **Deterministic rules beat complex AI for routine transactions**: Regex and merchant lookup maps handle ~95% of standard daily expenses instantly without external API latency or cost.
+- **Relative metrics provide clarity without privacy risk**: Tracking % variance against targets provides actionable feedback without keeping raw account numbers visible in dashboards.
+
+### Future Roadmap
+- **Local LLM Integration**: Adding a self-hosted local LLM engine for natural language querying (e.g., *"How much did cloud hosting costs increase over the last 6 months?"*).
+- **Interactive TUI Interface**: Building a Go-based terminal user interface (similar to [`bcron`](https://github.com/pawiromitchel/bcron)) for offline local transaction inspection.
+
+---
+
+*Interested in privacy-first developer tools and automation? Check out my other open-source projects on [GitHub](https://github.com/pawiromitchel) or get in touch at [pawiromitchel.com](https://pawiromitchel.com).*
