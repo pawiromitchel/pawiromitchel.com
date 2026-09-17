@@ -15,6 +15,14 @@ const projectSnippets: Record<string, { prompt: string; output: string[] }> = {
       "→ gemini copilot: ready",
     ],
   },
+  cryptowatcher: {
+    prompt: "cryptowatcher",
+    output: [
+      "🪙 BTC-USD $78,402 (+1.05%)",
+      "📈 TSLA $215.30 (+3.41%)",
+      "✓ braille sparkline & 2D grid active",
+    ],
+  },
   bcron: {
     prompt: "bcron list --active",
     output: [

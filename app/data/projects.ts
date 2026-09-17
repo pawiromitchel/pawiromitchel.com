@@ -40,6 +40,19 @@ export const projects: Project[] = [
     year: 2026,
   },
   {
+    id: "cryptowatcher",
+    title: "CryptoWatcher",
+    description: "macOS Stocks-style terminal dashboard with high-definition Braille sparklines and multi-feed routing",
+    longDescription:
+      "A keyboard-driven real-time terminal dashboard built in Go using Bubble Tea and Lipgloss. Inspired by the macOS Stocks widget, featuring 3-row sub-pixel Braille line charts, 24h price range sliders, and multi-feed routing across Coinbase, CoinGecko, and equity markets.",
+    image: "/images/projects/cryptowatcher.png",
+    technologies: ["Go", "Bubble Tea", "Lipgloss", "TUI", "CLI", "Web3"],
+    category: "infrastructure",
+    githubUrl: "https://github.com/pawiromitchel/cryptowatcher",
+    featured: true,
+    year: 2026,
+  },
+  {
     id: "forexsu",
     title: "ForexSU",
     description: "Real-time PWA aggregator querying 8 bank portals with 5-minute sync and offline caching",
