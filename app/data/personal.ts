@@ -1,12 +1,13 @@
 export const personalInfo = {
   name: "Mitchel Pawirodinomo",
-  title: "Technical Operations Engineer | Web3 Developer",
+  title: "Technical Operations Engineer | Web3 & Infrastructure Systems",
   shortTitle: "Technical Operations Engineer",
   currentRole: "Technical Operations Engineer",
   currentCompany: "QuickNode",
-  bio: "Tech enthusiast obsessed with automation. Software Engineer with extensive experience in Technical Support and full-stack development. Specialized in building scalable Web3 infrastructure, smart contracts, and backend systems. Passionate about decentralized technologies and developer tools.",
-  location: "Para, Suriname",
+  bio: "Technical Operations & Infrastructure Engineer specializing in high-throughput Web3 RPC infrastructure, Go systems tooling, and backend automation. Currently ensuring reliability, observability, and performance for global node infrastructure at QuickNode.",
+  location: "Para, Suriname (Remote)",
   email: "pawiromitchel@gmail.com",
+  status: "Available for select advisory & engineering opportunities",
   social: {
     github: "https://github.com/pawiromitchel",
     linkedin: "https://linkedin.com/in/mitchel-pawirodinomo",
@@ -19,9 +20,9 @@ export const personalInfo = {
     hackathonWins: 3,
   },
   cta: {
-    primary: "View My Work",
+    primary: "View Experience",
     secondary: "Get In Touch",
   },
 };
 
-export const profileImage = "/images/profile.jpg";
+export const profileImage = "/pfp.jpg";

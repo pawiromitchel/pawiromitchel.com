@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Image from "next/image";
 import { Container } from "../layout/Container";
 import { Button } from "../ui/Button";
@@ -7,13 +9,21 @@ import { AnimatedText } from "../ui/AnimatedText";
 import { personalInfo } from "@/app/data/personal";
 
 export function Hero() {
+  const [copied, setCopied] = useState(false);
+
   const roles = [
-    "Software Engineer",
-    "Support Engineer",
     "Technical Operations Engineer",
+    "Systems & Web3 Engineer",
+    "Infrastructure Automation Specialist",
   ];
 
-  const topSkills = ["TypeScript", "Go", "Python", "Kubernetes", "Docker", "Ansible"];
+  const topSkills = ["Go", "Kubernetes", "Docker", "TypeScript", "Python", "Linux", "Prometheus"];
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(personalInfo.email);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2200);
+  };
 
   return (
     <section className="min-h-screen flex items-center justify-center py-20 bg-gradient-to-br from-background via-primary/5 to-primary/25 relative overflow-hidden">
@@ -37,10 +47,11 @@ export function Hero() {
 
           {/* Right side - Text content */}
           <div className="animate-slide-in-right order-2 lg:order-2">
-            {/* Welcome Label */}
-            <p className="text-primary font-semibold text-xs lg:text-sm mb-4 lg:mb-8 uppercase tracking-widest">
-              Welcome to my profile
-            </p>
+            {/* Live Availability Status */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-4 lg:mb-6">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>{personalInfo.status}</span>
+            </div>
 
             {/* Main Heading */}
             <h1 className="text-3xl lg:text-6xl font-bold text-foreground leading-tight mb-1 lg:mb-2">
@@ -72,30 +83,50 @@ export function Hero() {
             </div>
 
             {/* CTA and Social */}
-            <div className="flex flex-col sm:flex-row items-center gap-4 lg:gap-6">
+            <div className="flex flex-col gap-5">
               <div className="flex flex-wrap items-center gap-3">
-                <a href="mailto:pawiromitchel@gmail.com">
-                  <Button size="lg">Get In Touch</Button>
-                </a>
                 <a href="#experience">
-                  <Button size="lg" variant="secondary">
-                    View Experience
+                  <Button size="lg">View Experience</Button>
+                </a>
+                <button
+                  onClick={handleCopyEmail}
+                  className="px-5 py-3 rounded-full border border-border text-sm font-medium text-foreground hover:border-primary/60 transition-all flex items-center gap-2 bg-card-bg shadow-sm"
+                  title="Copy email to clipboard"
+                >
+                  {copied ? (
+                    <>
+                      <span className="text-emerald-400 font-bold">✓</span>
+                      <span className="text-emerald-400 font-medium">Copied to clipboard!</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      <span>Copy Email</span>
+                    </>
+                  )}
+                </button>
+                <a href="mailto:pawiromitchel@gmail.com">
+                  <Button size="lg" variant="ghost">
+                    Send Email ↗
                   </Button>
                 </a>
               </div>
 
               {/* Social Links */}
-              <div className="flex gap-3 lg:gap-4">
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-muted font-medium mr-1">Connect:</span>
                 {personalInfo.social.github && (
                   <a
                     href={personalInfo.social.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300"
+                    className="w-9 h-9 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300"
                     aria-label="GitHub"
                   >
                     <svg
-                      className="w-5 h-5"
+                      className="w-4 h-4"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
@@ -108,11 +139,11 @@ export function Hero() {
                     href={personalInfo.social.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300"
+                    className="w-9 h-9 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300"
                     aria-label="LinkedIn"
                   >
                     <svg
-                      className="w-5 h-5"
+                      className="w-4 h-4"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
@@ -125,11 +156,11 @@ export function Hero() {
                     href={personalInfo.social.twitter}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300"
+                    className="w-9 h-9 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300"
                     aria-label="Twitter"
                   >
                     <svg
-                      className="w-5 h-5"
+                      className="w-4 h-4"
                       fill="currentColor"
                       viewBox="0 0 24 24"
                     >
@@ -143,8 +174,8 @@ export function Hero() {
         </div>
 
         {/* Scroll indicator */}
-        <div className="flex justify-center mt-24">
-          <div className="animate-bounce-slow opacity-60">
+        <div className="flex justify-center mt-20">
+          <a href="#experience" className="animate-bounce-slow opacity-60 hover:opacity-100 transition-opacity" aria-label="Scroll down">
             <svg
               className="w-5 h-5 text-primary"
               fill="none"
@@ -158,7 +189,7 @@ export function Hero() {
                 d="M19 14l-7 7m0 0l-7-7m7 7V3"
               />
             </svg>
-          </div>
+          </a>
         </div>
       </Container>
     </section>

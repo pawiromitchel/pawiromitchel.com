@@ -16,7 +16,7 @@ export const projects: Project[] = [
   {
     id: "bcron",
     title: "bcron",
-    description: "Task scheduler with an interactive TUI for managing scheduled background tasks",
+    description: "Modern Go CLI & background daemon with sub-10ms trigger overhead and an interactive TUI",
     longDescription:
       "A modern CLI task scheduler built in Go featuring an interactive terminal UI for Unix systems. Supports timezone-aware crontab scheduling, background execution daemon, full execution logging, and desktop notifications.",
     image: "/images/projects/bcron.jpg",
@@ -29,7 +29,7 @@ export const projects: Project[] = [
   {
     id: "forexsu",
     title: "ForexSU",
-    description: "Surinamese exchange rates aggregator PWA with real-time updates",
+    description: "Real-time PWA aggregator querying 8 bank portals with 5-minute sync and offline caching",
     longDescription:
       "A Progressive Web App aggregating real-time foreign exchange rates across major Surinamese banking institutions. Features automated 5-minute data refresh, offline caching via Service Workers, dark mode, and multi-currency transfer conversions.",
     image: "/images/projects/forexsu.jpg",
@@ -56,7 +56,7 @@ export const projects: Project[] = [
   {
     id: "ftx-api-rest-extended",
     title: "FTX API REST Extended",
-    description: "Extended REST API client library for Node.js",
+    description: "Extended REST API trading library for Node.js with 10k+ downloads on npm",
     longDescription:
       "An extended open-source Node.js library for trading operations on FTX REST APIs, implementing missing spot, futures, and subaccount management helper functions.",
     image: "/images/projects/ftx-api.jpg",
