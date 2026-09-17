@@ -1,0 +1,160 @@
+export const metadata = {
+  title: "Architecting bcron: Building a Lightweight Go TUI Task Scheduler",
+  description: "A deep dive into building an interactive terminal task scheduler and background daemon in Go, featuring sub-10ms execution overhead and clean Unix process management.",
+  date: "2026-03-05",
+  tags: ["go", "systems", "cli", "tui", "linux"],
+};
+
+Standard Unix `cron` is bulletproof, but inspecting execution history, checking task exit codes, and managing ad-hoc scheduled jobs on macOS and Linux usually requires digging through `grep /var/log/syslog` or maintaining custom wrapper scripts.
+
+To solve this, I designed **`bcron`**—a lightweight command scheduler written in Go with an interactive terminal UI (TUI) and a background daemon. Here is how the system is architected.
+
+---
+
+## 1. System Topology
+
+`bcron` splits execution into two discrete processes: a headless background daemon that manages the scheduling wheel, and an ephemeral TUI client that attaches via local Unix domain sockets.
+
+```text
+┌──────────────────────────────────────────────┐
+│             bcron CLI / TUI                  │
+│       (Bubbletea + Lipgloss Terminal)        │
+└──────────────────────┬───────────────────────┘
+                       │ Unix Domain Socket (IPC)
+                       ▼
+┌──────────────────────────────────────────────┐
+│             bcron Daemon (Engine)            │
+│  ┌─────────────────┐    ┌─────────────────┐  │
+│  │ Crontab Parser  │    │ Execution Pool  │  │
+│  └────────┬────────┘    └────────┬────────┘  │
+│           ▼                      ▼           │
+│  ┌─────────────────┐    ┌─────────────────┐  │
+│  │ Timezone Clock  │    │ SQLite Log Sink │  │
+│  └─────────────────┘    └─────────────────┘  │
+└──────────────────────┬───────────────────────┘
+                       │ fork/exec
+                       ▼
+┌──────────────────────────────────────────────┐
+│        Managed Child Processes / Tasks       │
+└──────────────────────────────────────────────┘
+```
+
+This decoupled approach ensures:
+1. **Zero UI Overhead on Execution**: The daemon runs with `< 15MB` RAM and triggers jobs within sub-10ms precision regardless of whether the TUI is open.
+2. **Safe Terminal Crashes**: Closing or resizing the terminal does not interrupt running background jobs.
+
+---
+
+## 2. Process Lifecycle & Daemonization
+
+Starting a long-running process in Unix without `systemd` requires detaching standard file descriptors and handling process groups cleanly:
+
+```go
+package daemon
+
+import (
+	"os"
+	"os/exec"
+	"syscall"
+)
+
+func SpawnDetachedDaemon(binaryPath string, args []string) (*os.Process, error) {
+	cmd := exec.Command(binaryPath, args...)
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Setsid: true, // Creates a new session; detaches from controlling TTY
+	}
+
+	// Redirect std streams to log sink
+	logFile, err := os.OpenFile("/tmp/bcron.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		return nil, err
+	}
+	cmd.Stdout = logFile
+	cmd.Stderr = logFile
+
+	if err := cmd.Start(); err != nil {
+		return nil, err
+	}
+	return cmd.Process, nil
+}
+```
+
+---
+
+## 3. Concurrency & Execution Loop
+
+The daemon evaluates tasks every second. Instead of spawning uncontrolled goroutines, tasks run through a bounded worker pool:
+
+```go
+type Job struct {
+	ID       string
+	Schedule string
+	Command  string
+	Timeout  time.Duration
+}
+
+func (e *Engine) RunWorkerPool(ctx context.Context, jobs <-chan Job, maxConcurrent int) {
+	sem := make(chan struct{}, maxConcurrent)
+
+	for job := range jobs {
+		select {
+		case <-ctx.Done():
+			return
+		case sem <- struct{}{}:
+			go func(j Job) {
+				defer func() { <-sem }()
+				e.executeTask(ctx, j)
+			}(job)
+		}
+	}
+}
+```
+
+---
+
+## 4. TUI State Management with Elm Architecture
+
+The terminal interface utilizes the Model-Update-View pattern:
+
+```go
+type Model struct {
+	tasks    []TaskStatus
+	cursor   int
+	selected map[int]struct{}
+	err      error
+}
+
+func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "k", "up":
+			if m.cursor > 0 {
+				m.cursor--
+			}
+		case "j", "down":
+			if m.cursor < len(m.tasks)-1 {
+				m.cursor++
+			}
+		case "r": // Trigger manual execution
+			return m, triggerTaskCmd(m.tasks[m.cursor].ID)
+		case "q", "ctrl+c":
+			return m, tea.Quit
+		}
+	}
+	return m, nil
+}
+```
+
+---
+
+## Key Performance Results
+
+| Metric | System crontab | bcron |
+| :--- | :--- | :--- |
+| **Trigger Overhead** | Variable (OS-dependent) | `< 8ms` |
+| **Output Inspection** | `cat /var/log/syslog` | Live TUI streaming |
+| **Daemon Memory Footprint** | ~2MB | ~12MB |
+| **Manual One-Off Triggers** | CLI workarounds | Instant single-key (`r`) |
+
+Check out the source and binaries on GitHub: [github.com/pawiromitchel/bcron](https://github.com/pawiromitchel/bcron).

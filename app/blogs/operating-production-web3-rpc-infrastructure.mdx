@@ -1,0 +1,108 @@
+export const metadata = {
+  title: "Operating Production-Grade Web3 RPC Nodes at Scale",
+  description: "Key architectural patterns and operational lessons for running high-throughput EVM execution and consensus clients with 99.9%+ availability.",
+  date: "2026-03-04",
+  tags: ["web3", "infrastructure", "devops", "ethereum", "kubernetes"],
+};
+
+Operating blockchain infrastructure in production is fundamentally different from hosting standard stateless web APIs. Blockchains are stateful, append-heavy databases with high random I/O demands, dynamic peer-to-peer topologies, and zero tolerance for out-of-sync block states.
+
+Here is how we design, monitor, and failover high-availability RPC node clusters under heavy production traffic.
+
+---
+
+## 1. Node Topology: Execution & Consensus Pairing
+
+Following the Ethereum Merge, every EVM full node requires two cooperating processes communicating via the authenticated Engine API:
+
+```text
+┌─────────────────────────────────────────────────────────┐
+│                    Traffic Load Balancer                │
+└────────────┬───────────────────────────────┬────────────┘
+             │ JSON-RPC (HTTP / WS)          │
+             ▼                               ▼
+   ┌───────────────────┐           ┌───────────────────┐
+   │ Execution Node A  │           │ Execution Node B  │
+   │   (Geth / Nether) │           │   (Erigon / Besu) │
+   └─────────▲─────────┘           └─────────▲─────────┘
+             │ Engine API (Auth JWT)         │
+             ▼                               ▼
+   ┌───────────────────┐           ┌───────────────────┐
+   │ Consensus Node A  │           │ Consensus Node B  │
+   │  (Prysm / Lighthouse)         │     (Teku / Lodestar)
+   └───────────────────┘           └───────────────────┘
+```
+
+### Critical Bottlenecks to Mitigate
+- **Disk I/O Saturation**: LevelDB and PebbleDB engines perform constant read-modify-write cycles to update the Ethereum state trie. Standard cloud SSDs (e.g. AWS `gp3` under 3,000 IOPS) will bottleneck within hours. Production nodes require dedicated NVMe storage delivering &ge; 12,000 IOPS.
+- **Peer Dropouts**: If node firewall rules drop UDP traffic, discv5 discovery degrades, dropping peer count below minimum thresholds (&lt; 25 peers) and halting state sync.
+
+---
+
+## 2. Advanced Health Checking Beyond `eth_blockNumber`
+
+A common operational anti-pattern is checking node health solely via `eth_blockNumber`. A node can report block height while:
+1. Stuck in a reorg state.
+2. In the middle of an archival catch-up sync.
+3. Completely disconnected from consensus peers.
+
+A robust health check probe verifies three vectors simultaneously:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+RPC_URL="http://127.0.0.1:8545"
+
+# 1. Check sync status (must return false)
+SYNC_STATUS=$(curl -s -X POST "$RPC_URL" \
+  -H "Content-Type: application/json" \
+  --data '{"jsonrpc":"2.0","method":"eth_syncing","params":[],"id":1}' | jq -r .result)
+
+if [ "$SYNC_STATUS" != "false" ]; then
+  echo "CRITICAL: Node is currently syncing state."
+  exit 1
+fi
+
+# 2. Check peer count (minimum 25 peers)
+PEER_HEX=$(curl -s -X POST "$RPC_URL" \
+  -H "Content-Type: application/json" \
+  --data '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}' | jq -r .result)
+
+PEER_COUNT=$((PEER_HEX))
+if [ "$PEER_COUNT" -lt 25 ]; then
+  echo "WARNING: Low peer count ($PEER_COUNT peers connected)."
+  exit 1
+fi
+
+# 3. Verify latest block timestamp is within 30 seconds
+LATEST_BLOCK_HEX=$(curl -s -X POST "$RPC_URL" \
+  -H "Content-Type: application/json" \
+  --data '{"jsonrpc":"2.0","method":"eth_getBlockByNumber","params":["latest", false],"id":1}' | jq -r .result.timestamp)
+
+BLOCK_TIME=$((LATEST_BLOCK_HEX))
+CURRENT_TIME=$(date +%s)
+LAG=$((CURRENT_TIME - BLOCK_TIME))
+
+if [ "$LAG" -gt 30 ]; then
+  echo "CRITICAL: Block state is lagging by ${LAG}s."
+  exit 1
+fi
+
+echo "HEALTHY: Node synced, $PEER_COUNT peers, lag: ${LAG}s."
+exit 0
+```
+
+---
+
+## 3. High-Throughput Request Routing
+
+When routing millions of requests, read methods should be partitioned into tiers:
+
+| Tier | Methods | Routing Strategy |
+| :--- | :--- | :--- |
+| **Volatile State** | `eth_blockNumber`, `eth_getBalance`, `eth_sendRawTransaction` | Route strictly to head nodes with zero block lag. |
+| **Heavy Computation** | `eth_call`, `eth_estimateGas` | Route to dedicated compute pools with CPU throttling. |
+| **Historical Data** | `eth_getLogs`, `eth_getBlockByNumber` | Cache at Edge proxy / Redis; route misses to archive nodes. |
+
+Decoupling write and computational traffic from standard read requests preserves sub-50ms p95 latencies across high-volume dApps.

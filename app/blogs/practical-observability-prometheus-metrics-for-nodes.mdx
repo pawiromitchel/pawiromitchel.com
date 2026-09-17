@@ -1,0 +1,103 @@
+export const metadata = {
+  title: "Production Observability: Essential Prometheus Metrics for Blockchain Nodes",
+  description: "Beyond CPU and memory: Key metrics, PromQL queries, and alert thresholds required to run high-reliability node clusters.",
+  date: "2026-02-28",
+  tags: ["devops", "prometheus", "observability", "grafana", "infrastructure"],
+};
+
+A node reporting 20% CPU and 40% memory usage can still be dropping transactions or falling out of consensus. In high-availability blockchain operations, host-level metrics are lagging indicators.
+
+True node health requires tracking the **Four Golden Signals** tailored specifically for peer-to-peer execution clients.
+
+---
+
+## 1. The Core Metrics Matrix
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│                    EVM Node Client                          │
+│                                                             │
+│  [Peer Mesh]        [Block State]         [Storage Engine]  │
+│  p2p_peers >= 30    block_lag <= 1        iops_write < 80%  │
+└──────────┬─────────────────┬──────────────────────┬─────────┘
+           │                 │                      │
+           ▼                 ▼                      ▼
+┌─────────────────────────────────────────────────────────────┐
+│                   Prometheus Scrape Engine                  │
+│                     (15-second interval)                    │
+└──────────┬────────────────────────────────────────┬─────────┘
+           ▼                                        ▼
+┌───────────────────────┐                ┌────────────────────┐
+│   Grafana Dashboard   │                │   Alertmanager     │
+│   (p95 Latency Heat)  │                │   (PagerDuty / Ops)│
+└───────────────────────┘                └────────────────────┘
+```
+
+| Metric | Target Threshold | Critical Alert Condition |
+| :--- | :--- | :--- |
+| **Peer Count** (`p2p_peers`) | &ge; 30 | &lt; 15 for &gt; 2m |
+| **Block Sync Lag** | 0 blocks | &ge; 2 blocks behind head |
+| **Transaction Pool Depth** | 1,000 - 5,000 | Sudden drop to 0 (P2P partition) |
+| **Disk Write Latency** | &lt; 15ms | &gt; 50ms for &gt; 3m |
+
+---
+
+## 2. Prometheus Scrape Configuration
+
+Configuring Prometheus to scrape Geth, Nethermind, or Erigon nodes:
+
+```yaml
+# prometheus.yml
+scrape_configs:
+  - job_name: "evm-nodes"
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    static_configs:
+      - targets:
+          - "node-eth-mainnet-01.internal:6060"
+          - "node-eth-mainnet-02.internal:6060"
+        labels:
+          chain: "ethereum-mainnet"
+          tier: "execution"
+
+    metric_relabel_configs:
+      # Filter high-cardinality RPC debug counters
+      - source_labels: [__name__]
+        regex: "rpc_duration_seconds_bucket|p2p_peers|chain_head_block"
+        action: keep
+```
+
+---
+
+## 3. Mission-Critical PromQL Alert Queries
+
+### A. Block Sync Stall Alert
+Fires if the local node has not imported a new block within 45 seconds:
+
+```promql
+(time() - chain_head_header_timestamp{job="evm-nodes"}) > 45
+```
+
+### B. High RPC p95 Latency Alert
+Fires if 95th percentile RPC execution duration exceeds 200ms:
+
+```promql
+histogram_quantile(
+  0.95,
+  sum(rate(rpc_duration_seconds_bucket{job="evm-nodes"}[5m])) by (le, method)
+) > 0.200
+```
+
+### C. Sudden Peer Mesh Drop (P2P Partition)
+Fires if connected peers drop by more than 50% over a 5-minute window:
+
+```promql
+deriv(p2p_peers{job="evm-nodes"}[5m]) < -10
+```
+
+---
+
+## 4. Grafana Visualizations that Matter
+
+1. **Block Height Divergence**: Graphing `chain_head_block` across all cluster nodes on a single chart instantly reveals isolated forks or lagging replicas.
+2. **IOPS Queue Saturation**: LevelDB state compaction creates sudden write spikes; visualizing disk write await times warns of disk degradation before blocks are missed.

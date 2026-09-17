@@ -1,0 +1,102 @@
+export const metadata = {
+  title: "Modernizing Legacy Enterprise Systems: A 3x Developer Velocity Blueprint",
+  description: "Architectural blueprint and leadership lessons from migrating core enterprise desktop tools to a high-throughput web platform.",
+  date: "2026-02-20",
+  tags: ["architecture", "typescript", "engineering-leadership", "legacy-migration", "fullstack"],
+};
+
+Legacy desktop software often starts as an efficient internal tool, but eventually morphs into a deployment bottleneck: operating system update incompatibilities, localized database locks, and zero cross-team collaboration.
+
+While serving as Lead Software Engineer at Alembo, I spearheaded the architectural migration of core desktop C# tools into a web-based platform (Angular, Node.js, MySQL). 
+
+Here is the phased blueprint that delivered a **3x acceleration in development and operational throughput**.
+
+---
+
+## 1. The Strangler Fig Migration Pattern
+
+Direct "Big Bang" rewrites fail because business operations cannot halt for six months. We employed the **Strangler Fig pattern** to incrementally replace modules while preserving operational continuity:
+
+```text
+Phase 1: Legacy Monolith
+┌─────────────────────────────────────────────────────────────┐
+│              Legacy C# Desktop Client (WPF / WinForms)      │
+│                Direct Socket / Direct DB Access             │
+└─────────────────────────────────────────────────────────────┘
+
+Phase 2: Hybrid Transition (API Façade Layer)
+┌──────────────────────────────┐ ┌────────────────────────────┐
+│   Legacy Desktop Client      │ │   Modern Web App (Angular) │
+└──────────────┬───────────────┘ └──────────────┬─────────────┘
+               │                                │
+               ▼                                ▼
+┌─────────────────────────────────────────────────────────────┐
+│           Unified REST API Gateway (Node.js / Express)      │
+└──────────────────────────────┬──────────────────────────────┘
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│              Relational Database (MySQL / InnoDB)           │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 2. Decoupling Business Logic into Micro-Endpoints
+
+Desktop code frequently tightly couples UI event listeners with database transactions. We extracted core business logic into stateless service controllers:
+
+```typescript
+// services/transcription.service.ts
+export class TranscriptionService {
+  constructor(private db: Pool) {}
+
+  public async assignBatch(userId: string, batchSize: number = 50): Promise<BatchRecord[]> {
+    const connection = await this.db.getConnection();
+    try {
+      await connection.beginTransaction();
+
+      // Row-level locking prevents double allocation across concurrent web workers
+      const [rows] = await connection.query<RowDataPacket[]>(
+        `SELECT id, payload FROM tasks 
+         WHERE status = 'PENDING' 
+         ORDER BY priority DESC, created_at ASC 
+         LIMIT ? FOR UPDATE`,
+        [batchSize]
+      );
+
+      if (rows.length === 0) {
+        await connection.rollback();
+        return [];
+      }
+
+      const taskIds = rows.map((r) => r.id);
+      await connection.query(
+        `UPDATE tasks SET status = 'IN_PROGRESS', assigned_to = ?, assigned_at = NOW() 
+         WHERE id IN (?)`,
+        [userId, taskIds]
+      );
+
+      await connection.commit();
+      return rows as BatchRecord[];
+    } catch (err) {
+      await connection.rollback();
+      throw err;
+    } finally {
+      connection.release();
+    }
+  }
+}
+```
+
+---
+
+## 3. Results & Velocity Multipliers
+
+| Metric | Legacy Desktop (C#) | Modern Web (Angular / Node) | Impact |
+| :--- | :--- | :--- | :--- |
+| **Worker Onboarding Time** | 2 days (Install VMs, drivers) | 30 seconds (Open URL) | **95% faster** |
+| **Deployment Cycle** | Monthly manual MSI updates | Automated daily CI/CD | **Continuous delivery** |
+| **Operational Throughput** | Fragmented local queues | Centralized dynamic allocation | **3x speed increase** |
+| **Bug Mitigation** | Patch installer distribution | Instant server-side fix | **Zero client intervention** |
+
+Migrating from thick-client monoliths to web architectures is primarily an exercise in disciplined state decoupling and incremental domain separation.

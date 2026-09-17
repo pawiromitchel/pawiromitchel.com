@@ -1,0 +1,156 @@
+export const metadata = {
+  title: "Zero-Downtime Data Ingestion: The ForexSU Architecture",
+  description: "How to engineer a fault-tolerant exchange rate aggregation pipeline across 8 banking portals with automatic fallback tiers and offline-first PWA caching.",
+  date: "2026-03-02",
+  tags: ["typescript", "pwa", "web-scraping", "caching", "architecture"],
+};
+
+Aggregating real-time financial data from financial institutions in emerging markets presents unique engineering hurdles: banks rarely offer clean REST APIs, website layouts change without notice, and downstream network latency is highly variable.
+
+When building [ForexSU](https://forexsu.co/), the goal was 100% uptime for users seeking currency conversion rates across 8 Surinamese banks (CBVS, DSB, Hakrinbank, Republic Bank, VCB, Finabank, CME, SCB).
+
+Here is the ingestion and caching architecture that ensures zero downtime.
+
+---
+
+## 1. Multi-Tiered Architecture
+
+```text
+┌────────────────────────────────────────────────────────┐
+│               Surinamese Banking Portals               │
+└───────┬────────────────────────┬───────────────┬───────┘
+        ▼                        ▼               ▼
+┌───────────────┐        ┌───────────────┐ ┌─────────────┐
+│  Parser A     │        │  Parser B     │ │ Parser N    │
+└───────┬───────┘        └───────┬───────┘ └──────┬──────┘
+        └───────────────┬────────┴────────────────┘
+                        ▼
+        ┌────────────────────────────────┐
+        │  Normalization & Validation    │ (Detects format drift)
+        └───────────────┬────────────────┘
+                        ▼
+        ┌────────────────────────────────┐
+        │  Tier 1: Redis / In-Memory     │ (5-min TTL)
+        └───────────────┬────────────────┘
+                        ▼
+        ┌────────────────────────────────┐
+        │  Tier 2: Last-Known-Good DB    │ (Permanent fallback)
+        └───────────────┬────────────────┘
+                        ▼
+┌────────────────────────────────────────────────────────┐
+│       Client PWA (Service Worker Cache-First)          │
+└────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 2. Defensive Scraper Parsing & Format Drift
+
+Banks frequently alter CSS class names or table wrappers. A resilient parser relies on structural semantic parsing rather than brittle CSS selector paths:
+
+```typescript
+interface ExchangeRate {
+  bankCode: string;
+  currency: "USD" | "EUR";
+  buyCash: number;
+  sellCash: number;
+  buyWire: number;
+  sellWire: number;
+  timestamp: string;
+}
+
+export function parseBankTable(html: string, bankCode: string): ExchangeRate[] {
+  const $ = cheerio.load(html);
+  const results: ExchangeRate[] = [];
+
+  $("table tbody tr").each((_, row) => {
+    const text = $(row).text().toUpperCase();
+    
+    // Match currency code in text regardless of column index
+    const isUSD = text.includes("USD") || text.includes("DOLLAR");
+    const isEUR = text.includes("EUR") || text.includes("EURO");
+
+    if (!isUSD && !isEUR) return;
+
+    // Extract all numeric tokens (handles commas or dots as decimal separators)
+    const numbers = $(row)
+      .find("td")
+      .map((_, col) => $(col).text().trim())
+      .get()
+      .map((val) => parseFloat(val.replace(",", ".")))
+      .filter((n) => !isNaN(n) && n > 0);
+
+    // Sanity check bounds: Rates must fall within reasonable macroeconomic limits
+    if (numbers.length >= 2 && numbers[0] > 10 && numbers[0] < 100) {
+      results.push({
+        bankCode,
+        currency: isUSD ? "USD" : "EUR",
+        buyCash: numbers[0],
+        sellCash: numbers[1],
+        buyWire: numbers[2] ?? numbers[0],
+        sellWire: numbers[3] ?? numbers[1],
+        timestamp: new Date().toISOString(),
+      });
+    }
+  });
+
+  return results;
+}
+```
+
+---
+
+## 3. The Fallback Cache Tier
+
+If a bank’s server times out or returns a 500 error during high traffic, the ingestion engine falls back to the Last-Known-Good (LKG) snapshot with stale indicators:
+
+```typescript
+export async function getAggregatedRates(): Promise<AggregatedResponse> {
+  const cached = await redis.get("live_rates");
+  if (cached) {
+    return { data: JSON.parse(cached), source: "cache", stale: false };
+  }
+
+  try {
+    const freshData = await scrapeAllBanksWithTimeout(4000);
+    await redis.set("live_rates", JSON.stringify(freshData), "EX", 300); // 5 min TTL
+    await db.saveLastKnownGood(freshData);
+    return { data: freshData, source: "live", stale: false };
+  } catch (error) {
+    // Graceful fallback to persistent storage
+    const fallback = await db.getLastKnownGood();
+    return { data: fallback, source: "fallback_lkg", stale: true };
+  }
+}
+```
+
+---
+
+## 4. Offline-First Service Worker Strategy
+
+On mobile connections, client-side Service Workers use a **Stale-While-Revalidate** strategy so rates display instantly:
+
+```javascript
+// public/sw.js
+self.addEventListener("fetch", (event) => {
+  if (event.request.url.includes("/api/rates")) {
+    event.respondWith(
+      caches.open("rates-cache-v1").then((cache) => {
+        return cache.match(event.request).then((cachedResponse) => {
+          const fetchPromise = fetch(event.request).then((networkResponse) => {
+            if (networkResponse.status === 200) {
+              cache.put(event.request, networkResponse.clone());
+            }
+            return networkResponse;
+          });
+
+          // Return cached response immediately; fetch updates in background
+          return cachedResponse || fetchPromise;
+        });
+      })
+    );
+  }
+});
+```
+
+By decoupling scraper failures from API responses and caching at both Edge and client tiers, ForexSU delivers instantaneous load times and 100% uptime.

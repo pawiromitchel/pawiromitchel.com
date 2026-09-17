@@ -1,0 +1,115 @@
+export const metadata = {
+  title: "EVM Security & Gas Optimization: Lessons from Smart Contract Audits",
+  description: "Practical patterns for storage slot packing, checks-effects-interactions, custom errors, and transient storage in Solidity.",
+  date: "2026-02-26",
+  tags: ["solidity", "ethereum", "security", "web3", "smart-contracts"],
+};
+
+Writing production smart contracts requires balancing deterministic security guarantees with EVM gas economics. A contract that passes basic unit tests can still harbor reentrancy vulnerabilities or bankrupt users with unoptimized storage writes.
+
+Here are the most impactful optimization and defensive patterns derived from auditing EVM codebases.
+
+---
+
+## 1. Storage Slot Packing & SLOAD/SSTORE Economics
+
+Every 32-byte storage slot in the EVM costs up to **20,000 gas** to initialize (`SSTORE`) and **2,100 gas** for cold reads (`SLOAD`). 
+
+Placing variables that fit within 32 bytes consecutively allows the compiler to pack them into a single storage slot:
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
+
+// ❌ UNOPTIMIZED: Uses 3 distinct 32-byte storage slots (96 bytes total)
+contract UnpackedState {
+    uint128 public depositAmount; // Slot 0 (16 bytes used, 16 wasted)
+    uint256 public timestamp;     // Slot 1 (32 bytes)
+    uint128 public rewardRate;    // Slot 2 (16 bytes used, 16 wasted)
+}
+
+// ✅ OPTIMIZED: Uses 2 storage slots (64 bytes total)
+contract PackedState {
+    uint128 public depositAmount; // Slot 0 (16 bytes)
+    uint128 public rewardRate;    // Slot 0 (16 bytes) -> Packed together!
+    uint256 public timestamp;     // Slot 1 (32 bytes)
+}
+```
+
+```text
+Unpacked Layout:
+Slot 0: [depositAmount (16B)] [   UNALLOCATED (16B)   ]
+Slot 1: [                 timestamp (32B)             ]
+Slot 2: [ rewardRate (16B)  ] [   UNALLOCATED (16B)   ]
+
+Packed Layout:
+Slot 0: [depositAmount (16B)] [   rewardRate (16B)    ] -> 1 SLOAD loads both!
+Slot 1: [                 timestamp (32B)             ]
+```
+
+---
+
+## 2. Checks-Effects-Interactions (CEI) vs Reentrancy Guards
+
+While OpenZeppelin’s `ReentrancyGuard` is widely used, internal storage flags add runtime overhead. Adhering strictly to the **Checks-Effects-Interactions** pattern prevents reentrancy by design:
+
+```solidity
+contract SecureVault {
+    mapping(address => uint256) private balances;
+
+    error InsufficientBalance(uint256 available, uint256 requested);
+    error TransferFailed();
+
+    function withdraw(uint256 amount) external {
+        // 1. CHECKS
+        uint256 userBalance = balances[msg.sender];
+        if (userBalance < amount) {
+            revert InsufficientBalance(userBalance, amount);
+        }
+
+        // 2. EFFECTS (State updated BEFORE any external call)
+        balances[msg.sender] = userBalance - amount;
+
+        // 3. INTERACTIONS
+        (bool success, ) = msg.sender.call{value: amount}("");
+        if (!success) {
+            revert TransferFailed();
+        }
+    }
+}
+```
+
+---
+
+## 3. Custom Errors vs `require` Revert Strings
+
+String literals inside `require(condition, "Insufficient balance")` are stored in contract bytecode and cost ~21 gas per non-zero byte of ABI data:
+
+```solidity
+// ❌ Costs extra contract deployment gas and execution gas
+require(balance >= amount, "Vault: insufficient balance for withdrawal");
+
+// ✅ Zero string memory allocation; only 4-byte selector in bytecode
+error InsufficientBalance();
+if (balance < amount) revert InsufficientBalance();
+```
+
+---
+
+## 4. Transient Storage (EIP-1153)
+
+In Solidity &ge; 0.8.24, transient storage (`TSTORE` / `TLOAD`) enables in-transaction temporary storage that is discarded after transaction completion, reducing reentrancy lock costs from ~2,200 gas to **100 gas**:
+
+```solidity
+assembly {
+    // Check lock
+    if tload(0) { revert(0, 0) }
+    // Set lock
+    tstore(0, 1)
+}
+// ... execute protected logic ...
+assembly {
+    // Clear lock
+    tstore(0, 0)
+}
+```
