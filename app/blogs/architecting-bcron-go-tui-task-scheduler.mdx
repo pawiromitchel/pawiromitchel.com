@@ -114,6 +114,10 @@ func (e *Engine) RunWorkerPool(ctx context.Context, jobs <-chan Job, maxConcurre
 
 ## 4. TUI State Management with Elm Architecture
 
+The interactive split-pane terminal interface provides real-time task status, execution history, and manual trigger controls:
+
+![bcron Go interactive TUI interface](/images/projects/bcron.png)
+
 The terminal interface utilizes the Model-Update-View pattern:
 
 ```go

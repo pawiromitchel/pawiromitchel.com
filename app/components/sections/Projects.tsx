@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { Container } from "../layout/Container";
 import { Card, CardTitle, CardDescription } from "../ui/Card";
 import { BadgeGroup } from "../ui/Badge";
@@ -50,38 +51,65 @@ export function ProjectsSection() {
 
             return (
               <Card key={project.id} padding="none" hover className="flex flex-col overflow-hidden group">
-                {/* Visual Terminal Header */}
-                <div className="bg-[#0b0f17] border-b border-border p-4 font-mono text-xs flex flex-col justify-between h-44 select-none">
-                  {/* Window Bar */}
-                  <div className="flex items-center justify-between pb-2.5 border-b border-white/5">
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
+                {/* Visual Header */}
+                {project.id === "bcron" ? (
+                  <div className="relative h-44 bg-[#0b0f17] border-b border-border overflow-hidden">
+                    <Image
+                      src="/images/projects/bcron.png"
+                      alt="bcron Go interactive TUI screenshot"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 pointer-events-none" />
+                    <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10">
+                      <div className="w-2 h-2 rounded-full bg-red-500/80" />
+                      <div className="w-2 h-2 rounded-full bg-yellow-500/80" />
+                      <div className="w-2 h-2 rounded-full bg-green-500/80" />
+                      <span className="text-[10px] text-gray-300 font-mono ml-1">bcron.tui</span>
                     </div>
-                    <span className="text-[10px] font-semibold text-primary/80 uppercase tracking-wider px-2 py-0.5 rounded bg-primary/10">
-                      {project.category}
-                    </span>
+                    <div className="absolute top-3 right-3">
+                      <span className="text-[10px] font-semibold text-primary uppercase tracking-wider px-2 py-0.5 rounded-full bg-black/75 backdrop-blur-md border border-primary/40">
+                        {project.category}
+                      </span>
+                    </div>
+                    <div className="absolute bottom-2 right-3 text-[10px] text-gray-300/80 font-sans backdrop-blur-sm px-2 py-0.5 rounded bg-black/50">
+                      Shipped {project.year}
+                    </div>
                   </div>
-
-                  {/* Terminal Content */}
-                  <div className="py-2 flex-1 flex flex-col justify-center space-y-1.5">
-                    <div className="text-primary font-semibold text-xs truncate">
-                      <span className="text-muted mr-1.5">$</span>
-                      {snippet ? snippet.prompt : `${project.title.toLowerCase()} --info`}
-                    </div>
-                    {(snippet ? snippet.output : [project.description.slice(0, 50) + "..."]).map((line, i) => (
-                      <div key={i} className="text-muted text-[11px] truncate">
-                        {line}
+                ) : (
+                  <div className="bg-[#0b0f17] border-b border-border p-4 font-mono text-xs flex flex-col justify-between h-44 select-none">
+                    {/* Window Bar */}
+                    <div className="flex items-center justify-between pb-2.5 border-b border-white/5">
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
                       </div>
-                    ))}
-                  </div>
+                      <span className="text-[10px] font-semibold text-primary/80 uppercase tracking-wider px-2 py-0.5 rounded bg-primary/10">
+                        {project.category}
+                      </span>
+                    </div>
 
-                  {/* Year Tag */}
-                  <div className="text-[10px] text-muted/60 text-right font-sans">
-                    Shipped {project.year}
+                    {/* Terminal Content */}
+                    <div className="py-2 flex-1 flex flex-col justify-center space-y-1.5">
+                      <div className="text-primary font-semibold text-xs truncate">
+                        <span className="text-muted mr-1.5">$</span>
+                        {snippet ? snippet.prompt : `${project.title.toLowerCase()} --info`}
+                      </div>
+                      {(snippet ? snippet.output : [project.description.slice(0, 50) + "..."]).map((line, i) => (
+                        <div key={i} className="text-muted text-[11px] truncate">
+                          {line}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Year Tag */}
+                    <div className="text-[10px] text-muted/60 text-right font-sans">
+                      Shipped {project.year}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Content */}
                 <div className="p-6 flex flex-col flex-1">
