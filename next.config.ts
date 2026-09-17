@@ -2,7 +2,10 @@ import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
 
 const withMDX = createMDX({
-  // Add markdown plugins here, with defaults for GFM and syntax highlighting
+  options: {
+    remarkPlugins: ["remark-gfm"],
+    rehypePlugins: [],
+  },
 });
 
 const nextConfig: NextConfig = withMDX({

@@ -5,7 +5,6 @@ interface TimelineItemProps {
   subtitle?: string;
   description?: string;
   date?: string;
-  icon?: ReactNode;
   children?: ReactNode;
   isLast?: boolean;
 }
@@ -15,7 +14,6 @@ export function TimelineItem({
   subtitle,
   description,
   date,
-  icon: _icon,
   children,
   isLast = false,
 }: TimelineItemProps) {

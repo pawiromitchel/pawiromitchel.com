@@ -1,0 +1,171 @@
+export const metadata = {
+  title: "Scraping 8 Surinamese Banks Without Losing My Mind: The ForexSU Story",
+  description: "Why I built ForexSU to track foreign currency rates across Suriname, and how to write resilient web scrapers that survive constant HTML breaking changes.",
+  date: "2026-03-02",
+  tags: ["typescript", "pwa", "web-scraping", "node", "real-world"],
+};
+
+In Suriname, foreign exchange rates for USD and EUR fluctuate daily. 
+
+If you want to exchange currency, send a wire transfer, or pay international invoices, you quickly discover a frustrating reality: **every bank publishes their own distinct rates, and none of them have an API.**
+
+To find the best rates, people in Suriname were manually opening 8 different banking websites every morning:
+- Central Bank (CBVS)
+- De Surinaamsche Bank (DSB)
+- Hakrinbank
+- Republic Bank
+- Finabank
+- VCB
+- Southern Commercial Bank (SCB)
+- CME
+
+Tired of checking 8 slow banking portals on mobile data, I built **[ForexSU](https://forexsu.co/)**—a fast, lightweight PWA that aggregates exchange rates from all 8 banks in real-time, refreshed every 5 minutes.
+
+Here are the messy engineering realities of building reliable scrapers when you don't control the source HTML.
+
+---
+
+## 1. The Reality of Scraping Banking Websites
+
+If you write naive scrapers with rigid CSS selectors like:
+
+```typescript
+// ❌ Dies the second a marketing banner is added to the page
+const rate = $("#content > div:nth-child(3) > table > tr:nth-child(2) > td:nth-child(4)").text();
+```
+
+Your scraper will break every two weeks. 
+
+Bank websites in Suriname undergo frequent frontend redesigns. Sometimes a table column order changes, sometimes a bank switches from periods (`38.50`) to European commas (`38,50`), and occasionally a bank’s server randomly returns a 500 error for 20 minutes during morning traffic spikes.
+
+### The Defensive Parsing Pattern
+Instead of relying on DOM hierarchy, the parser searches for **semantic anchors** (the word `USD` or `EUR`) and extracts adjacent numeric tokens within macroeconomic sanity bounds:
+
+```typescript
+import * as cheerio from "cheerio";
+
+interface BankRate {
+  bank: string;
+  currency: "USD" | "EUR";
+  buyCash: number;
+  sellCash: number;
+  buyWire: number;
+  sellWire: number;
+}
+
+export function parseBankHTML(html: string, bankName: string): BankRate[] {
+  const $ = cheerio.load(html);
+  const rates: BankRate[] = [];
+
+  $("tr").each((_, element) => {
+    const rowText = $(element).text().toUpperCase();
+
+    const isUSD = rowText.includes("USD") || rowText.includes("DOLLAR");
+    const isEUR = rowText.includes("EUR") || rowText.includes("EURO");
+
+    if (!isUSD && !isEUR) return;
+
+    // Grab all numerical values from this row, normalizing commas to decimals
+    const values = $(element)
+      .find("td")
+      .map((_, col) => $(col).text().trim().replace(",", "."))
+      .get()
+      .map((text) => parseFloat(text))
+      .filter((num) => !isNaN(num) && num > 10 && num < 100); // Sanity check range
+
+    // If we extracted at least Buy and Sell numbers
+    if (values.length >= 2) {
+      rates.push({
+        bank: bankName,
+        currency: isUSD ? "USD" : "EUR",
+        buyCash: values[0],
+        sellCash: values[1],
+        buyWire: values[2] ?? values[0], // fallback if cash and wire are identical
+        sellWire: values[3] ?? values[1],
+      });
+    }
+  });
+
+  return rates;
+}
+```
+
+By filtering numbers through reasonable bounds (e.g. rates between 10 and 100), unrelated numbers (like phone numbers, dates, or footer copyright years) are automatically discarded.
+
+---
+
+## 2. Preventing Blank Screens: The "Last-Known-Good" Cache
+
+If Bank A’s server goes down at 10 AM, your aggregated dashboard should **never** show an empty card or fail the entire page request.
+
+The backend uses a two-tier cache strategy:
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│                       Client Request                        │
+└──────────────────────────────┬──────────────────────────────┘
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  Tier 1: Redis In-Memory                    │ (5-minute TTL)
+└──────────────────────────────┬──────────────────────────────┘
+                               │ Miss or Expired
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│               Scraper Cron (Runs in background)             │
+│        Attempts fresh scrape from all 8 bank portals        │
+└──────────────┬───────────────────────────────┬──────────────┘
+               │ Success                       │ Network Failure / Timeout
+               ▼                               ▼
+┌──────────────────────────────┐ ┌────────────────────────────┐
+│ Write to Redis + Save to DB  │ │ Load "Last-Known-Good"     │
+│       (Mark as Fresh)        │ │ Snapshot from DB (stale=1) │
+└──────────────────────────────┘ └────────────────────────────┘
+```
+
+When a bank's portal times out, ForexSU serves the previous successful rate and displays a subtle indicator: *"Cached 25 mins ago"*. The user gets data, and the application never breaks.
+
+---
+
+## 3. Why PWA + Service Workers Were Essential
+
+Most users check exchange rates on their phones while on the go. In Suriname, mobile cellular networks can have latency spikes.
+
+Converting the site into a Progressive Web App (PWA) with a **Stale-While-Revalidate** Service Worker achieved two major wins:
+
+1. **Instant Loading**: When a user opens `forexsu.co`, the rates from their previous visit display in under 100ms from the local Cache Storage API.
+2. **Background Refresh**: The Service Worker silently fetches the latest rates from `/api/rates` in the background and updates the UI smoothly.
+3. **Home Screen Installation**: Users can tap *"Install App"* on iOS Safari or Android Chrome to get a native app icon on their phone without going through the App Store.
+
+```javascript
+// public/sw.js
+self.addEventListener("fetch", (event) => {
+  if (event.request.url.includes("/api/rates")) {
+    event.respondWith(
+      caches.open("forexsu-cache-v1").then(async (cache) => {
+        const cachedResponse = await cache.match(event.request);
+        
+        // Fetch fresh data in the background
+        const networkFetch = fetch(event.request).then((networkResponse) => {
+          if (networkResponse.ok) {
+            cache.put(event.request, networkResponse.clone());
+          }
+          return networkResponse;
+        });
+
+        // Return cached rates immediately if available, otherwise wait for network
+        return cachedResponse || networkFetch;
+      })
+    );
+  }
+});
+```
+
+---
+
+## The Big Takeaway
+
+Building tools that solve real problems in your local community is the most satisfying kind of engineering. 
+
+You don't need a massive distributed architecture or complex microservices. A solid caching layer, defensive parsers, and a fast PWA frontend are often all it takes to build a product that thousands of people use every single day.
+
+Check out the live app at **[forexsu.co](https://forexsu.co/)**.

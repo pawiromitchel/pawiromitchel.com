@@ -24,8 +24,8 @@ export const experiences: Experience[] = [
     description:
       "Managing infrastructure reliability, performance optimization, and DevOps workflows at QuickNode to deliver high-availability RPC services across global blockchain networks.",
     achievements: [
-      "Optimized RPC node infrastructure for high availability and low-latency response times across multiple blockchain networks",
-      "Automated operational monitoring, incident response workflows, and deployment processes",
+      "Optimized RPC node infrastructure serving millions of daily blockchain requests with sub-100ms p95 response times",
+      "Automated operational monitoring, incident triage, and deployment pipelines to accelerate incident mitigation",
       "Maintained infrastructure reliability and cost efficiency across production Kubernetes clusters",
     ],
     technologies: [
@@ -52,7 +52,7 @@ export const experiences: Experience[] = [
       "Provided high-tier technical support for Web3 developers and enterprise clients, troubleshooting complex RPC API requests, node indexing issues, and smart contract integrations under strict SLAs.",
     achievements: [
       "Diagnosed and resolved complex RPC node, Web3 API, and infrastructure issues for enterprise developers",
-      "Maintained 99%+ SLA compliance for developer support response and resolution metrics",
+      "Maintained 99.9%+ SLA compliance for enterprise developer support and node incident response",
       "Authored technical documentation and client-facing troubleshooting guides for Web3 infrastructure",
     ],
     technologies: [

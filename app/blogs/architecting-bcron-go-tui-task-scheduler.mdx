@@ -1,0 +1,162 @@
+export const metadata = {
+  title: "Why I Built bcron: Fixing Everything That Annoys Me About Crontab",
+  description: "I got tired of silent cron failures, digging through syslog, and guessing whether background jobs were still running. Here is how I built bcron in Go.",
+  date: "2026-03-05",
+  tags: ["go", "systems", "cli", "tui", "linux"],
+};
+
+Standard `crontab` is one of those Unix tools everyone respects, but secretly hates using.
+
+You open `crontab -e`, paste a five-star syntax line you had to double-check on crontab.guru, and pray the environment variables match your local shell. A week later, you realize a backup script died silently because your local mail transport wasn't configured, leaving zero error traces unless you dig through `/var/log/syslog`.
+
+Heavy orchestration tools (Rundeck, Airflow, Temporal) exist, but they are complete overkill when all you want is to run 8 scheduled scripts on a server or your Mac.
+
+I wanted something in between: a single, self-contained binary with a background daemon and an interactive split-pane terminal UI. So I built **[`bcron`](https://github.com/pawiromitchel/bcron)** in Go.
+
+---
+
+## What It Looks Like
+
+Instead of raw crontab syntax or invisible background execution, `bcron` gives you a live dashboard right in your terminal:
+
+![bcron Go interactive TUI interface](/images/projects/bcron.png)
+
+You get a split-pane layout: your active tasks on the left, and live metadata, schedule, and full stdout/stderr history on the right.
+
+### Everyday Shortcuts
+- `r` — Manually trigger the selected task right now (great for debugging scripts).
+- `space` — Pause / resume a schedule without deleting the entry.
+- `enter` — View full stdout/stderr logs from the last run without opening log files.
+- `q` — Detach. The background daemon keeps running your jobs.
+
+---
+
+## How It Works Under the Hood
+
+The architecture is split into two independent pieces: a long-running headless daemon and a fast terminal client. They talk to each other over a local Unix domain socket.
+
+```text
+┌──────────────────────────────────────────────┐
+│                  bcron TUI                   │
+│         (Bubbletea + Lipgloss loop)          │
+└──────────────────────┬───────────────────────┘
+                       │ Unix Domain Socket (/tmp/bcron.sock)
+                       ▼
+┌──────────────────────────────────────────────┐
+│                 bcron Daemon                 │
+│      ├── Internal Scheduler Clock            │
+│      ├── Worker Pool (bounded concurrency)   │
+│      └── SQLite Execution & Output Store     │
+└──────────────────────┬───────────────────────┘
+                       │ fork/exec
+                       ▼
+┌──────────────────────────────────────────────┐
+│               Child Scripts                  │
+│       (.sh, .py, .go, binaries, etc.)        │
+└──────────────────────────────────────────────┘
+```
+
+This separation was non-negotiable:
+1. **Closing your terminal cannot kill your jobs.** If you close your laptop or exit the terminal session, the daemon doesn't care.
+2. **The TUI needs to be instant.** When you run `bcron`, it shouldn't spin up a heavy runtime; it just connects to the socket, reads the current task state from SQLite, and starts rendering.
+
+---
+
+## 1. Detaching the Daemon (No Systemd Required)
+
+On macOS or development Linux machines, you don't always want to configure a systemd service just to test a daemon. In Go, properly detaching a process so it survives terminal closures requires calling `Setsid` to create an independent session:
+
+```go
+package daemon
+
+import (
+	"os"
+	"os/exec"
+	"syscall"
+)
+
+func StartBackgroundDaemon(binPath string, args []string) (*os.Process, error) {
+	cmd := exec.Command(binPath, args...)
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Setsid: true, // Creates a new session; detaches from controlling TTY
+	}
+
+	// Capture initial daemon output in case of early panics
+	logSink, err := os.OpenFile("/tmp/bcron-daemon.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		return nil, err
+	}
+	cmd.Stdout = logSink
+	cmd.Stderr = logSink
+
+	if err := cmd.Start(); err != nil {
+		return nil, err
+	}
+	return cmd.Process, nil
+}
+```
+
+---
+
+## 2. Preventing Thundering Herds with a Worker Pool
+
+Standard cron will gladly launch 40 jobs at the exact same second if their schedules align, maxing out your CPU and memory. 
+
+In `bcron`, tasks are fed through a buffered semaphore channel that caps concurrent executions:
+
+```go
+func (e *Engine) DispatchJobs(ctx context.Context, readyJobs []Job, maxConcurrent int) {
+	sem := make(chan struct{}, maxConcurrent) // e.g. cap at 8 concurrent jobs
+
+	for _, job := range readyJobs {
+		select {
+		case <-ctx.Done():
+			return
+		case sem <- struct{}{}:
+			go func(j Job) {
+				defer func() { <-sem }()
+				e.executeJob(ctx, j)
+			}(job)
+		}
+	}
+}
+```
+
+---
+
+## 3. Native macOS Desktop Notifications
+
+One feature I use constantly: native desktop notifications when long-running scripts fail. When a job exits with a non-zero exit code, `bcron` sends a notification directly to macOS Notification Center:
+
+```go
+func notifyFailure(jobName string, exitCode int) {
+	script := fmt.Sprintf(
+		`display notification "Task '%s' failed with exit code %d" with title "bcron alert" sound name "Basso"`,
+		jobName, exitCode,
+	)
+	exec.Command("osascript", "-e", script).Run()
+}
+```
+
+---
+
+## The Comparison
+
+| Feature | Standard crontab | bcron |
+| :--- | :--- | :--- |
+| **Interface** | Raw text editor (`crontab -e`) | Interactive split-pane TUI |
+| **Inspect Logs** | Dig through `/var/log` | Built-in per-task log viewer (`Enter`) |
+| **Manual One-Off Run** | Copy/paste command into terminal | Hit `r` on any task |
+| **Memory Footprint** | ~2MB | ~12MB |
+| **Binary Size** | Pre-installed | Single static binary (~15MB) |
+
+If you want to try it out or install it via Go:
+
+```bash
+git clone https://github.com/pawiromitchel/bcron.git
+cd bcron
+./build.sh
+./bin/bcron
+```
+
+Source code is available on [GitHub](https://github.com/pawiromitchel/bcron).

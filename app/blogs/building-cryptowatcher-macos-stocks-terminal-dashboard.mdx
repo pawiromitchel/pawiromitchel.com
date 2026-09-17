@@ -1,0 +1,156 @@
+export const metadata = {
+  title: "Building CryptoWatcher: Bringing macOS Stocks Widgets into the Terminal with Go",
+  description: "I wanted the glanceability of macOS Stocks widgets inside my tmux session. Here is how I built CryptoWatcher in Go using Bubble Tea, Lipgloss, high-definition Braille line charts, and composite multi-feed asset routing.",
+  date: "2026-03-14",
+  tags: ["go", "tui", "bubbletea", "crypto", "cli", "systems"],
+};
+
+Most terminal market tickers fall into two camps:
+
+1. **The Wall-of-Text Ticker**: A scrolling stream of 1-line text logs that scrolls off your screen before you can read the 24h delta.
+2. **The Cluttered Full-Screen Bloomberg Clone**: Massive terminal dashboards that require 160 columns of terminal width just to render 4 assets without clipping text.
+
+I love the visual design of the **macOS Stocks widget**: clean rounded cards, prominent delta badges, high-contrast typography, and a subtle sparkline that immediately tells you whether an asset is breaking out or dumping.
+
+I decided to build that exact experience for the terminal as a weekend project in Go: **[CryptoWatcher](https://github.com/pawiromitchel/cryptowatcher)**.
+
+---
+
+## What It Looks Like in the Terminal
+
+Here is CryptoWatcher running live inside a terminal window:
+
+![CryptoWatcher macOS-style Stocks and Crypto Terminal Dashboard](/images/projects/cryptowatcher.png)
+
+Every card gives you:
+- **Directional Momentum**: Up/Down indicator (`▲`/`▼`) with symbol, company/token name, and formatted market cap (`$1.57T`, `$297.3B`, `$49.6B`).
+- **High-Definition Braille Sparklines**: A 3-row mini line chart with a reference dotted baseline (`┄┄┄┄┄┄`) that shows price trajectory over the last 24 hours.
+- **Top Summary Status Bar**: Active monitored count, current top 24h gainer, top loser, and multi-feed connectivity status.
+- **2D Grid Navigation**: Move across cards and categories seamlessly using either arrow keys or standard Vim bindings (`h`/`j`/`k`/`l`).
+
+---
+
+## The Two Card Modes: Line Charts vs. Big Price Hero View
+
+One of my favorite additions is widget mode toggling. Pressing `c` or `v` switches every card between two distinct display modes on the fly:
+
+```text
+1. Sparkline Trend Mode (Default):          2. Big Price Hero Focus Mode:
+╭──────────────────────────────╮            ╭──────────────────────────────╮
+│ ▲ BTC-USD           $1.57T   │            │ ▲ BTC-USD           $1.57T   │
+│ Bitcoin USD         +1.05%   │            │ Bitcoin USD         +1.05%   │
+│                              │            │                              │
+│                   ⢀⡠⠔⠒⠉⠉⠉⠑   │            │ ╭────────────────────────╮   │
+│      ⢀⣀⣀⣀⣀     ⣀⠤⠊⠁          │            │ │       $78,402.00       │   │
+│   ⣀⠔⠊⠁    ⠉⠉⠉⠉⠉              │            │ ╰────────────────────────╯   │
+│   ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄   │            │ [███████████████████████░░░] │
+│                  $78,402.00  │            │ L: $77.6K        H: $78.5K   │
+╰──────────────────────────────╯            ╰──────────────────────────────╯
+```
+
+The **Big Price Mode** introduces an intraday price range slider (`[████████░░░]`) showing exactly where the current spot price sits relative to the 24-hour low and high.
+
+---
+
+## Under the Hood: High-Resolution Braille Line Charts
+
+Rendering clean curves in a text-based terminal usually relies on block characters like ` `, `▂`, `▃`, `▄`, `▅`, `▆`, `▇`, `█`. While block characters work for bar charts, they look jagged for line trends.
+
+In `cryptowatcher`, the sparkline renderer uses **Unicode Braille patterns** (`U+2800` through `U+28FF`).
+
+### Why Braille?
+A standard terminal character cell is roughly a 2:1 vertical rectangle. Unicode Braille matrices feature a $2 \times 4$ dot grid per character cell:
+
+```text
+Dot positions in a Braille cell:
+(0,0) ●  ● (1,0)  -> 0x01 | 0x08
+(0,1) ●  ● (1,1)  -> 0x02 | 0x10
+(0,2) ●  ● (1,2)  -> 0x04 | 0x20
+(0,3) ●  ● (1,3)  -> 0x40 | 0x80
+```
+
+By stacking 3 Braille cells vertically, we achieve **12 distinct sub-pixel vertical steps** per character column instead of just 1.
+
+```go
+// computeBrailleRune maps normalized Y coordinates into an 8-bit Braille bitmask
+func computeBrailleRune(yLeft, yRight int) rune {
+    var mask rune = 0x2800 // Base Unicode Braille offset
+
+    // Map left column dots (bits 0, 1, 2, 6)
+    if yLeft >= 0 && yLeft < 4 {
+        leftBits := []rune{0x01, 0x02, 0x04, 0x40}
+        mask |= leftBits[3-yLeft]
+    }
+
+    // Map right column dots (bits 3, 4, 5, 7)
+    if yRight >= 0 && yRight < 4 {
+        rightBits := []rune{0x08, 0x10, 0x20, 0x80}
+        mask |= rightBits[3-yRight]
+    }
+
+    return mask
+}
+```
+
+This sub-pixel precision produces continuous, smooth curves even inside a compact 26-character-wide card.
+
+---
+
+## MultiFetcher: Smart Asset Routing Across Feeds
+
+In a single dashboard, users want to monitor Bitcoin, micro-cap tokens, and the S&P 500 simultaneously. No single public API serves all three reliably without expensive subscriptions or restrictive rate limits.
+
+To solve this, `CryptoWatcher` implements a composite `MultiFetcher` interface that dynamically classifies and routes ticker symbols:
+
+```text
+                                  [ User Input: "aapl", "sol", "pepe" ]
+                                                    │
+                                                    ▼
+                                            [ MultiFetcher ]
+                                                    │
+                   ┌────────────────────────────────┼────────────────────────────────┐
+                   ▼                                ▼                                ▼
+         [ Coinbase REST API ]            [ Equity / Yahoo Feed ]           [ CoinGecko API ]
+         ├── BTC, ETH, SOL                ├── SPY, TSLA, AAPL, NVDA         ├── On-chain altcoins
+         └── 24h hourly OHLCV candles     └── 15m intraday quote series     └── Meme coins & tokens
+```
+
+1. **Coinbase Exchange API**: Used for major crypto pairs (`BTC-USD`, `ETH-USD`, `SOL-USD`). Provides high-frequency orderbook snapshots and complete 24-hour hourly candle arrays without requiring an API key.
+2. **Equity Feeds**: Resolves US equities and index ETFs (`SPY`, `TSLA`, `GOOGL`, `AAPL`) with 24-hour high/low metrics and market cap formatting.
+3. **CoinGecko Resolver**: Used as a dynamic fallback for tokens not listed on Coinbase (e.g. `PEPE`, `WIF`, `BONK`, `HMM`).
+
+When you press `a` in the dashboard and type a ticker name, the routing engine queries the fetcher pool concurrently, automatically infers whether it belongs in the **Cryptocurrency** section or the **Stocks & Equities** section, and persists the update to `~/.config/cryptowatcher/config.json`.
+
+---
+
+## Keyboard-First Productivity
+
+Because it was built for developers who live in tmux and terminal splits, every interaction is keyboard-driven:
+
+| Key | Action |
+| :--- | :--- |
+| `c` / `v` | Toggle between **Sparkline Chart** and **Big Price Hero** view |
+| `h` / `j` / `k` / `l` or `←` / `↓` / `↑` / `→` | 2D navigation across cards and sections |
+| `a` / `+` | Open interactive modal to add any stock or crypto pair |
+| `d` / `x` | Remove selected widget card with safety confirmation prompt |
+| `r` | Force instant refresh across all active tickers |
+| `q` | Quit cleanly, restoring terminal alternate screen buffer |
+
+---
+
+## Try It Out
+
+You can install CryptoWatcher directly on macOS or Linux via Homebrew:
+
+```bash
+brew install pawiromitchel/tap/cryptowatcher
+cryptowatcher
+```
+
+Or run it with mock data if you're offline or testing:
+
+```bash
+cryptowatcher -mock
+```
+
+Check out the full source code and release binaries on GitHub: **[github.com/pawiromitchel/cryptowatcher](https://github.com/pawiromitchel/cryptowatcher)**.

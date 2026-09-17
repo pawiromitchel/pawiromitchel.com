@@ -2,35 +2,38 @@ import React from "react";
 import { Container } from "../layout/Container";
 import { Badge } from "../ui/Badge";
 import { SectionHeading } from "../ui/SectionHeading";
-import { topSkills } from "@/app/data/skills";
+import { skillsByCategory } from "@/app/data/skills";
+
+const categoryLabels: Record<string, string> = {
+  languages: "Languages",
+  frameworks: "Frameworks & Libraries",
+  web3: "Web3 & Blockchain",
+  devops: "DevOps & Infrastructure",
+};
 
 export function SkillsSection() {
-  // Group top skills by category
-  const skillsByCategory = {
-    languages: topSkills.filter((s) => s.category === "languages"),
-    frameworks: topSkills.filter((s) => s.category === "frameworks"),
-    web3: topSkills.filter((s) => s.category === "web3"),
-    devops: topSkills.filter((s) => s.category === "devops"),
-  };
-
   return (
-    <section id="skills" className="py-24 bg-background">
+    <section id="skills" className="py-24 bg-background border-t border-border/50">
       <Container>
         <div className="mb-16">
-          <SectionHeading subtitle="Technologies and tools I work with daily">
-            Key Skills & Expertise
+          <SectionHeading centered subtitle="Technologies, frameworks, and infrastructure tools I engineer with">
+            Technical Skills & Expertise
           </SectionHeading>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {Object.entries(skillsByCategory).map(([category, categorySkills]) => (
-            categorySkills.length > 0 && (
-              <div key={category} className="animate-fade-in-up">
-                <h3 className="text-lg font-semibold text-foreground mb-5 capitalize">
-                  {category}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+          {Object.entries(skillsByCategory).map(([category, items]) => (
+            items.length > 0 && (
+              <div
+                key={category}
+                className="p-6 rounded-2xl bg-card-bg border border-border transition-all duration-300 hover:border-primary/40 hover:shadow-lg"
+              >
+                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-primary inline-block" />
+                  {categoryLabels[category] || category}
                 </h3>
-                <div className="flex flex-wrap gap-3">
-                  {categorySkills.map((skill) => (
+                <div className="flex flex-wrap gap-2.5">
+                  {items.map((skill) => (
                     <Badge
                       key={skill.name}
                       variant="primary"
