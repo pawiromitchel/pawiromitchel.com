@@ -73,9 +73,16 @@ export function Hero() {
 
             {/* CTA and Social */}
             <div className="flex flex-col sm:flex-row items-center gap-4 lg:gap-6">
-              <a href="mailto:pawiromitchel@gmail.com">
-                <Button size="lg">Get In Touch</Button>
-              </a>
+              <div className="flex flex-wrap items-center gap-3">
+                <a href="mailto:pawiromitchel@gmail.com">
+                  <Button size="lg">Get In Touch</Button>
+                </a>
+                <a href="#experience">
+                  <Button size="lg" variant="secondary">
+                    View Experience
+                  </Button>
+                </a>
+              </div>
 
               {/* Social Links */}
               <div className="flex gap-3 lg:gap-4">

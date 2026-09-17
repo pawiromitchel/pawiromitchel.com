@@ -38,22 +38,6 @@ export function Card({
   );
 }
 
-interface CardImageProps {
-  src: string;
-  alt: string;
-  className?: string;
-}
-
-export function CardImage({ src, alt, className = "" }: CardImageProps) {
-  return (
-    <img
-      src={src}
-      alt={alt}
-      className={`w-full h-48 object-cover rounded-lg mb-4 ${className}`}
-    />
-  );
-}
-
 interface CardTitleProps {
   children: ReactNode;
   className?: string;

@@ -6,9 +6,10 @@ import { Container } from "./Container";
 
 const navItems = [
   { label: "Home", href: "/" },
-  { label: "Experience", href: "#experience" },
-  { label: "Projects", href: "#projects" },
-  { label: "Education", href: "#education" },
+  { label: "Experience", href: "/#experience" },
+  { label: "Projects", href: "/#projects" },
+  { label: "Skills", href: "/#skills" },
+  { label: "Education", href: "/#education" },
   { label: "Blog", href: "/blog" },
 ];
 
@@ -26,12 +27,13 @@ export function Navigation() {
   }, []);
 
   const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href.startsWith("#")) {
+    setIsOpen(false);
+    if (href.startsWith("/#") && typeof window !== "undefined" && window.location.pathname === "/") {
       e.preventDefault();
-      const element = document.querySelector(href);
+      const hash = href.replace("/", "");
+      const element = document.querySelector(hash);
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });
-        setIsOpen(false);
       }
     }
   };
