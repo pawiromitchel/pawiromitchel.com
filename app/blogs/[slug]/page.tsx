@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { readdirSync } from "fs";
 import { join } from "path";
+import { Navigation } from "@/app/components/layout/Navigation";
+import { Footer } from "@/app/components/layout/Footer";
+import { Container } from "@/app/components/layout/Container";
+import { Badge } from "@/app/components/ui/Badge";
 
 interface BlogPost {
   title: string;
@@ -37,7 +42,7 @@ export async function generateMetadata(
   const { metadata } = await getBlogPost(params.slug);
 
   return {
-    title: metadata.title,
+    title: `${metadata.title} - Pawiro Mitchel`,
     description: metadata.description,
   };
 }
@@ -58,28 +63,76 @@ export default async function BlogPage(props: BlogPageProps) {
   const { content: Content, metadata } = await getBlogPost(params.slug);
 
   return (
-    <article className="prose prose-invert max-w-2xl mx-auto">
-      <header className="mb-8">
-        <h1>{metadata.title}</h1>
-        <p className="text-gray-400 text-sm">
-          {new Date(metadata.date).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </p>
-        <div className="flex gap-2 mt-4">
-          {metadata.tags.map((tag) => (
-            <span
-              key={tag}
-              className="bg-gray-800 text-gray-300 px-2 py-1 rounded text-sm"
+    <>
+      <Navigation />
+      <main className="pt-24 pb-20 bg-background min-h-screen">
+        <Container className="max-w-3xl">
+          {/* Back button */}
+          <div className="mb-8">
+            <Link
+              href="/blog"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-primary transition-colors"
             >
-              {tag}
-            </span>
-          ))}
-        </div>
-      </header>
-      <Content />
-    </article>
+              <span>←</span> Back to all articles
+            </Link>
+          </div>
+
+          <article>
+            {/* Article Header */}
+            <header className="mb-10 pb-8 border-b border-border">
+              <div className="flex items-center gap-3 text-xs text-muted mb-4">
+                <time dateTime={metadata.date}>
+                  {new Date(metadata.date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </time>
+                <span>•</span>
+                <span>Mitchel Pawirodinomo</span>
+              </div>
+
+              <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground leading-[1.15] mb-6">
+                {metadata.title}
+              </h1>
+
+              <p className="text-base md:text-lg text-muted leading-relaxed mb-6">
+                {metadata.description}
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                {metadata.tags.map((tag) => (
+                  <Badge key={tag} size="sm" variant="primary">
+                    #{tag}
+                  </Badge>
+                ))}
+              </div>
+            </header>
+
+            {/* Article Content */}
+            <div className="prose prose-invert prose-blue max-w-none text-muted leading-relaxed prose-headings:text-foreground prose-headings:font-bold prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3 prose-p:mb-5 prose-p:leading-relaxed prose-a:text-primary hover:prose-a:underline prose-code:text-primary-light prose-code:bg-card-bg prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-pre:bg-[#0b0f17] prose-pre:border prose-pre:border-border prose-pre:rounded-xl prose-li:my-1">
+              <Content />
+            </div>
+
+            {/* Post-article navigation */}
+            <div className="mt-16 pt-8 border-t border-border flex justify-between items-center">
+              <Link
+                href="/blog"
+                className="text-sm font-medium text-primary hover:underline"
+              >
+                ← Back to Blog
+              </Link>
+              <Link
+                href="/#experience"
+                className="text-sm font-medium text-muted hover:text-foreground transition-colors"
+              >
+                View Experience →
+              </Link>
+            </div>
+          </article>
+        </Container>
+      </main>
+      <Footer />
+    </>
   );
 }
