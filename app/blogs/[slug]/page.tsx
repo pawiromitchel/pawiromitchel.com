@@ -5,7 +5,6 @@ import { join } from "path";
 import { Navigation } from "@/app/components/layout/Navigation";
 import { Footer } from "@/app/components/layout/Footer";
 import { Container } from "@/app/components/layout/Container";
-import { Badge } from "@/app/components/ui/Badge";
 
 interface BlogPost {
   title: string;
@@ -71,60 +70,69 @@ export default async function BlogPage(props: BlogPageProps) {
           <div className="mb-8">
             <Link
               href="/blog"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-primary transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted hover:text-primary transition-colors"
             >
               <span>←</span> Back to all articles
             </Link>
           </div>
 
           <article>
-            {/* Article Header */}
-            <header className="mb-10 pb-8 border-b border-border">
-              <div className="flex items-center gap-3 text-xs text-muted mb-4">
-                <time dateTime={metadata.date}>
+            {/* Clean, Uncluttered Article Header */}
+            <header className="mb-10">
+              {/* Category & Date Eyebrow */}
+              <div className="flex items-center gap-2.5 text-xs font-semibold uppercase tracking-wider text-primary mb-3">
+                <span>{metadata.tags[0] || "Engineering"}</span>
+                <span className="text-muted/40">•</span>
+                <time dateTime={metadata.date} className="text-muted font-normal">
                   {new Date(metadata.date).toLocaleDateString("en-US", {
                     year: "numeric",
-                    month: "long",
+                    month: "short",
                     day: "numeric",
                   })}
                 </time>
-                <span>•</span>
-                <span>Mitchel Pawirodinomo</span>
               </div>
 
-              <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground leading-[1.15] mb-6">
+              {/* Article Title */}
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground leading-[1.2] mb-5">
                 {metadata.title}
               </h1>
 
-              <p className="text-base md:text-lg text-muted leading-relaxed mb-6">
-                {metadata.description}
-              </p>
-
-              <div className="flex flex-wrap gap-2">
-                {metadata.tags.map((tag) => (
-                  <Badge key={tag} size="sm" variant="primary">
-                    #{tag}
-                  </Badge>
-                ))}
+              {/* Author Byline & Tags Row */}
+              <div className="flex flex-wrap items-center justify-between gap-3 py-3.5 border-y border-border/70 text-xs text-muted">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-foreground">Mitchel Pawirodinomo</span>
+                  <span className="text-muted/40">•</span>
+                  <span>Technical Operations Engineer</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {metadata.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-2 py-0.5 rounded-full bg-card-bg border border-border text-[11px] text-muted font-mono"
+                    >
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
               </div>
             </header>
 
             {/* Article Content */}
-            <div className="prose prose-invert prose-blue max-w-none text-muted leading-relaxed prose-headings:text-foreground prose-headings:font-bold prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3 prose-p:mb-5 prose-p:leading-relaxed prose-a:text-primary hover:prose-a:underline prose-code:text-primary-light prose-code:bg-card-bg prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-pre:bg-[#0b0f17] prose-pre:border prose-pre:border-border prose-pre:rounded-xl prose-li:my-1">
+            <div className="prose prose-invert prose-blue max-w-none text-muted leading-relaxed prose-headings:text-foreground prose-headings:font-bold prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:border-b prose-h2:border-border/40 prose-h2:pb-2 prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3 prose-p:mb-5 prose-p:leading-relaxed prose-a:text-primary hover:prose-a:underline prose-code:text-primary-light prose-code:bg-card-bg prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-pre:bg-[#0b0f17] prose-pre:border prose-pre:border-border prose-pre:rounded-xl prose-li:my-1">
               <Content />
             </div>
 
             {/* Post-article navigation */}
-            <div className="mt-16 pt-8 border-t border-border flex justify-between items-center">
+            <div className="mt-16 pt-8 border-t border-border flex justify-between items-center text-sm">
               <Link
                 href="/blog"
-                className="text-sm font-medium text-primary hover:underline"
+                className="font-medium text-primary hover:underline"
               >
-                ← Back to Blog
+                ← Back to all articles
               </Link>
               <Link
                 href="/#experience"
-                className="text-sm font-medium text-muted hover:text-foreground transition-colors"
+                className="font-medium text-muted hover:text-foreground transition-colors"
               >
                 View Experience →
               </Link>
