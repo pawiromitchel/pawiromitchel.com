@@ -7,6 +7,14 @@ import { SectionHeading } from "../ui/SectionHeading";
 import { projects } from "@/app/data/projects";
 
 const projectSnippets: Record<string, { prompt: string; output: string[] }> = {
+  cashly: {
+    prompt: "curl -s https://cashlyfinance.com/api/health",
+    output: [
+      "● go daemon active [sqlite-wal]",
+      "✓ imap banking sync: 0 unread alerts",
+      "→ gemini copilot: ready",
+    ],
+  },
   bcron: {
     prompt: "bcron list --active",
     output: [

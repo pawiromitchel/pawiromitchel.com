@@ -1,0 +1,184 @@
+export const metadata = {
+  title: "Building Cashly: Architecting a Multi-Asset Financial Intelligence Engine & AI Copilot",
+  description: "Why I stopped using third-party budget apps and built a self-hosted financial operating system with a Go daemon, Next.js 14, automated bank email ingestion, dynamic cashflow models, and an autonomous AI copilot.",
+  date: "2026-03-12",
+  tags: ["go", "nextjs", "sqlite", "ai", "fintech", "systems"],
+};
+
+Most personal finance apps make you choose between two bad tradeoffs:
+
+1. **The Black-Box Cloud Aggregator**: You hand your bank credentials over to Plaid, Yodlee, or MX. When their screen-scrapers break, your balances freeze for three weeks. If you live or bank outside of the US or EU, your financial institutions don't even exist in their dropdown. On top of that, good luck tracking staking yield, DeFi liquidity positions, or tokenized equity in the same view.
+2. **The Spreadsheet Trap**: You build an elaborate 18-tab Google Sheet. It works until you forget to manually copy over debit card receipts for two weekends, and the entire cash flow model falls out of sync.
+
+I wanted something different: a real, self-hosted financial operating system that runs locally, automates ingestion directly from banking alerts, models cash flow dynamically, tracks multi-chain crypto alongside fiat accounts, and provides an autonomous AI copilot that can query balances, record transactions, and rollback changes on command.
+
+That is why I built **[Cashly](https://cashlyfinance.com/)**.
+
+---
+
+## The System Architecture
+
+Cashly is structured as a dual-engine architecture: a high-throughput **Go backend daemon** running background schedulers and ledger calculations, paired with a responsive **Next.js 14 web application** running behind Cloudflare Tunnel with PIN-protected authentication.
+
+```text
+                                  [ Cloudflare Ingress ]
+                                             │
+                                             ▼
+                              [ Next.js 14 Web UI (Port 3005) ]
+                              ├── PIN Authentication & JWT Sessions
+                              ├── Defense-in-depth Path Filtering
+                              └── SWR Client Caching & Privacy Mode
+                                             │
+                                (Internal Token Proxy)
+                                             ▼
+                        [ Go Unified Backend Daemon (Port 8080) ]
+       ┌───────────────────────────────┬───────────────────────────────┐
+       ▼                               ▼                               ▼
+[ HTTP REST API ]            [ Background Schedulers ]       [ Autonomous AI Copilot ]
+├── Account Valuations       ├── IMAP Email Ingestion (2m)   ├── Fast-path ledger updates
+├── Transactions & Ledger    ├── Price Updater Cron (5m)     ├── Transaction rollbacks
+├── Cashflow Engine (Sankey) └── Token Rebalance Watchdog    └── Multi-turn financial chat
+├── Market Intelligence
+└── Financial Statements
+       │
+       ▼
+[ SQLite 3 Database (WAL Mode) ] ◄────► [ Master Excel Workbook ]
+(finance.db: accounts, transactions,    (Bidirectional sync via
+merchants, budgets, audit logs)          excelize/v2 engine)
+```
+
+---
+
+## 1. Zero-Credential Bank Sync via RFC 822 Email Alerts
+
+Rather than trusting banking aggregators with API keys or login credentials, Cashly uses a push-based model. Most banks and fintech providers fire instant notification emails the moment a debit card swipe, wire transfer, or ATM withdrawal occurs.
+
+The Go backend daemon runs an automated IMAP ingestion worker that polls secure mailboxes every two minutes.
+
+### Solving Idempotency & Deduplication
+
+Email delivery is inherently at-least-once. If a network blip occurs during an IMAP handshake, an email might be re-fetched. To guarantee strict idempotency, every incoming transaction alert passes through a three-layer deduplication filter before touching the ledger:
+
+```go
+// GenerateDeterministicTxHash computes a SHA-256 fingerprint from immutable transaction properties
+func GenerateDeterministicTxHash(messageID string, date time.Time, amountCents int64, rawSubject string) string {
+    hasher := sha256.New()
+    hasher.Write([]byte(messageID))
+    hasher.Write([]byte(strconv.FormatInt(date.Unix(), 10)))
+    hasher.Write([]byte(strconv.FormatInt(amountCents, 10)))
+    hasher.Write([]byte(rawSubject))
+    return hex.EncodeToString(hasher.Sum(nil))
+}
+```
+
+If a bank alert doesn't provide an explicit RFC 822 `Message-ID`, the engine computes a composite hash from the timestamp, settled amount in integer cents, and cleaned merchant pattern. If the hash exists in the SQLite `transactions` table, it is dropped as a duplicate without writing dirty audit state.
+
+---
+
+## 2. Dynamic Sankey Cash Flow Engine
+
+Most budget apps present finances as simple pie charts. Pie charts tell you where money went in aggregate, but they fail to show **how liquidity moves through your system**.
+
+Cashly includes a fully dynamic Sankey cashflow engine that computes the exact topology of your capital:
+
+```text
+[ Inflow Sources ] ──► [ Clearing Hubs ] ──► [ Operating Accounts ] ──► [ Outflows & Savings ]
+- Foreign Invoicing     - Payoneer USD        - Local Chequing Accounts   - Fixed Living Costs
+- Staking Yield         - Crypto Vaults       - Local Savings Accounts    - Discretionary Budgets
+- Investment Income                           - Base L2 Smart Wallets     - DCA Asset Allocations
+```
+
+### Double-Entry Ledgers and Multi-Currency Nodes
+
+Every transaction in Cashly models both legs of a transfer:
+- **Primary Leg**: The source account debit and destination credit.
+- **Fx Conversion**: Exchange rate metadata if swapping between currencies (e.g. USD to local fiat).
+- **Fee Allocation**: Automatic deduction of network gas or international wire fees into dedicated operational expense categories.
+
+The frontend consumes this via a normalized DAG (Directed Acyclic Graph) computed on the fly by the Go daemon, producing an interactive Sankey diagram that visually tracks burn rate, runway, and net savings rate month over month.
+
+---
+
+## 3. Multi-Asset Custody: Fiat, Yield Vaults & Tokenized Equities
+
+A modern balance sheet rarely lives entirely in one bank. Cashly tracks the entire spectrum of modern custody:
+
+| Asset Class | Custody Method | Tracking & Valuation Mechanism |
+| :--- | :--- | :--- |
+| **Traditional Fiat** | Multi-bank checking & savings | Automated IMAP ingestion + reconciliation ledger |
+| **DeFi Yield Vaults** | Smart contract vaults (Ether.fi, Base L2) | Contract event polling + on-chain APR calculations |
+| **Liquid Staking** | Hardware cold storage (stETH, SOL, NEAR) | Validator RPC queries + reward balance delta tracking |
+| **Tokenized Equities** | Base L2 Fractional Shares | Live market pricing scrapers via Binance & CoinGecko |
+
+By centralizing multi-asset pricing into a periodic cron job with localized SQLite caching, portfolio valuation queries execute in **under 2 milliseconds** without hammering external rate limits.
+
+---
+
+## 4. Autonomous Financial Copilot & Fast-Path Rollbacks
+
+One of the biggest friction points in manual tracking is recording cash transactions on the go. Opening an app, navigating five menus, picking a date picker, and selecting a category guarantees you will abandon the habit within two weeks.
+
+Cashly integrates a dedicated **Gemini AI Copilot** designed specifically for financial operations.
+
+### Multi-Turn Natural Language Logging
+
+Instead of forms, you can type or dictate naturally:
+> *"Paid \$35 cash for grocery run at Supermarket yesterday evening"*
+
+The copilot parses the intent, cleans the merchant name via regularized merchant dictionaries, matches the correct expense category, selects the cash clearing account, and stages the transaction in SQLite:
+
+```json
+{
+  "action": "RECORD_TRANSACTION",
+  "data": {
+    "account": "Cash Wallet",
+    "merchant": "Supermarket",
+    "category": "Groceries",
+    "amount": 35.00,
+    "timestamp": "2026-03-11T19:30:00Z"
+  }
+}
+```
+
+### Safety First: Deterministic Rollback Journaling
+
+LLMs can make mistakes or misinterpret ambiguous requests. To prevent silent data corruption, every mutation initiated by the AI Copilot is logged to an explicit `copilot_action_log` table with an undo token:
+
+```go
+type CopilotActionLog struct {
+    ID           string    `json:"id"`
+    SessionID    string    `json:"session_id"`
+    ActionType   string    `json:"action_type"` // CREATE_TX, UPDATE_BUDGET, RECLASSIFY
+    TargetTable  string    `json:"target_table"`
+    TargetID     string    `json:"target_id"`
+    PreviousState []byte   `json:"previous_state"` // Snapshot of raw row bytes
+    CreatedAt    time.Time `json:"created_at"`
+}
+```
+
+If the agent misinterprets an amount or assigns the wrong category, saying *"Undo that"* immediately triggers an atomic rollback restoring the previous row state from the byte snapshot without manual database surgery.
+
+---
+
+## 5. Market Cycle Intelligence & Macro Regime Detection
+
+Portfolio management isn't just about recording what happened; it's about understanding macro market positioning.
+
+Cashly includes built-in quantitative oscillators calculated directly from weekly OHLCV candlestick data for driving assets (BTC, ETH, SOL, S&P 500):
+
+- **Pi Cycle Top & Bottom Gauge**: Quantifies the spread between the 111-day SMA and the 350-day SMA × 2 (Top indicator) alongside the 471-day SMA × 0.745 (Bottom indicator) to detect macro market exhaustion.
+- **Multi-EMA Trend Ribbons**: Computes the 20, 50, and 200 weekly Exponential Moving Averages to confirm bull/bear regime shifts before executing monthly portfolio rebalances.
+
+---
+
+## Performance & Privacy By Design
+
+When you are dealing with personal net worth and transaction history, cloud convenience cannot compromise privacy:
+
+- **Local-First & Self-Contained**: The database is a single SQLite file running in WAL mode with fast foreign key constraints.
+- **Dockerized Single-Command Deployment**: Both the Go daemon and Next.js frontend run in hardened containers behind an authenticated reverse proxy.
+- **No Third-Party Analytics**: No telemetry, no third-party tracker scripts, and zero cloud lock-in.
+
+Building Cashly proved that you don't need to surrender your financial sovereignty to proprietary cloud startups to have an intelligent, beautiful, and fully automated wealth dashboard.
+
+If you are interested in exploring the project or discussing fintech systems engineering, feel free to reach out or check out [Cashly](https://cashlyfinance.com/).

@@ -14,6 +14,19 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: "cashly",
+    title: "Cashly",
+    description: "Multi-asset personal finance & portfolio intelligence engine with an autonomous AI copilot",
+    longDescription:
+      "A self-hosted financial operating system featuring a Go backend daemon, Next.js 14 web client, automated bank email ingestion, multi-asset portfolio tracking (fiat, DeFi vaults, tokenized equities), and an autonomous Gemini AI copilot.",
+    image: "/images/projects/cashly.png",
+    technologies: ["Go", "Next.js", "SQLite", "Gemini AI", "Cloudflare", "Fintech"],
+    category: "fullstack",
+    liveUrl: "https://cashlyfinance.com/",
+    featured: true,
+    year: 2026,
+  },
+  {
     id: "bcron",
     title: "bcron",
     description: "Modern Go CLI & background daemon with sub-10ms trigger overhead and an interactive TUI",
