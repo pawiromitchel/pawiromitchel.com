@@ -1,0 +1,91 @@
+export const metadata = {
+  title: "Ditching Docker Desktop: Lightweight Containers with Colima and Portainer",
+  description: "Docker Desktop on macOS eats gigabytes of RAM just sitting idle. Here is how I replaced it with Colima for the container runtime and Portainer for the UI.",
+  date: "2026-09-19",
+  tags: ["docker", "macos", "devops", "containers", "tools"],
+};
+
+Docker Desktop on macOS has become notoriously heavy. Even with nothing running, the Electron GUI, background helper services, and virtual machine overhead frequently chew through 4GB to 8GB of memory and keep CPU threads awake.
+
+If you only need a fast, reliable Docker daemon without the bloat, [Colima](https://github.com/abiosoft/colima) is an immediate upgrade. And if you still want a visual dashboard to inspect containers, images, volumes, and logs, you can run [Portainer](https://www.portainer.io/) inside Docker itself in one command.
+
+Here is the exact setup.
+
+---
+
+## 1. Install Colima and the Docker CLI
+
+Colima provides container runtimes on macOS (and Linux) with minimal setup, built on Lima (Linux virtual machines).
+
+You will need Homebrew installed. If you haven't already uninstalled Docker Desktop, make sure you quit it first.
+
+```bash
+# Install the Docker CLI client and Colima
+brew install docker docker-compose colima
+```
+
+*Note: You only need the CLI clients now, not the desktop application.*
+
+---
+
+## 2. Start Colima with Custom Resources
+
+By default, running `colima start` launches a VM with 2 CPUs and 2GB of memory. You can configure it to your machine's specs:
+
+```bash
+colima start --cpu 4 --memory 4 --disk 40
+```
+
+### Useful Colima Commands
+
+- **Check status:**
+  ```bash
+  colima status
+  ```
+- **Stop the VM:**
+  ```bash
+  colima stop
+  ```
+- **Restart or edit configuration:**
+  ```bash
+  colima restart
+  ```
+
+Once Colima is up, your standard `docker` CLI commands work right away:
+
+```bash
+docker ps
+```
+
+---
+
+## 3. Running Portainer for the UI
+
+The biggest complaint people have about removing Docker Desktop is losing the dashboard. Running Portainer Community Edition inside Docker solves this cleanly without running a dedicated macOS desktop app.
+
+Start Portainer and mount the Docker socket:
+
+```bash
+docker run -d \
+  --name portainer \
+  -p 9000:9000 \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --restart=always \
+  portainer/portainer-ce:latest
+```
+
+### Accessing Portainer
+
+1. Open your browser and navigate to `http://localhost:9000`.
+2. Set your admin username and password on the initial welcome screen.
+3. Select your local Docker environment.
+
+You now get a full-featured management interface for containers, networks, volumes, resource usage, and container logs.
+
+---
+
+## 4. Why This Setup Works Better
+
+1. **Idle resource usage drops dramatically.** Colima runs a lightweight Linux VM without Electron wrappers or proprietary telemetry.
+2. **Portainer is disposable.** Portainer is just another container. You can stop or delete it anytime, or keep it running with `--restart=always`.
+3. **Transparent workflow.** Your `docker-compose.yml` files, CLI aliases, and existing scripts work out of the box.
