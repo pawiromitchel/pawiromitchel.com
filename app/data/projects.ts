@@ -1,160 +1,81 @@
 export interface Project {
   id: string;
   title: string;
+  tagline: string;
   description: string;
-  longDescription: string;
   image: string;
-  technologies: string[];
-  category: "web3" | "infrastructure" | "fullstack";
-  githubUrl?: string;
+  imageAlt: string;
+  stack: string[];
   liveUrl?: string;
-  featured: boolean;
+  githubUrl?: string;
+  postSlug?: string;
   year: number;
 }
 
+// Shown in order on the homepage; the first one gets the large card.
 export const projects: Project[] = [
   {
     id: "cashly",
     title: "Cashly",
-    description: "Multi-asset personal finance & portfolio intelligence engine with an autonomous AI copilot",
-    longDescription:
-      "A self-hosted financial operating system featuring a Go backend daemon, Next.js 14 web client, automated bank email ingestion, multi-asset portfolio tracking (fiat, DeFi vaults, tokenized equities), and an autonomous Gemini AI copilot.",
-    image: "/images/projects/cashly.png",
-    technologies: ["Go", "Next.js", "SQLite", "Gemini AI", "Cloudflare", "Fintech"],
-    category: "fullstack",
+    tagline: "Self-hosted finance for fiat and crypto",
+    description:
+      "A private ledger that parses bank notification emails, tracks multi-currency cash and crypto balances, and projects runway. A Go daemon on SQLite, a Next.js client, and a Gemini-powered assistant for market analysis and automation.",
+    image: "/images/projects/cashly-site.jpg",
+    imageAlt: "Cashly landing page with net worth, monthly spend and runway cards",
+    stack: ["Go", "Next.js", "SQLite", "Tailwind", "Gemini"],
     liveUrl: "https://cashlyfinance.com/",
-    featured: true,
+    postSlug: "building-cashly-multi-asset-financial-intelligence-engine",
+    year: 2026,
+  },
+  {
+    id: "apexcv",
+    title: "ApexCV Builder",
+    tagline: "A calm resume builder",
+    description:
+      "Guided CV editor with a live preview, multiple templates, PDF export and shareable links. No account needed.",
+    image: "/images/projects/apexcv.jpg",
+    imageAlt: "ApexCV Builder landing page showing the editor next to a live CV preview",
+    stack: ["Go", "Next.js", "SQLite", "Tailwind"],
+    liveUrl: "https://apexcvbuilder.com/",
     year: 2026,
   },
   {
     id: "bcron",
     title: "bcron",
-    description: "Modern Go CLI & background daemon with sub-10ms trigger overhead and an interactive TUI",
-    longDescription:
-      "A modern CLI task scheduler built in Go featuring an interactive terminal UI for Unix systems. Supports timezone-aware crontab scheduling, background execution daemon, full execution logging, and desktop notifications.",
+    tagline: "Cron with logs, a daemon and a TUI",
+    description:
+      "A Go replacement for crontab: timezone-aware schedules, a background daemon, full run history and desktop notifications, all managed from an interactive terminal UI.",
     image: "/images/projects/bcron.jpg",
-    technologies: ["Go", "CLI", "TUI", "Cron", "Linux"],
-    category: "infrastructure",
+    imageAlt: "bcron terminal UI listing scheduled jobs and their last runs",
+    stack: ["Go", "Bubble Tea", "Linux"],
     githubUrl: "https://github.com/pawiromitchel/bcron",
-    featured: true,
+    postSlug: "architecting-bcron-go-tui-task-scheduler",
     year: 2026,
   },
   {
     id: "cryptowatcher",
     title: "CryptoWatcher",
-    description: "macOS Stocks-style terminal dashboard with high-definition Braille sparklines and multi-feed routing",
-    longDescription:
-      "A keyboard-driven real-time terminal dashboard built in Go using Bubble Tea and Lipgloss. Inspired by the macOS Stocks widget, featuring 3-row sub-pixel Braille line charts, 24h price range sliders, and multi-feed routing across Coinbase, CoinGecko, and equity markets.",
-    image: "/images/projects/cryptowatcher.png",
-    technologies: ["Go", "Bubble Tea", "Lipgloss", "TUI", "CLI", "Web3"],
-    category: "infrastructure",
+    tagline: "Stocks-widget dashboard for the terminal",
+    description:
+      "Keyboard-driven market dashboard with Braille sparklines, routing crypto and equity tickers across several price feeds.",
+    image: "/images/projects/cryptowatcher.jpg",
+    imageAlt: "CryptoWatcher terminal grid of crypto and stock tickers with sparklines",
+    stack: ["Go", "Bubble Tea", "Lipgloss"],
     githubUrl: "https://github.com/pawiromitchel/cryptowatcher",
-    featured: true,
+    postSlug: "building-cryptowatcher-macos-stocks-terminal-dashboard",
     year: 2026,
   },
   {
     id: "forexsu",
     title: "ForexSU",
-    description: "Real-time PWA aggregator querying 8 bank portals with 5-minute sync and offline caching",
-    longDescription:
-      "A Progressive Web App aggregating real-time foreign exchange rates across major Surinamese banking institutions. Features automated 5-minute data refresh, offline caching via Service Workers, dark mode, and multi-currency transfer conversions.",
+    tagline: "Exchange rates from 8 Surinamese banks",
+    description:
+      "Installable PWA that scrapes USD and EUR rates from local banks every few minutes and works offline.",
     image: "/images/projects/forexsu.jpg",
-    technologies: ["TypeScript", "PWA", "Service Workers", "Node.js", "Web Scraping"],
-    category: "fullstack",
+    imageAlt: "ForexSU table comparing USD and EUR buy and sell rates per bank",
+    stack: ["TypeScript", "Node.js", "PWA"],
     liveUrl: "https://forexsu.co/",
-    featured: true,
+    postSlug: "resilient-scraping-and-pwa-architecture-forexsu",
     year: 2026,
-  },
-  {
-    id: "pawiromitchel-com",
-    title: "Portfolio & Engineering Blog",
-    description: "Personal website and technical blog built with Next.js 16 and MDX",
-    longDescription:
-      "A single-page developer portfolio and blog platform built with Next.js 16, TypeScript, Tailwind CSS v4, and MDX. Optimized for static site generation and deployed automatically via GitHub Actions.",
-    image: "/images/projects/portfolio.jpg",
-    technologies: ["Next.js", "TypeScript", "Tailwind CSS", "React", "MDX"],
-    category: "fullstack",
-    githubUrl: "https://github.com/pawiromitchel/pawiromitchel.com",
-    liveUrl: "https://pawiromitchel.com",
-    featured: false,
-    year: 2024,
-  },
-  {
-    id: "ftx-api-rest-extended",
-    title: "FTX API REST Extended",
-    description: "Extended REST API trading library for Node.js with 10k+ downloads on npm",
-    longDescription:
-      "An extended open-source Node.js library for trading operations on FTX REST APIs, implementing missing spot, futures, and subaccount management helper functions.",
-    image: "/images/projects/ftx-api.jpg",
-    technologies: ["JavaScript", "Node.js", "REST API", "npm"],
-    category: "fullstack",
-    githubUrl: "https://github.com/pawiromitchel/ftx-api-rest-extended",
-    liveUrl: "https://www.npmjs.com/package/ftx-api-rest-extended",
-    featured: true,
-    year: 2021,
-  },
-  {
-    id: "ftx-telegram-trader",
-    title: "FTX Telegram Trader",
-    description: "Telegram interface for executing crypto exchange orders",
-    longDescription:
-      "A lightweight Telegram bot interface enabling real-time order creation, account balance checks, and trade management via automated bot commands.",
-    image: "/images/projects/ftx-trader.jpg",
-    technologies: ["JavaScript", "Node.js", "Telegram API", "Cryptocurrency"],
-    category: "fullstack",
-    githubUrl: "https://github.com/pawiromitchel/ftx-telegram-trader",
-    featured: false,
-    year: 2021,
-  },
-  {
-    id: "defimaxi",
-    title: "DefiMaxi",
-    description: "DeFi automation tool for monitoring on-chain liquidity and yields",
-    longDescription:
-      "An automated bot designed to monitor decentralized liquidity pools, track yield farm metrics, and notify users of key on-chain opportunities.",
-    image: "/images/projects/defimaxi.jpg",
-    technologies: ["JavaScript", "Web3.js", "Ethereum", "DeFi"],
-    category: "web3",
-    githubUrl: "https://github.com/pawiromitchel/DefiMaxi",
-    featured: false,
-    year: 2021,
-  },
-  {
-    id: "gas-tracker",
-    title: "Gas Tracker",
-    description: "Ethereum real-time gas price monitor",
-    longDescription:
-      "A lightweight browser utility providing real-time Ethereum gas price tracking and gas cost estimates across standard, fast, and instant transaction speeds.",
-    image: "/images/projects/gas-tracker.jpg",
-    technologies: ["JavaScript", "Ethereum", "Web3.js", "HTML/CSS"],
-    category: "web3",
-    githubUrl: "https://github.com/pawiromitchel/Gas-Tracker",
-    featured: false,
-    year: 2021,
-  },
-  {
-    id: "ftx-dca-script",
-    title: "FTX DCA Script",
-    description: "Automated Dollar-Cost-Averaging script for exchange trading",
-    longDescription:
-      "A automated trading script implementing disciplined Dollar-Cost-Averaging (DCA) strategies on exchange orderbooks with custom interval scheduling.",
-    image: "/images/projects/ftx-dca.jpg",
-    technologies: ["JavaScript", "Node.js", "REST API", "Cryptocurrency"],
-    category: "fullstack",
-    githubUrl: "https://github.com/pawiromitchel/ftx-dca-script",
-    featured: false,
-    year: 2021,
-  },
-  {
-    id: "suriname-fx-scraper",
-    title: "Suriname FX Exchange Scraper",
-    description: "Automated FX rate scraper and alert notification bot",
-    longDescription:
-      "Automated web scraping service that periodically checks local exchange rates across bank portals and broadcasts rate changes to Telegram channels.",
-    image: "/images/projects/fx-scraper.jpg",
-    technologies: ["JavaScript", "Node.js", "Web Scraping", "Telegram API"],
-    category: "fullstack",
-    featured: false,
-    year: 2022,
   },
 ];

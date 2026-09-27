@@ -1,34 +1,28 @@
-import React from "react";
 import type { MDXComponents } from "mdx/types";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     table: ({ children, ...props }) => (
-      <div className="my-8 w-full overflow-x-auto rounded-xl border border-border bg-[#0b0f17] shadow-lg">
-        <table className="w-full text-left text-sm text-muted border-collapse" {...props}>
+      <div className="not-prose my-8 w-full overflow-x-auto rounded-xl border">
+        <table className="w-full border-collapse text-left text-sm" {...props}>
           {children}
         </table>
       </div>
     ),
     thead: ({ children, ...props }) => (
-      <thead className="bg-[#111827] text-xs font-semibold uppercase tracking-wider text-foreground border-b border-border" {...props}>
+      <thead className="border-b bg-muted/60 text-xs font-medium tracking-wide text-foreground uppercase" {...props}>
         {children}
       </thead>
     ),
     th: ({ children, ...props }) => (
-      <th className="px-4 py-3 font-semibold text-foreground" {...props}>
+      <th className="px-4 py-3 font-medium" {...props}>
         {children}
       </th>
     ),
     td: ({ children, ...props }) => (
-      <td className="px-4 py-3 border-t border-border/50 text-muted" {...props}>
+      <td className="border-t px-4 py-3 text-muted-foreground" {...props}>
         {children}
       </td>
-    ),
-    tr: ({ children, ...props }) => (
-      <tr className="hover:bg-white/[0.02] transition-colors" {...props}>
-        {children}
-      </tr>
     ),
     ...components,
   };

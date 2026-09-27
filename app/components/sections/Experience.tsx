@@ -1,125 +1,94 @@
+import { ArrowUpRight } from "lucide-react";
+import { experience, earlierRoles } from "@/app/data/experience";
+import { personalInfo } from "@/app/data/personal";
 import { Container } from "../layout/Container";
 import { SectionHeading } from "../ui/SectionHeading";
-import { Timeline, TimelineItem } from "../ui/Timeline";
-import { BadgeGroup } from "../ui/Badge";
-import { experiences } from "@/app/data/experience";
-
-interface GroupedExperience {
-  company: string;
-  positions: typeof experiences;
-  startDate: string;
-  endDate: string | "Present";
-  location: string;
-}
-
-function groupExperiencesByCompany(exps: typeof experiences): GroupedExperience[] {
-  const grouped: { [key: string]: GroupedExperience } = {};
-
-  exps.forEach((exp) => {
-    if (!grouped[exp.company]) {
-      grouped[exp.company] = {
-        company: exp.company,
-        positions: [],
-        startDate: exp.startDate,
-        endDate: exp.endDate,
-        location: exp.location,
-      };
-    }
-    grouped[exp.company].positions.push(exp);
-
-    // Update earliest start date and latest end date
-    if (exp.startDate < grouped[exp.company].startDate) {
-      grouped[exp.company].startDate = exp.startDate;
-    }
-    if (exp.endDate === "Present" || exp.endDate > grouped[exp.company].endDate) {
-      grouped[exp.company].endDate = exp.endDate;
-    }
-  });
-
-  return Object.values(grouped).sort((a, b) => {
-    const aEnd = a.endDate === "Present" ? "2999-12" : a.endDate;
-    const bEnd = b.endDate === "Present" ? "2999-12" : b.endDate;
-    return bEnd.localeCompare(aEnd);
-  });
-}
-
-function calculateDuration(startDate: string, endDate: string | "Present"): string {
-  const start = new Date(startDate + "-01");
-  const end = endDate === "Present" ? new Date() : new Date(endDate + "-01");
-
-  let years = end.getFullYear() - start.getFullYear();
-  let months = end.getMonth() - start.getMonth();
-
-  if (months < 0) {
-    years--;
-    months += 12;
-  }
-
-  const parts = [];
-  if (years > 0) parts.push(`${years} yr${years !== 1 ? "s" : ""}`);
-  if (months > 0) parts.push(`${months} mo${months !== 1 ? "s" : ""}`);
-
-  return parts.join(" ");
-}
+import { Reveal } from "../ui/Reveal";
 
 export function ExperienceSection() {
-  const groupedExperiences = groupExperiencesByCompany(experiences);
-
   return (
-    <section id="experience" className="py-24 bg-background">
-      <Container className="max-w-3xl">
-        <SectionHeading centered subtitle="10+ years of experience in full-stack and blockchain development">
-          Professional Experience
-        </SectionHeading>
-
-        <Timeline className="mt-16">
-          {groupedExperiences.map((group, groupIdx) => (
-            <TimelineItem
-              key={group.company}
-              title={group.company}
-              subtitle={calculateDuration(group.startDate, group.endDate)}
-              date={group.location}
-              isLast={groupIdx === groupedExperiences.length - 1}
+    <section id="experience" className="border-t bg-card/40 py-20 sm:py-28">
+      <Container>
+        <SectionHeading
+          eyebrow="Experience"
+          title="From web platforms to node infrastructure"
+          action={
+            <a
+              href={personalInfo.cvUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
-              {/* Positions under this company */}
-              <div className="space-y-6 mt-4">
-                {group.positions
-                  .sort((a, b) => b.startDate.localeCompare(a.startDate))
-                  .map((exp, idx) => (
-                    <div key={exp.id}>
-                      <h4 className="text-base font-semibold text-foreground mb-1">
-                        {exp.position}
-                      </h4>
-                      <p className="text-sm text-muted mb-3">
-                        {exp.duration}
-                      </p>
+              Full CV <ArrowUpRight className="size-4" />
+            </a>
+          }
+        />
 
-                      <p className="text-muted text-sm mb-3 leading-relaxed">
-                        {exp.description}
-                      </p>
+        <ol className="divide-y border-y">
+          {experience.map((job) => (
+            <li key={job.id}>
+              <Reveal className="grid gap-4 py-8 md:grid-cols-[220px_1fr] md:gap-10">
+                <div>
+                  <h3 className="font-semibold">
+                    {job.url ? (
+                      <a href={job.url} target="_blank" rel="noopener noreferrer" className="hover:text-brand">
+                        {job.company}
+                      </a>
+                    ) : (
+                      job.company
+                    )}
+                  </h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{job.period}</p>
+                  <p className="text-sm text-muted-foreground">{job.location}</p>
+                </div>
 
-                      <div className="mb-3">
-                        <p className="text-xs font-semibold text-muted mb-1">
-                          Key Achievements:
-                        </p>
-                        <ul className="list-disc list-inside text-xs text-muted space-y-0.5">
-                          {exp.achievements.map((achievement, aidx) => (
-                            <li key={aidx}>{achievement}</li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <BadgeGroup badges={exp.technologies} variant="primary" size="sm" />
-
-                      {idx < group.positions.length - 1 && (
-                        <div className="mt-6 pt-6 border-t border-border" />
+                <div className="space-y-6">
+                  {job.roles.map((role, i) => (
+                    <div key={role.title} className={job.roles.length > 1 ? "relative border-l pl-5" : undefined}>
+                      {job.roles.length > 1 && (
+                        <span
+                          aria-hidden
+                          className={`absolute top-1.5 -left-[5px] size-2.5 rounded-full border-2 border-background ${
+                            i === 0 ? "bg-brand" : "bg-muted-foreground/40"
+                          }`}
+                        />
                       )}
+                      <div className="flex flex-wrap items-baseline justify-between gap-x-4">
+                        <h4 className="font-medium">{role.title}</h4>
+                        {job.roles.length > 1 && (
+                          <span className="font-mono text-xs text-muted-foreground">{role.period}</span>
+                        )}
+                      </div>
+                      <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-muted-foreground">
+                        {role.highlights.map((point) => (
+                          <li key={point} className="flex gap-2.5">
+                            <span aria-hidden className="mt-2.5 h-px w-2.5 shrink-0 bg-muted-foreground/50" />
+                            <span className="text-pretty">{point}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   ))}
-              </div>
-            </TimelineItem>
+                  <p className="font-mono text-xs text-muted-foreground">{job.stack.join(" · ")}</p>
+                </div>
+              </Reveal>
+            </li>
           ))}
-        </Timeline>
+        </ol>
+
+        <div className="mt-10">
+          <h3 className="mb-3 text-sm font-medium text-muted-foreground">Also</h3>
+          <ul className="space-y-2 text-sm">
+            {earlierRoles.map((job) => (
+              <li key={job.id} className="flex flex-wrap items-baseline gap-x-2">
+                <span className="font-medium">{job.roles[0].title}</span>
+                <span className="text-muted-foreground">
+                  · {job.company} ({job.type}) · {job.period}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </Container>
     </section>
   );

@@ -1,146 +1,114 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { readdirSync } from "fs";
-import { join } from "path";
-import { Navigation } from "@/app/components/layout/Navigation";
-import { Footer } from "@/app/components/layout/Footer";
+import { ArrowLeft } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { formatDate, getPost, getPostSlugs, getPosts } from "@/lib/posts";
+import { personalInfo } from "@/app/data/personal";
 import { Container } from "@/app/components/layout/Container";
 
-interface BlogPost {
-  title: string;
-  description: string;
-  date: string;
-  tags: string[];
+interface PostPageProps {
+  params: Promise<{ slug: string }>;
 }
 
-interface BlogPageProps {
-  params: Promise<{
-    slug: string;
-  }>;
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return getPostSlugs().map((slug) => ({ slug }));
 }
 
-async function getBlogPost(slug: string): Promise<{
-  content: React.ComponentType;
-  metadata: BlogPost;
-}> {
-  try {
-    const post = await import(`@/app/blogs/${slug}.mdx`);
-    return {
-      content: post.default,
-      metadata: post.metadata,
-    };
-  } catch {
-    throw new Error(`Blog post not found: ${slug}`);
-  }
-}
-
-export async function generateMetadata(
-  props: BlogPageProps
-): Promise<Metadata> {
-  const params = await props.params;
-  const { metadata } = await getBlogPost(params.slug);
-
+export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const { metadata } = await getPost(slug);
   return {
-    title: `${metadata.title} - Pawiro Mitchel`,
+    title: metadata.title,
     description: metadata.description,
+    alternates: { canonical: `/blogs/${slug}` },
+    openGraph: {
+      type: "article",
+      title: metadata.title,
+      description: metadata.description,
+      publishedTime: metadata.date,
+      authors: [personalInfo.name],
+      tags: metadata.tags,
+      url: `/blogs/${slug}`,
+      images: ["/opengraph-image.png"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: metadata.title,
+      description: metadata.description,
+      images: ["/opengraph-image.png"],
+    },
   };
 }
 
-export async function generateStaticParams() {
-  const blogsDir = join(process.cwd(), "app/blogs");
-  const files = readdirSync(blogsDir);
-
-  return files
-    .filter((file) => file.endsWith(".mdx") && !file.includes("["))
-    .map((file) => ({
-      slug: file.replace(".mdx", ""),
-    }));
-}
-
-export default async function BlogPage(props: BlogPageProps) {
-  const params = await props.params;
-  const { content: Content, metadata } = await getBlogPost(params.slug);
+export default async function PostPage({ params }: PostPageProps) {
+  const { slug } = await params;
+  const { Content, metadata, readingMinutes } = await getPost(slug);
+  const posts = await getPosts();
+  const index = posts.findIndex((p) => p.slug === slug);
+  const newer = posts[index - 1];
+  const older = posts[index + 1];
 
   return (
-    <>
-      <Navigation />
-      <main className="pt-24 pb-20 bg-background min-h-screen">
-        <Container className="max-w-3xl">
-          {/* Back button */}
-          <div className="mb-8">
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted hover:text-primary transition-colors"
-            >
-              <span>←</span> Back to all articles
+    <Container className="max-w-3xl py-12 sm:py-16">
+      <Link
+        href="/blog"
+        className="mb-10 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <ArrowLeft className="size-4" /> All posts
+      </Link>
+
+      <article>
+        <header className="mb-10 border-b pb-8">
+          <p className="font-mono text-xs text-muted-foreground">
+            <time dateTime={metadata.date}>{formatDate(metadata.date, "long")}</time> · {readingMinutes} min read
+          </p>
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-balance sm:text-4xl">{metadata.title}</h1>
+          <p className="mt-4 text-lg text-muted-foreground text-pretty">{metadata.description}</p>
+          <ul className="mt-5 flex flex-wrap gap-1.5" aria-label="Tags">
+            {metadata.tags.map((tag) => (
+              <li key={tag}>
+                <Badge variant="secondary" className="font-normal">
+                  {tag}
+                </Badge>
+              </li>
+            ))}
+          </ul>
+        </header>
+
+        <div className="prose prose-neutral max-w-none dark:prose-invert prose-headings:font-semibold prose-headings:tracking-tight prose-h2:mt-12 prose-a:text-brand prose-a:underline-offset-4 prose-code:font-normal prose-code:before:content-none prose-code:after:content-none prose-img:rounded-xl prose-img:border">
+          <Content />
+        </div>
+      </article>
+
+      <footer className="mt-16 border-t pt-8">
+        <p className="text-sm text-muted-foreground">
+          Written by <span className="font-medium text-foreground">{personalInfo.name}</span>, {personalInfo.title} at{" "}
+          {personalInfo.currentCompany}. Questions or corrections?{" "}
+          <a href={`mailto:${personalInfo.email}`} className="text-brand underline-offset-4 hover:underline">
+            Email me
+          </a>
+          .
+        </p>
+        <nav aria-label="More posts" className="mt-8 grid gap-4 sm:grid-cols-2">
+          {older && (
+            <Link href={`/blogs/${older.slug}`} className="group rounded-xl border p-4 transition-colors hover:bg-accent/50">
+              <span className="text-xs text-muted-foreground">Older</span>
+              <span className="mt-1 block text-sm font-medium group-hover:text-brand">{older.metadata.title}</span>
             </Link>
-          </div>
-
-          <article>
-            {/* Clean, Uncluttered Article Header */}
-            <header className="mb-10">
-              {/* Category & Date Eyebrow */}
-              <div className="flex items-center gap-2.5 text-xs font-semibold uppercase tracking-wider text-primary mb-3">
-                <span>{metadata.tags[0] || "Engineering"}</span>
-                <span className="text-muted/40">•</span>
-                <time dateTime={metadata.date} className="text-muted font-normal">
-                  {new Date(metadata.date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </time>
-              </div>
-
-              {/* Article Title */}
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground leading-[1.2] mb-5">
-                {metadata.title}
-              </h1>
-
-              {/* Author Byline & Tags Row */}
-              <div className="flex flex-wrap items-center justify-between gap-3 py-3.5 border-y border-border/70 text-xs text-muted">
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-foreground">Mitchel Pawirodinomo</span>
-                  <span className="text-muted/40">•</span>
-                  <span>Technical Operations Engineer</span>
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {metadata.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-2 py-0.5 rounded-full bg-card-bg border border-border text-[11px] text-muted font-mono"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </header>
-
-            {/* Article Content */}
-            <div className="prose prose-invert prose-blue max-w-none text-muted leading-relaxed prose-headings:text-foreground prose-headings:font-bold prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:border-b prose-h2:border-border/40 prose-h2:pb-2 prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3 prose-p:mb-5 prose-p:leading-relaxed prose-a:text-primary hover:prose-a:underline prose-code:text-primary-light prose-code:bg-card-bg prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-pre:bg-[#0b0f17] prose-pre:border prose-pre:border-border prose-pre:rounded-xl prose-li:my-1">
-              <Content />
-            </div>
-
-            {/* Post-article navigation */}
-            <div className="mt-16 pt-8 border-t border-border flex justify-between items-center text-sm">
-              <Link
-                href="/blog"
-                className="font-medium text-primary hover:underline"
-              >
-                ← Back to all articles
-              </Link>
-              <Link
-                href="/#experience"
-                className="font-medium text-muted hover:text-foreground transition-colors"
-              >
-                View Experience →
-              </Link>
-            </div>
-          </article>
-        </Container>
-      </main>
-      <Footer />
-    </>
+          )}
+          {newer && (
+            <Link
+              href={`/blogs/${newer.slug}`}
+              className="group rounded-xl border p-4 text-right transition-colors hover:bg-accent/50 sm:col-start-2"
+            >
+              <span className="text-xs text-muted-foreground">Newer</span>
+              <span className="mt-1 block text-sm font-medium group-hover:text-brand">{newer.metadata.title}</span>
+            </Link>
+          )}
+        </nav>
+      </footer>
+    </Container>
   );
 }

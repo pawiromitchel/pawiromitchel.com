@@ -1,49 +1,48 @@
-import { Container } from "../layout/Container";
-import { SectionHeading } from "../ui/SectionHeading";
-import { Timeline, TimelineItem } from "../ui/Timeline";
-import { education } from "@/app/data/education";
+import { Award, BadgeCheck, GraduationCap, Languages } from "lucide-react";
+import { awards, certifications, education, type Credential } from "@/app/data/education";
+import { languages } from "@/app/data/skills";
 
-export function EducationSection() {
+function CredentialGroup({
+  icon: Icon,
+  label,
+  items,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  items: Credential[];
+}) {
   return (
-    <section id="education" className="py-24 bg-background">
-      <Container className="max-w-3xl">
-        <SectionHeading
-          centered
-          subtitle="My academic background and training"
-        >
-          Education
-        </SectionHeading>
+    <div className="rounded-xl border bg-card p-5">
+      <h3 className="mb-4 flex items-center gap-2 text-sm font-medium">
+        <Icon className="size-4 text-brand" />
+        {label}
+      </h3>
+      <ul className="space-y-3">
+        {items.map((item) => (
+          <li key={`${item.title}-${item.year}`} className="text-sm">
+            <p className="font-medium">{item.title}</p>
+            <p className="text-muted-foreground">
+              {item.issuer}
+              {item.year && ` · ${item.year}`}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
-        <Timeline className="mt-16">
-          {education.map((edu, idx) => (
-            <TimelineItem
-              key={edu.id}
-              title={edu.institution}
-              subtitle={`${edu.degree} in ${edu.field}`}
-              date={`${edu.startYear} - ${edu.endYear}`}
-              isLast={idx === education.length - 1}
-            >
-              {edu.description && (
-                <p className="text-muted text-sm mb-3 leading-relaxed">
-                  {edu.description}
-                </p>
-              )}
-              {edu.achievements && edu.achievements.length > 0 && (
-                <div className="mb-3">
-                  <p className="text-xs font-semibold text-muted mb-1">
-                    Highlights:
-                  </p>
-                  <ul className="list-disc list-inside text-xs text-muted space-y-0.5">
-                    {edu.achievements.map((achievement, aidx) => (
-                      <li key={aidx}>{achievement}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </TimelineItem>
-          ))}
-        </Timeline>
-      </Container>
-    </section>
+export function Credentials() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <CredentialGroup icon={GraduationCap} label="Education" items={education} />
+      <CredentialGroup icon={Award} label="Awards" items={awards} />
+      <CredentialGroup icon={BadgeCheck} label="Certification" items={certifications} />
+      <CredentialGroup
+        icon={Languages}
+        label="Languages"
+        items={languages.map((l) => ({ title: l.name, issuer: l.level }))}
+      />
+    </div>
   );
 }

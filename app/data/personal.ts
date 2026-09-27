@@ -1,27 +1,22 @@
+export const siteUrl = "https://pawiromitchel.com";
+
 export const personalInfo = {
   name: "Mitchel Pawirodinomo",
-  title: "Technical Operations Engineer | Web3 & Infrastructure Systems",
-  shortTitle: "Technical Operations Engineer",
-  currentRole: "Technical Operations Engineer",
+  handle: "pawiromitchel",
+  title: "Technical Operations Engineer",
+  currentRole: "Technical Operations Engineer II",
   currentCompany: "QuickNode",
-  bio: "Technical Operations & Infrastructure Engineer specializing in high-throughput Web3 RPC infrastructure, Go systems tooling, and backend automation. Currently ensuring reliability, observability, and performance for global node infrastructure at QuickNode.",
-  location: "Para, Suriname (Remote)",
+  currentCompanyUrl: "https://www.quicknode.com",
+  headline: "I keep blockchain infrastructure fast and boring.",
+  bio: "I work on QuickNode's blockchain node infrastructure: leading our Kubernetes migration, rolling out client upgrades and new chains, and sharing on-call. Before that I spent years shipping web platforms, and I still build Go tools and self-hosted products on the side.",
+  location: "Para, Suriname",
+  timezone: "UTC−3",
   email: "pawiromitchel@gmail.com",
-  status: "Available for select advisory & engineering opportunities",
+  cvUrl: "https://apexcvbuilder.com/view/mitchel-cv",
   social: {
     github: "https://github.com/pawiromitchel",
-    linkedin: "https://linkedin.com/in/mitchel-pawirodinomo",
-    twitter: "https://twitter.com/pawiromitchel",
-  },
-  stats: {
-    yearsExperience: 10,
-    companiesWorked: 5,
-    projectsCompleted: 14,
-    hackathonWins: 3,
-  },
-  cta: {
-    primary: "View Experience",
-    secondary: "Get In Touch",
+    linkedin: "https://www.linkedin.com/in/mitchel-pawirodinomo",
+    x: "https://x.com/pawiromitchel",
   },
 };
 

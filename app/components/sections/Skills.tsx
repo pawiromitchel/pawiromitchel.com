@@ -1,51 +1,41 @@
-import React from "react";
+import { skillGroups } from "@/app/data/skills";
+import { personalInfo } from "@/app/data/personal";
 import { Container } from "../layout/Container";
-import { Badge } from "../ui/Badge";
 import { SectionHeading } from "../ui/SectionHeading";
-import { skillsByCategory } from "@/app/data/skills";
+import { Reveal } from "../ui/Reveal";
+import { Credentials } from "./Education";
 
-const categoryLabels: Record<string, string> = {
-  languages: "Languages",
-  frameworks: "Frameworks & Libraries",
-  web3: "Web3 & Blockchain",
-  devops: "DevOps & Infrastructure",
-};
-
-export function SkillsSection() {
+export function AboutSection() {
   return (
-    <section id="skills" className="py-24 bg-background border-t border-border/50">
+    <section id="about" className="border-t bg-card/40 py-20 sm:py-28">
       <Container>
-        <div className="mb-16">
-          <SectionHeading centered subtitle="Technologies, frameworks, and infrastructure tools I engineer with">
-            Technical Skills & Expertise
-          </SectionHeading>
-        </div>
+        <SectionHeading eyebrow="About" title="A bit more about me" />
+        <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr]">
+          <Reveal className="space-y-5 text-muted-foreground">
+            <p className="text-pretty">
+              I started out building websites and mobile apps in Suriname, then spent five years at Alembo turning
+              internal desktop tools into web apps that the whole team could work on. In 2022 I joined{" "}
+              {personalInfo.currentCompany}, first in senior support and now in technical operations, where I work on
+              the node infrastructure behind its blockchain APIs.
+            </p>
+            <p className="text-pretty">
+              Outside work I build the tools I want to use: a self-hosted finance ledger, a friendlier cron, a
+              terminal market dashboard. I write up how each one works on the blog.
+            </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-4xl mx-auto">
-          {Object.entries(skillsByCategory).map(([category, items]) => (
-            items.length > 0 && (
-              <div
-                key={category}
-                className="p-6 rounded-2xl bg-card-bg border border-border transition-all duration-300 hover:border-primary/40 hover:shadow-lg"
-              >
-                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-primary inline-block" />
-                  {categoryLabels[category] || category}
-                </h3>
-                <div className="flex flex-wrap gap-2.5">
-                  {items.map((skill) => (
-                    <Badge
-                      key={skill.name}
-                      variant="primary"
-                      size="md"
-                    >
-                      {skill.name}
-                    </Badge>
-                  ))}
+            <div className="space-y-4 pt-4">
+              {skillGroups.map((group) => (
+                <div key={group.label} className="grid gap-1 sm:grid-cols-[120px_1fr] sm:gap-4">
+                  <h3 className="text-sm font-medium text-foreground">{group.label}</h3>
+                  <p className="text-sm">{group.items.join(", ")}</p>
                 </div>
-              </div>
-            )
-          ))}
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.08}>
+            <Credentials />
+          </Reveal>
         </div>
       </Container>
     </section>

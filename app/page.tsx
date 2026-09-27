@@ -1,25 +1,24 @@
-import { Navigation } from "./components/layout/Navigation";
-import { Footer } from "./components/layout/Footer";
+import { getPosts } from "@/lib/posts";
 import { Hero } from "./components/sections/Hero";
-import { Stats } from "./components/sections/Stats";
-import { ExperienceSection } from "./components/sections/Experience";
+import { Highlights } from "./components/sections/Stats";
 import { ProjectsSection } from "./components/sections/Projects";
-import { SkillsSection } from "./components/sections/Skills";
-import { EducationSection } from "./components/sections/Education";
+import { ExperienceSection } from "./components/sections/Experience";
+import { WritingSection } from "./components/sections/Writing";
+import { AboutSection } from "./components/sections/Skills";
+import { ContactSection } from "./components/sections/Contact";
 
-export default function Home() {
+export default async function Home() {
+  const posts = await getPosts();
+
   return (
     <>
-      <Navigation />
-      <main className="pt-16">
-        <Hero />
-        <Stats />
-        <ExperienceSection />
-        <ProjectsSection />
-        <SkillsSection />
-        <EducationSection />
-      </main>
-      <Footer />
+      <Hero />
+      <Highlights />
+      <ProjectsSection />
+      <ExperienceSection />
+      <WritingSection posts={posts.slice(0, 3)} />
+      <AboutSection />
+      <ContactSection />
     </>
   );
 }

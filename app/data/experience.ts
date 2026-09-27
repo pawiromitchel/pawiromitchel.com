@@ -1,156 +1,113 @@
-export interface Experience {
-  id: string;
-  company: string;
-  position: string;
-  duration: string;
-  startDate: string;
-  endDate: string | "Present";
-  description: string;
-  achievements: string[];
-  technologies: string[];
-  location: string;
-  type: "full-time" | "contract" | "freelance";
-  logo?: string;
+export interface Role {
+  title: string;
+  period: string;
+  highlights: string[];
 }
 
-export const experiences: Experience[] = [
+export interface Company {
+  id: string;
+  company: string;
+  url?: string;
+  location: string;
+  period: string;
+  type?: "Contract" | "Internship";
+  roles: Role[];
+  stack: string[];
+}
+
+// Main career history, newest first. Mirrors the CV.
+export const experience: Company[] = [
   {
-    id: "quicknode-tox",
+    id: "quicknode",
     company: "QuickNode",
-    position: "Technical Operations Engineer",
-    duration: "Aug 2025 - Present",
-    startDate: "2025-08",
-    endDate: "Present",
-    description:
-      "Managing infrastructure reliability, performance optimization, and DevOps workflows at QuickNode to deliver high-availability RPC services across global blockchain networks.",
-    achievements: [
-      "Optimized RPC node infrastructure serving millions of daily blockchain requests with sub-100ms p95 response times",
-      "Automated operational monitoring, incident triage, and deployment pipelines to accelerate incident mitigation",
-      "Maintained infrastructure reliability and cost efficiency across production Kubernetes clusters",
+    url: "https://www.quicknode.com",
+    location: "Miami, FL · Remote",
+    period: "Feb 2022 – Present",
+    roles: [
+      {
+        title: "Technical Operations Engineer II",
+        period: "Aug 2025 – Present",
+        highlights: [
+          "Leading the Kubernetes migration to modernize the infrastructure architecture and make deployments scale.",
+          "Own blockchain client upgrades and new chain deployments, and share the on-call rotation that keeps node infrastructure up.",
+        ],
+      },
+      {
+        title: "Senior Support Engineer",
+        period: "Feb 2022 – Aug 2025",
+        highlights: [
+          "Resolved technical issues for developers across Zendesk, Slack, Discord and X within SLA.",
+          "Picked up DevOps and infrastructure work across multiple chains: system upgrades, configuration changes and infrastructure health.",
+        ],
+      },
     ],
-    technologies: [
-      "Web3",
-      "Kubernetes",
-      "Docker",
-      "DevOps",
-      "Go",
-      "Linux",
-      "Prometheus",
-    ],
-    location: "Miami, Florida, United States - Remote",
-    type: "full-time",
-    logo: "/images/companies/quicknode.svg",
-  },
-  {
-    id: "quicknode-web3",
-    company: "QuickNode",
-    position: "Senior Web3 Support Engineer",
-    duration: "Apr 2022 - Aug 2025",
-    startDate: "2022-04",
-    endDate: "2025-08",
-    description:
-      "Provided high-tier technical support for Web3 developers and enterprise clients, troubleshooting complex RPC API requests, node indexing issues, and smart contract integrations under strict SLAs.",
-    achievements: [
-      "Diagnosed and resolved complex RPC node, Web3 API, and infrastructure issues for enterprise developers",
-      "Maintained 99.9%+ SLA compliance for enterprise developer support and node incident response",
-      "Authored technical documentation and client-facing troubleshooting guides for Web3 infrastructure",
-    ],
-    technologies: [
-      "Web3",
-      "Ethereum",
-      "RPC Infrastructure",
-      "Node.js",
-      "TypeScript",
-    ],
-    location: "Miami, Florida, United States - Remote",
-    type: "full-time",
-    logo: "/images/companies/quicknode.svg",
-  },
-  {
-    id: "infinitri",
-    company: "INFINITRI",
-    position: "Web3 Lead Developer",
-    duration: "Feb 2022 - Dec 2022",
-    startDate: "2022-02",
-    endDate: "2022-12",
-    description:
-      "Led Web3 development and smart contract architecture for Infinitri's proof-of-concept platform.",
-    achievements: [
-      "Architected proof-of-concept Web3 application logic and smart contract interfaces",
-      "Guided technical direction and mentored engineers on blockchain integration standards",
-      "Designed decentralized application (dApp) backend integrations",
-    ],
-    technologies: ["Solidity", "Web3.js", "Smart Contracts", "Ethereum", "TypeScript"],
-    location: "Suriname - Remote",
-    type: "contract",
-    logo: "/images/companies/infinitri.svg",
+    stack: ["Kubernetes", "Docker", "Linux", "Prometheus", "Go"],
   },
   {
     id: "alembo",
-    company: "Alembo B.V.",
-    position: "Lead Software Engineer",
-    duration: "Feb 2017 - Feb 2022",
-    startDate: "2017-02",
-    endDate: "2022-02",
-    description:
-      "Led the migration of internal core desktop tools from C# to a modern web application using Angular and MySQL, resulting in a 3x development throughput increase and seamless cross-team collaboration.",
-    achievements: [
-      "Architected web-based data transcription platform (DETA) replacing legacy desktop software",
-      "Accelerated developer onboarding and feature delivery velocity by 3x through modern web architecture",
-      "Managed team workflows and introduced continuous integration and code review standards",
-    ],
-    technologies: [
-      "Angular",
-      "TypeScript",
-      "MySQL",
-      "C#",
-      "Node.js",
-    ],
+    company: "Alembo",
     location: "Suriname",
-    type: "full-time",
-    logo: "/images/companies/alembo.svg",
+    period: "Feb 2017 – Feb 2022",
+    roles: [
+      {
+        title: "Lead Software Engineer",
+        period: "Feb 2017 – Feb 2022",
+        highlights: [
+          "Proposed and led the migration of an internal C# desktop tool to an Angular + MySQL web app, tripling development speed by letting more developers contribute.",
+          "Led server deployments and built websites, web apps and mobile apps.",
+        ],
+      },
+    ],
+    stack: ["Angular", "TypeScript", "MySQL", "C#", "Node.js"],
   },
   {
     id: "bitdynamics",
-    company: "Bit Dynamics N.V.",
-    position: "Web Developer",
-    duration: "Aug 2016 - Feb 2017",
-    startDate: "2016-08",
-    endDate: "2017-02",
-    description:
-      "Developed and maintained responsive web applications, custom e-commerce stores, and cross-platform mobile apps for client projects.",
-    achievements: [
-      "Developed custom web applications and mobile clients using Ionic Framework and AngularJS",
-      "Built responsive client sites and e-commerce platforms with custom extensions",
-      "Ensured web application performance, cross-browser compatibility, and security",
-    ],
-    technologies: [
-      "Ionic Framework",
-      "AngularJS",
-      "WordPress",
-      "JavaScript",
-      "PHP",
-    ],
+    company: "BitDynamics",
     location: "Suriname",
-    type: "full-time",
-    logo: "/images/companies/bitdynamics.svg",
+    period: "Aug 2016 – Feb 2017",
+    roles: [
+      {
+        title: "Web Developer",
+        period: "Aug 2016 – Feb 2017",
+        highlights: [
+          "Built client websites, e-commerce stores and Ionic mobile apps.",
+        ],
+      },
+    ],
+    stack: ["AngularJS", "Ionic", "PHP"],
+  },
+];
+
+// Shorter side and early roles, shown as one-liners.
+export const earlierRoles: Company[] = [
+  {
+    id: "infinitri",
+    company: "Infinitri",
+    location: "Remote",
+    period: "Feb 2022 – Dec 2022",
+    type: "Contract",
+    roles: [
+      {
+        title: "Web3 Lead Developer",
+        period: "Feb 2022 – Dec 2022",
+        highlights: ["Smart contract and dApp architecture for a proof-of-concept platform."],
+      },
+    ],
+    stack: ["Solidity", "TypeScript"],
   },
   {
     id: "careerit",
-    company: "CareerIT NV",
-    position: "Intern Application Developer",
-    duration: "Mar 2016 - Jul 2016",
-    startDate: "2016-03",
-    endDate: "2016-07",
-    description:
-      "Application development internship focused on web projects, Linux system administration, and shell scripting.",
-    achievements: [
-      "Built web modules and automated server setup routines using Linux shell scripts",
-      "Gained hands-on experience in database management, web publishing, and system administration",
-    ],
-    technologies: ["Linux", "Shell/Bash", "WordPress", "MySQL"],
+    company: "CareerIT",
     location: "Suriname",
-    type: "freelance",
-    logo: "/images/companies/careerit.svg",
+    period: "Mar 2016 – Jul 2016",
+    type: "Internship",
+    roles: [
+      {
+        title: "Application Developer Intern",
+        period: "Mar 2016 – Jul 2016",
+        highlights: ["Web modules and Linux server automation with shell scripts."],
+      },
+    ],
+    stack: ["Linux", "Bash"],
   },
 ];
