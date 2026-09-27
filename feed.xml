@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Mitchel Pawirodinomo</title>
+    <link>https://pawiromitchel.com/blog</link>
+    <description>Writing on infrastructure, Go tooling and side projects.</description>
+    <language>en</language>
+    <item>
+      <title>Ditching Docker Desktop: Lightweight Containers with Colima and Portainer</title>
+      <link>https://pawiromitchel.com/blogs/replacing-docker-desktop-with-colima-and-portainer</link>
+      <guid>https://pawiromitchel.com/blogs/replacing-docker-desktop-with-colima-and-portainer</guid>
+      <pubDate>Sat, 19 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Docker Desktop on macOS eats gigabytes of RAM just sitting idle. Here is how I replaced it with Colima for the container runtime and Portainer for the UI.</description>
+    </item>
+    <item>
+      <title>Building CryptoWatcher: Bringing macOS Stocks Widgets into the Terminal with Go</title>
+      <link>https://pawiromitchel.com/blogs/building-cryptowatcher-macos-stocks-terminal-dashboard</link>
+      <guid>https://pawiromitchel.com/blogs/building-cryptowatcher-macos-stocks-terminal-dashboard</guid>
+      <pubDate>Sat, 14 Mar 2026 00:00:00 GMT</pubDate>
+      <description>I wanted the glanceability of macOS Stocks widgets inside my tmux session. Here is how I built CryptoWatcher in Go using Bubble Tea, Lipgloss, high-definition Braille line charts, and composite multi-feed asset routing.</description>
+    </item>
+    <item>
+      <title>Building Cashly: Architecting a Multi-Asset Financial Intelligence Engine &amp; AI Copilot</title>
+      <link>https://pawiromitchel.com/blogs/building-cashly-multi-asset-financial-intelligence-engine</link>
+      <guid>https://pawiromitchel.com/blogs/building-cashly-multi-asset-financial-intelligence-engine</guid>
+      <pubDate>Thu, 12 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Why I stopped using third-party budget apps and built a self-hosted financial operating system with a Go daemon, Next.js 14, automated bank email ingestion, dynamic cashflow models, and an autonomous AI copilot.</description>
+    </item>
+    <item>
+      <title>Why I Built bcron: Fixing Everything That Annoys Me About Crontab</title>
+      <link>https://pawiromitchel.com/blogs/architecting-bcron-go-tui-task-scheduler</link>
+      <guid>https://pawiromitchel.com/blogs/architecting-bcron-go-tui-task-scheduler</guid>
+      <pubDate>Thu, 05 Mar 2026 00:00:00 GMT</pubDate>
+      <description>I got tired of silent cron failures, digging through syslog, and guessing whether background jobs were still running. Here is how I built bcron in Go.</description>
+    </item>
+    <item>
+      <title>Scraping 8 Surinamese Banks Without Losing My Mind: The ForexSU Story</title>
+      <link>https://pawiromitchel.com/blogs/resilient-scraping-and-pwa-architecture-forexsu</link>
+      <guid>https://pawiromitchel.com/blogs/resilient-scraping-and-pwa-architecture-forexsu</guid>
+      <pubDate>Mon, 02 Mar 2026 00:00:00 GMT</pubDate>
+      <description>Why I built ForexSU to track foreign currency rates across Suriname, and how to write resilient web scrapers that survive constant HTML breaking changes.</description>
+    </item>
+  </channel>
+</rss>
