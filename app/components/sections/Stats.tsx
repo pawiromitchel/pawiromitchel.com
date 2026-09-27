@@ -1,55 +1,29 @@
-import React from "react";
 import { Container } from "../layout/Container";
-import { personalInfo } from "@/app/data/personal";
 
-interface StatItemProps {
-  number: number | string;
-  label: string;
-}
+// Headline facts. Each one is backed by a section further down the page.
+const highlights = [
+  { value: "10 years", label: "shipping software since 2016", href: "#experience" },
+  { value: "Kubernetes", label: "migration lead at QuickNode", href: "#experience" },
+  { value: "2× winner", label: "IT Core Hackathon, 2017 & 2019", href: "#about" },
+  { value: "CEH", label: "Certified Ethical Hacker", href: "#about" },
+];
 
-function StatItem({ number, label }: StatItemProps) {
+export function Highlights() {
   return (
-    <div className="text-center">
-      <div className="text-5xl md:text-6xl font-bold text-primary mb-2">
-        {number}
-      </div>
-      <p className="text-muted font-medium">{label}</p>
-    </div>
-  );
-}
-
-export function Stats() {
-  const stats = [
-    {
-      number: `${personalInfo.stats.yearsExperience}+`,
-      label: "Years of Experience",
-    },
-    {
-      number: personalInfo.stats.companiesWorked,
-      label: "Companies Worked",
-    },
-    {
-      number: `${personalInfo.stats.projectsCompleted}+`,
-      label: "Projects Completed",
-    },
-    {
-      number: personalInfo.stats.hackathonWins,
-      label: "Hackathon Wins",
-    },
-  ];
-
-  return (
-    <section className="py-24 bg-background border-y border-border">
-      <Container>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
-          {stats.map((stat, index) => (
-            <div key={index} className="animate-fade-in-up" style={{
-              animationDelay: `${index * 100}ms`
-            }}>
-              <StatItem number={stat.number} label={stat.label} />
-            </div>
+    <section aria-label="Highlights" className="border-y">
+      <Container className="px-0 sm:px-0">
+        <ul className="grid grid-cols-2 gap-px bg-border sm:border-x md:grid-cols-4">
+          {highlights.map((item) => (
+            <li key={item.value} className="bg-background">
+              <a href={item.href} className="group block h-full px-5 py-6 transition-colors hover:bg-accent/50 sm:px-8">
+                <span className="block text-lg font-semibold tracking-tight transition-colors group-hover:text-brand">
+                  {item.value}
+                </span>
+                <span className="mt-0.5 block text-sm text-muted-foreground">{item.label}</span>
+              </a>
+            </li>
           ))}
-        </div>
+        </ul>
       </Container>
     </section>
   );

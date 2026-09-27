@@ -1,38 +1,22 @@
-import React, { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 interface SectionHeadingProps {
-  children: ReactNode;
-  subtitle?: string;
-  centered?: boolean;
+  eyebrow: string;
+  title: string;
+  description?: string;
+  action?: React.ReactNode;
   className?: string;
-  accentLine?: boolean;
 }
 
-export function SectionHeading({
-  children,
-  subtitle,
-  centered = true,
-  className = "",
-  accentLine = true,
-}: SectionHeadingProps) {
-  const alignClass = centered ? "text-center" : "text-left";
-
+export function SectionHeading({ eyebrow, title, description, action, className }: SectionHeadingProps) {
   return (
-    <div className={`mb-12 ${alignClass} ${className}`}>
-      {accentLine && (
-        <div className="flex items-center gap-3 mb-4 justify-start md:justify-center">
-          <div className="w-8 h-1 bg-primary rounded-full"></div>
-          {centered && (
-            <div className="w-8 h-1 bg-primary rounded-full"></div>
-          )}
-        </div>
-      )}
-      <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-        {children}
-      </h2>
-      {subtitle && (
-        <p className="text-lg text-muted max-w-2xl mx-auto">{subtitle}</p>
-      )}
+    <div className={cn("mb-10 flex flex-wrap items-end justify-between gap-4", className)}>
+      <div className="max-w-2xl">
+        <p className="mb-2 font-mono text-xs font-medium tracking-wider text-brand uppercase">{eyebrow}</p>
+        <h2 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">{title}</h2>
+        {description && <p className="mt-3 text-muted-foreground text-pretty">{description}</p>}
+      </div>
+      {action}
     </div>
   );
 }

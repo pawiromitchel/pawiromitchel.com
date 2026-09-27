@@ -12,8 +12,9 @@ This repository contains the source code for my personal website, engineering po
 
 - **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS v4
-- **Content**: MDX
+- **Styling**: Tailwind CSS v4, shadcn/ui (Radix)
+- **Animation**: Motion
+- **Content**: MDX (posts in `app/blogs/`), RSS at `/feed.xml`
 - **Deployment**: GitHub Pages
 
 ## Local Development
@@ -50,12 +51,14 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to view the 
 
 ```text
 app/
-├── components/      # UI components & section layouts
-├── data/            # Structured resume data (experience, projects, skills, education)
+├── components/      # Page sections, layout and site-specific UI
+├── data/            # Resume data (experience, projects, skills, education) — keep in sync with the CV
 ├── blog/            # Blog index page
 ├── blogs/           # Dynamic MDX blog posts
 ├── page.tsx         # Portfolio homepage
-└── globals.css      # Tailwind CSS entrypoint
+└── globals.css      # Tailwind entrypoint and light/dark theme tokens
+components/ui/       # shadcn/ui primitives
+lib/                 # Helpers (blog post loading, cn)
 ```
 
 ## License

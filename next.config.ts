@@ -4,7 +4,13 @@ import createMDX from "@next/mdx";
 const withMDX = createMDX({
   options: {
     remarkPlugins: ["remark-gfm"],
-    rehypePlugins: [],
+    // Plugin options must be plain JSON so Turbopack can serialize them.
+    rehypePlugins: [
+      [
+        "rehype-pretty-code",
+        { theme: { light: "github-light", dark: "github-dark-dimmed" }, keepBackground: false, defaultLang: { block: "plaintext" } },
+      ],
+    ],
   },
 });
 

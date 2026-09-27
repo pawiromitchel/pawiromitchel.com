@@ -1,179 +1,148 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 @plugin "@tailwindcss/typography";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
-  /* Blue accent - Professional and modern */
-  --color-primary: #3b82f6;
-  --color-primary-dark: #2563eb;
-  --color-primary-light: #60a5fa;
+  --background: oklch(0.99 0.002 250);
+  --foreground: oklch(0.18 0.01 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.01 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.01 260);
+  --primary: oklch(0.2 0.01 260);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.96 0.004 250);
+  --secondary-foreground: oklch(0.2 0.01 260);
+  --muted: oklch(0.96 0.004 250);
+  --muted-foreground: oklch(0.5 0.015 260);
+  --accent: oklch(0.955 0.006 250);
+  --accent-foreground: oklch(0.2 0.01 260);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.915 0.006 250);
+  --input: oklch(0.915 0.006 250);
+  --ring: oklch(0.55 0.17 255);
+  --brand: oklch(0.52 0.19 258);
+  --brand-soft: oklch(0.52 0.19 258 / 10%);
+  --success: oklch(0.6 0.15 155);
+  --radius: 0.625rem;
+}
 
-  /* Dark mode colors */
-  --background: #0f0f0f;
-  --foreground: #ffffff;
-  --text-secondary: #b3b3b3;
-  --muted: #808080;
-  --border: #2a2a2a;
-  --card-bg: #1a1a1a;
-
-  /* Spacing */
-  --spacing-section: 7.5rem;
+.dark {
+  --background: oklch(0.145 0.006 260);
+  --foreground: oklch(0.96 0.003 250);
+  --card: oklch(0.18 0.007 260);
+  --card-foreground: oklch(0.96 0.003 250);
+  --popover: oklch(0.18 0.007 260);
+  --popover-foreground: oklch(0.96 0.003 250);
+  --primary: oklch(0.96 0.003 250);
+  --primary-foreground: oklch(0.18 0.01 260);
+  --secondary: oklch(0.23 0.008 260);
+  --secondary-foreground: oklch(0.96 0.003 250);
+  --muted: oklch(0.23 0.008 260);
+  --muted-foreground: oklch(0.7 0.012 260);
+  --accent: oklch(0.24 0.009 260);
+  --accent-foreground: oklch(0.96 0.003 250);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.7 0.15 255);
+  --brand: oklch(0.72 0.15 255);
+  --brand-soft: oklch(0.72 0.15 255 / 12%);
+  --success: oklch(0.75 0.15 155);
 }
 
 @theme inline {
-  --color-primary: var(--color-primary);
-  --color-primary-dark: var(--color-primary-dark);
-  --color-primary-light: var(--color-primary-light);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-geist-sans);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
   --color-border: var(--border);
-  --font-sans: var(--font-poppins);
-  --font-mono: var(--font-geist-mono);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-success: var(--success);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Base styles */
-body {
-  background: var(--background);
-  color: var(--text-secondary);
-  font-family: var(--font-poppins, "system-ui", "-apple-system", "sans-serif");
-  line-height: 1.75;
-  font-size: 14px;
-}
-
-/* Typography hierarchy */
-h1, h2, h3, h4, h5, h6 {
-  color: var(--foreground);
-  font-weight: 600;
-}
-
-h1 {
-  font-size: 2.5rem;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-}
-
-h2 {
-  font-size: 2rem;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-}
-
-h3 {
-  font-size: 1.5rem;
-  line-height: 1.4;
-}
-
-p {
-  color: var(--text-secondary);
-}
-
-/* Animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  ::selection {
+    background: var(--brand-soft);
   }
 }
 
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+/* Faint grid behind the hero */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 30%, transparent 100%);
 }
 
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
+/* Blog code: inline snippets get a chip, fenced blocks get one surface.
+   Colors come from rehype-pretty-code's dual light/dark Shiki themes. */
+.prose :not(pre) > code {
+  @apply rounded-md border bg-muted px-1.5 py-0.5 text-[0.875em];
 }
 
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
-  }
+.prose pre {
+  @apply my-6 overflow-x-auto rounded-xl border bg-muted/50 px-0 py-4 text-[0.8125rem] leading-relaxed dark:bg-card;
 }
 
-/* Utility classes for animations */
-.animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out;
+.prose pre > code {
+  @apply grid min-w-full bg-transparent p-0;
 }
 
-.animate-slide-in-left {
-  animation: slideInLeft 0.6s ease-out;
+.prose pre > code [data-line] {
+  @apply px-5;
 }
 
-.animate-slide-in-right {
-  animation: slideInRight 0.6s ease-out;
+.prose code[data-theme] span {
+  color: var(--shiki-light);
 }
 
-.animate-bounce-slow {
-  animation: bounce 2s infinite;
-}
-
-/* Teal accent utilities */
-.text-primary {
-  color: var(--color-primary);
-}
-
-.text-primary-dark {
-  color: var(--color-primary-dark);
-}
-
-.bg-primary {
-  background-color: var(--color-primary);
-}
-
-.bg-primary-light {
-  background-color: rgba(84, 202, 149, 0.1);
-}
-
-.border-primary {
-  border-color: var(--color-primary);
-}
-
-/* Hover transitions */
-.transition-colors {
-  transition: color 0.3s ease, background-color 0.3s ease;
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --muted: #9ca3af;
-    --border: #1f2937;
-    --card-bg: #111827;
-  }
+.dark .prose code[data-theme] span {
+  color: var(--shiki-dark);
 }
