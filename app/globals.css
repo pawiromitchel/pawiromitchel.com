@@ -106,9 +106,39 @@
   }
 }
 
+/* Hero entrance. Plain CSS so it plays on first paint instead of waiting for
+   hydration; set --delay (ms) per element to stagger. */
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(4px);
+  }
+}
+@keyframes enter-letter {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em);
+    filter: blur(8px);
+  }
+}
+.animate-enter,
+.animate-enter-letter {
+  animation: enter 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--delay, 0) * 1ms);
+}
+.animate-enter-letter {
+  animation-name: enter-letter;
+  animation-duration: 0.7s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .animate-enter,
+  .animate-enter-letter {
+    animation: none;
   }
 }
 
@@ -119,6 +149,14 @@
     linear-gradient(to bottom, var(--border) 1px, transparent 1px);
   background-size: 48px 48px;
   mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 30%, transparent 100%);
+}
+
+/* Brand-colored copy of the grid, revealed around the pointer by Spotlight */
+.bg-grid-brand {
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, var(--brand) 45%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--brand) 45%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 
 /* Blog code: inline snippets get a chip, fenced blocks get one surface.

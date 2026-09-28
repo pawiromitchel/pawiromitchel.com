@@ -1,10 +1,12 @@
 import { Container } from "../layout/Container";
+import { CountUp } from "../ui/CountUp";
 
 // Headline facts. Each one is backed by a section further down the page.
+// `count` makes the leading number tick up when the strip scrolls into view.
 const highlights = [
-  { value: "10 years", label: "shipping software since 2016", href: "#experience" },
+  { value: "10 years", count: 10, suffix: " years", label: "shipping software since 2016", href: "#experience" },
   { value: "Kubernetes", label: "migration lead at QuickNode", href: "#experience" },
-  { value: "2× winner", label: "IT Core Hackathon, 2017 & 2019", href: "#about" },
+  { value: "2× winner", count: 2, suffix: "× winner", label: "IT Core Hackathon, 2017 & 2019", href: "#about" },
   { value: "CEH", label: "Certified Ethical Hacker", href: "#about" },
 ];
 
@@ -17,7 +19,14 @@ export function Highlights() {
             <li key={item.value} className="bg-background">
               <a href={item.href} className="group block h-full px-5 py-6 transition-colors hover:bg-accent/50 sm:px-8">
                 <span className="block text-lg font-semibold tracking-tight transition-colors group-hover:text-brand">
-                  {item.value}
+                  {item.count !== undefined ? (
+                    <>
+                      <CountUp to={item.count} />
+                      {item.suffix}
+                    </>
+                  ) : (
+                    item.value
+                  )}
                 </span>
                 <span className="mt-0.5 block text-sm text-muted-foreground">{item.label}</span>
               </a>
