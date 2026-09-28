@@ -1,63 +1,55 @@
 export const metadata = {
-  title: "Building Cashly: Architecting a Multi-Asset Financial Intelligence Engine & AI Copilot",
-  description: "Why I stopped using third-party budget apps and built a self-hosted financial operating system with a Go daemon, Next.js 14, automated bank email ingestion, dynamic cashflow models, and an autonomous AI copilot.",
+  title: "Building Cashly, my self-hosted finance tracker",
+  description: "Why I stopped using budget apps and built my own: a Go daemon on SQLite that reads bank alert emails, tracks fiat and crypto in one place, and has an assistant that can undo its own mistakes.",
   date: "2026-03-12",
   tags: ["go", "nextjs", "sqlite", "ai", "fintech", "systems"],
 };
 
-Most personal finance apps make you choose between two bad tradeoffs:
+Most ways of tracking personal finances end up in one of two places.
 
-1. **The Black-Box Cloud Aggregator**: You hand your bank credentials over to Plaid, Yodlee, or MX. When their screen-scrapers break, your balances freeze for three weeks. If you live or bank outside of the US or EU, your financial institutions don't even exist in their dropdown. On top of that, good luck tracking staking yield, DeFi liquidity positions, or tokenized equity in the same view.
-2. **The Spreadsheet Trap**: You build an elaborate 18-tab Google Sheet. It works until you forget to manually copy over debit card receipts for two weekends, and the entire cash flow model falls out of sync.
+The first is the cloud aggregator. You give Plaid, Yodlee or MX your bank login, and it works until their scraper breaks and your balances freeze for three weeks. And if you bank outside the US or Europe, your bank usually isn't in the dropdown at all. Tracking staking rewards or DeFi positions next to that? Not happening.
 
-I wanted something different: a real, self-hosted financial operating system that runs locally, automates ingestion directly from banking alerts, models cash flow dynamically, tracks multi-chain crypto alongside fiat accounts, and provides an autonomous AI copilot that can query balances, record transactions, and rollback changes on command.
+The second is the spreadsheet. You build an 18-tab Google Sheet, and it works right up until you skip entering receipts for two weekends and the cash flow numbers stop meaning anything.
 
-That is why I built **[Cashly](https://cashlyfinance.com/)**.
+What I wanted was something that runs on my own hardware, picks up transactions without me typing them in, and shows bank accounts and crypto side by side. I also wanted to be able to say "I paid $35 cash for groceries" instead of filling in a form. That became [Cashly](https://cashlyfinance.com/).
 
----
+## How it's put together
 
-## The System Architecture
-
-Cashly is structured as a dual-engine architecture: a high-throughput **Go backend daemon** running background schedulers and ledger calculations, paired with a responsive **Next.js 14 web application** running behind Cloudflare Tunnel with PIN-protected authentication.
+There are two pieces: a Go daemon that does the real work (scheduled jobs, ledger maths, the API) and a Next.js web app in front of it. The web app sits behind a Cloudflare Tunnel and a PIN login, and talks to the Go API with an internal token.
 
 ```text
-                                  [ Cloudflare Ingress ]
-                                             │
-                                             ▼
-                              [ Next.js 14 Web UI (Port 3005) ]
-                              ├── PIN Authentication & JWT Sessions
-                              ├── Defense-in-depth Path Filtering
-                              └── SWR Client Caching & Privacy Mode
-                                             │
-                                (Internal Token Proxy)
-                                             ▼
-                        [ Go Unified Backend Daemon (Port 8080) ]
-       ┌───────────────────────────────┬───────────────────────────────┐
-       ▼                               ▼                               ▼
-[ HTTP REST API ]            [ Background Schedulers ]       [ Autonomous AI Copilot ]
-├── Account Valuations       ├── IMAP Email Ingestion (2m)   ├── Fast-path ledger updates
-├── Transactions & Ledger    ├── Price Updater Cron (5m)     ├── Transaction rollbacks
-├── Cashflow Engine (Sankey) └── Token Rebalance Watchdog    └── Multi-turn financial chat
-├── Market Intelligence
-└── Financial Statements
-       │
-       ▼
-[ SQLite 3 Database (WAL Mode) ] ◄────► [ Master Excel Workbook ]
-(finance.db: accounts, transactions,    (Bidirectional sync via
-merchants, budgets, audit logs)          excelize/v2 engine)
+                         Cloudflare Tunnel
+                                │
+                                ▼
+                Next.js web app (port 3005)
+                ├── PIN login, JWT sessions
+                ├── path filtering on the proxy
+                └── SWR caching, privacy mode
+                                │
+                         internal token
+                                ▼
+                 Go daemon (port 8080)
+      ┌─────────────────────────┼─────────────────────────┐
+      ▼                         ▼                         ▼
+   REST API               scheduled jobs                assistant
+   ├── accounts           ├── email ingestion (2m)      ├── record transactions
+   ├── transactions       ├── price updates (5m)        ├── undo changes
+   ├── cash flow          └── rebalance watchdog        └── chat about finances
+   ├── market data
+   └── statements
+      │
+      ▼
+SQLite (WAL mode) ◄──► Excel workbook
+                        (two-way sync via excelize)
 ```
 
----
+The Excel workbook stays in sync in both directions, so a spreadsheet is still there when it's the quicker tool.
 
-## 1. Zero-Credential Bank Sync via RFC 822 Email Alerts
+## Bank sync without handing over passwords
 
-Rather than trusting banking aggregators with API keys or login credentials, Cashly uses a push-based model. Most banks and fintech providers fire instant notification emails the moment a debit card swipe, wire transfer, or ATM withdrawal occurs.
+Instead of logging into banks, Cashly reads their notification emails. Most banks and fintech apps send an email the moment a card is charged, a transfer lands or cash comes out of an ATM. The Go daemon checks the mailbox over IMAP every two minutes and turns those emails into transactions.
 
-The Go backend daemon runs an automated IMAP ingestion worker that polls secure mailboxes every two minutes.
-
-### Solving Idempotency & Deduplication
-
-Email delivery is inherently at-least-once. If a network blip occurs during an IMAP handshake, an email might be re-fetched. To guarantee strict idempotency, every incoming transaction alert passes through a three-layer deduplication filter before touching the ledger:
+The catch with email is that you can get the same message twice. A dropped IMAP connection means a re-fetch, and a re-fetch must not mean a double charge in the ledger. So every alert gets a fingerprint before it's written:
 
 ```go
 // GenerateDeterministicTxHash computes a SHA-256 fingerprint from immutable transaction properties
@@ -71,61 +63,45 @@ func GenerateDeterministicTxHash(messageID string, date time.Time, amountCents i
 }
 ```
 
-If a bank alert doesn't provide an explicit RFC 822 `Message-ID`, the engine computes a composite hash from the timestamp, settled amount in integer cents, and cleaned merchant pattern. If the hash exists in the SQLite `transactions` table, it is dropped as a duplicate without writing dirty audit state.
+When the bank includes a `Message-ID` header, that alone makes the hash unique. When it doesn't, the timestamp, the amount in cents and the subject still do. If the hash is already in the `transactions` table, the email is skipped.
 
----
+## Following the money, not just totals
 
-## 2. Dynamic Sankey Cash Flow Engine
-
-Most budget apps present finances as simple pie charts. Pie charts tell you where money went in aggregate, but they fail to show **how liquidity moves through your system**.
-
-Cashly includes a fully dynamic Sankey cashflow engine that computes the exact topology of your capital:
+A pie chart tells you that 30% went to food. It doesn't tell you that money came in as a USD invoice, went through Payoneer, got converted to local currency and then paid rent. I wanted to see that path, so Cashly draws cash flow as a Sankey diagram:
 
 ```text
-[ Inflow Sources ] ──► [ Clearing Hubs ] ──► [ Operating Accounts ] ──► [ Outflows & Savings ]
-- Foreign Invoicing     - Payoneer USD        - Local Chequing Accounts   - Fixed Living Costs
-- Staking Yield         - Crypto Vaults       - Local Savings Accounts    - Discretionary Budgets
-- Investment Income                           - Base L2 Smart Wallets     - DCA Asset Allocations
+income             →  clearing          →  accounts           →  spending & saving
+- client invoices     - Payoneer (USD)     - local checking       - fixed costs
+- staking rewards     - crypto vaults      - local savings        - day-to-day budgets
+- investments                              - Base wallets         - DCA buys
 ```
 
-### Double-Entry Ledgers and Multi-Currency Nodes
+For that to work, a transfer between accounts is stored as more than a single row:
 
-Every transaction in Cashly models both legs of a transfer:
-- **Primary Leg**: The source account debit and destination credit.
-- **Fx Conversion**: Exchange rate metadata if swapping between currencies (e.g. USD to local fiat).
-- **Fee Allocation**: Automatic deduction of network gas or international wire fees into dedicated operational expense categories.
+- the main movement (out of one account, into another)
+- the exchange rate, if it crosses currencies
+- fees (gas, wire fees) booked as their own expense
 
-The frontend consumes this via a normalized DAG (Directed Acyclic Graph) computed on the fly by the Go daemon, producing an interactive Sankey diagram that visually tracks burn rate, runway, and net savings rate month over month.
+The Go daemon builds a graph from those rows, and the frontend renders it. That's also where burn rate, runway and savings rate come from.
 
----
+## Fiat and crypto in one balance sheet
 
-## 3. Multi-Asset Custody: Fiat, Yield Vaults & Tokenized Equities
-
-A modern balance sheet rarely lives entirely in one bank. Cashly tracks the entire spectrum of modern custody:
-
-| Asset Class | Custody Method | Tracking & Valuation Mechanism |
+| What | Where it lives | How Cashly tracks it |
 | :--- | :--- | :--- |
-| **Traditional Fiat** | Multi-bank checking & savings | Automated IMAP ingestion + reconciliation ledger |
-| **DeFi Yield Vaults** | Smart contract vaults (Ether.fi, Base L2) | Contract event polling + on-chain APR calculations |
-| **Liquid Staking** | Hardware cold storage (stETH, SOL, NEAR) | Validator RPC queries + reward balance delta tracking |
-| **Tokenized Equities** | Base L2 Fractional Shares | Live market pricing scrapers via Binance & CoinGecko |
+| Bank accounts | Checking and savings at several banks | Email ingestion plus reconciliation |
+| DeFi vaults | Ether.fi, vaults on Base | Contract events and on-chain APR |
+| Staked assets | stETH, SOL, NEAR | Validator RPC queries, reward deltas |
+| Tokenized stocks | Fractional shares on Base | Prices from Binance and CoinGecko |
 
-By centralizing multi-asset pricing into a periodic cron job with localized SQLite caching, portfolio valuation queries execute in **under 2 milliseconds** without hammering external rate limits.
+Prices are fetched on a schedule and cached in SQLite, so loading the portfolio page doesn't call any external API. Valuations come back in under 2 ms, and rate limits stop being a problem.
 
----
+## An assistant that can undo
 
-## 4. Autonomous Financial Copilot & Fast-Path Rollbacks
+Cash is the hardest thing to track. If recording a coffee means opening an app and tapping through five screens, you'll stop doing it within two weeks. So Cashly has an assistant, built on Gemini, that I can just tell:
 
-One of the biggest friction points in manual tracking is recording cash transactions on the go. Opening an app, navigating five menus, picking a date picker, and selecting a category guarantees you will abandon the habit within two weeks.
+> *"Paid \$35 cash for groceries at the supermarket yesterday evening"*
 
-Cashly integrates a dedicated **Gemini AI Copilot** designed specifically for financial operations.
-
-### Multi-Turn Natural Language Logging
-
-Instead of forms, you can type or dictate naturally:
-> *"Paid \$35 cash for grocery run at Supermarket yesterday evening"*
-
-The copilot parses the intent, cleans the merchant name via regularized merchant dictionaries, matches the correct expense category, selects the cash clearing account, and stages the transaction in SQLite:
+It works out the merchant, category and account, and records the transaction:
 
 ```json
 {
@@ -140,45 +116,35 @@ The copilot parses the intent, cleans the merchant name via regularized merchant
 }
 ```
 
-### Safety First: Deterministic Rollback Journaling
-
-LLMs can make mistakes or misinterpret ambiguous requests. To prevent silent data corruption, every mutation initiated by the AI Copilot is logged to an explicit `copilot_action_log` table with an undo token:
+Letting a language model write to your ledger is only okay if you can take it back. Every change the assistant makes is logged with a snapshot of the row as it was before:
 
 ```go
 type CopilotActionLog struct {
-    ID           string    `json:"id"`
-    SessionID    string    `json:"session_id"`
-    ActionType   string    `json:"action_type"` // CREATE_TX, UPDATE_BUDGET, RECLASSIFY
-    TargetTable  string    `json:"target_table"`
-    TargetID     string    `json:"target_id"`
-    PreviousState []byte   `json:"previous_state"` // Snapshot of raw row bytes
-    CreatedAt    time.Time `json:"created_at"`
+    ID            string    `json:"id"`
+    SessionID     string    `json:"session_id"`
+    ActionType    string    `json:"action_type"` // CREATE_TX, UPDATE_BUDGET, RECLASSIFY
+    TargetTable   string    `json:"target_table"`
+    TargetID      string    `json:"target_id"`
+    PreviousState []byte    `json:"previous_state"` // snapshot of the row before the change
+    CreatedAt     time.Time `json:"created_at"`
 }
 ```
 
-If the agent misinterprets an amount or assigns the wrong category, saying *"Undo that"* immediately triggers an atomic rollback restoring the previous row state from the byte snapshot without manual database surgery.
+When it gets an amount or a category wrong, "undo that" restores the snapshot in one transaction. No poking around in SQLite by hand.
 
----
+## Market indicators
 
-## 5. Market Cycle Intelligence & Macro Regime Detection
+I DCA into a few assets, so Cashly also calculates some long-term indicators for BTC, ETH, SOL and the S&P 500:
 
-Portfolio management isn't just about recording what happened; it's about understanding macro market positioning.
+- **Pi Cycle top and bottom:** the 111-day moving average against twice the 350-day, and the 471-day average × 0.745. Historically these have lined up with cycle extremes.
+- **EMA ribbons:** the 20, 50 and 200-week EMAs, as a quick read on whether we're in a bull or bear trend.
 
-Cashly includes built-in quantitative oscillators calculated directly from weekly OHLCV candlestick data for driving assets (BTC, ETH, SOL, S&P 500):
+None of this is advice. It's a dashboard I check before my monthly rebalance.
 
-- **Pi Cycle Top & Bottom Gauge**: Quantifies the spread between the 111-day SMA and the 350-day SMA × 2 (Top indicator) alongside the 471-day SMA × 0.745 (Bottom indicator) to detect macro market exhaustion.
-- **Multi-EMA Trend Ribbons**: Computes the 20, 50, and 200 weekly Exponential Moving Averages to confirm bull/bear regime shifts before executing monthly portfolio rebalances.
+## Keeping it private
 
----
+- All the data is in a single SQLite file.
+- The Go daemon and the web app run as two Docker containers behind the Cloudflare Tunnel.
+- There are no analytics or tracking scripts.
 
-## Performance & Privacy By Design
-
-When you are dealing with personal net worth and transaction history, cloud convenience cannot compromise privacy:
-
-- **Local-First & Self-Contained**: The database is a single SQLite file running in WAL mode with fast foreign key constraints.
-- **Dockerized Single-Command Deployment**: Both the Go daemon and Next.js frontend run in hardened containers behind an authenticated reverse proxy.
-- **No Third-Party Analytics**: No telemetry, no third-party tracker scripts, and zero cloud lock-in.
-
-Building Cashly proved that you don't need to surrender your financial sovereignty to proprietary cloud startups to have an intelligent, beautiful, and fully automated wealth dashboard.
-
-If you are interested in exploring the project or discussing fintech systems engineering, feel free to reach out or check out [Cashly](https://cashlyfinance.com/).
+If you're building something similar, or want to compare notes on parsing bank emails, [get in touch](mailto:pawiromitchel@gmail.com). The project lives at [cashlyfinance.com](https://cashlyfinance.com/).
