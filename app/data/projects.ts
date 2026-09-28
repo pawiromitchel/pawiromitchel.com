@@ -42,9 +42,9 @@ export const projects: Project[] = [
   {
     id: "bcron",
     title: "bcron",
-    tagline: "Cron with logs, a daemon and a TUI",
+    tagline: "Scheduled tasks you can actually see",
     description:
-      "A Go replacement for crontab: timezone-aware schedules, a background daemon, full run history and desktop notifications, all managed from an interactive terminal UI.",
+      "A small Go scheduler with a background daemon, SQLite run history with full output, macOS notifications, a terminal UI and an MCP server.",
     image: "/images/projects/bcron.jpg",
     imageAlt: "bcron terminal UI listing scheduled jobs and their last runs",
     stack: ["Go", "Bubble Tea", "Linux"],

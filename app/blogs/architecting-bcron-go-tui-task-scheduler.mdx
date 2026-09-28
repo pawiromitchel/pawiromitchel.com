@@ -1,162 +1,139 @@
 export const metadata = {
-  title: "Why I Built bcron: Fixing Everything That Annoys Me About Crontab",
-  description: "I got tired of silent cron failures, digging through syslog, and guessing whether background jobs were still running. Here is how I built bcron in Go.",
+  title: "Why I built bcron: a scheduler I can actually see",
+  description: "Scheduled jobs that fail silently, with output nobody kept. bcron is a small Go scheduler with a background daemon, SQLite history and a terminal UI.",
   date: "2026-03-05",
   tags: ["go", "systems", "cli", "tui", "linux"],
 };
 
-Standard `crontab` is one of those Unix tools everyone respects, but secretly hates using.
+`cron` is one of those Unix tools everyone respects and nobody enjoys using.
 
-You open `crontab -e`, paste a five-star syntax line you had to double-check on crontab.guru, and pray the environment variables match your local shell. A week later, you realize a backup script died silently because your local mail transport wasn't configured, leaving zero error traces unless you dig through `/var/log/syslog`.
+You open `crontab -e`, write a schedule you double-checked on crontab.guru, and hope the environment matches your shell. A week later you find out a backup script has been failing the whole time, because the output went to local mail that nobody reads.
 
-Heavy orchestration tools (Rundeck, Airflow, Temporal) exist, but they are complete overkill when all you want is to run 8 scheduled scripts on a server or your Mac.
+The heavy alternatives (Rundeck, Airflow, Temporal) are built for teams and pipelines. I just wanted to schedule a handful of scripts on my Mac or a server and see what happened when they ran. So I built [bcron](https://github.com/pawiromitchel/bcron) in Go: one binary with a daemon, a CLI and a terminal UI.
 
-I wanted something in between: a single, self-contained binary with a background daemon and an interactive split-pane terminal UI. So I built **[`bcron`](https://github.com/pawiromitchel/bcron)** in Go.
+To be upfront about scope: bcron runs tasks at a time you choose. It doesn't do recurring cron-style schedules.
 
----
+## What it looks like
 
-## What It Looks Like
+![bcron's terminal UI with a task list and task details](/images/projects/bcron.png)
 
-Instead of raw crontab syntax or invisible background execution, `bcron` gives you a live dashboard right in your terminal:
+Tasks on the left, details for the selected one on the right: command, scheduled time, status and when it ran. The keys are what you'd guess:
 
-![bcron Go interactive TUI interface](/images/projects/bcron.png)
+| Key | Action |
+| :--- | :--- |
+| `n` / `e` / `d` | New, edit, delete a task |
+| `enter` | Task details |
+| `h` | Run history with the full stdout and stderr |
+| `f` | Cycle the status filter |
+| `r` | Refresh |
+| `q` | Quit (the daemon keeps running) |
 
-You get a split-pane layout: your active tasks on the left, and live metadata, schedule, and full stdout/stderr history on the right.
+The same things work from the command line:
 
-### Everyday Shortcuts
-- `r` — Manually trigger the selected task right now (great for debugging scripts).
-- `space` — Pause / resume a schedule without deleting the entry.
-- `enter` — View full stdout/stderr logs from the last run without opening log files.
-- `q` — Detach. The background daemon keeps running your jobs.
+```bash
+bcron add "./backup.sh" --at "2026-02-05 02:00 UTC" --name "backup"
+bcron list
+bcron run 1       # run it right now
+bcron logs 1      # output from the last run
+bcron history 1   # every run
+```
 
----
+`--at` accepts ISO 8601, a time with a zone abbreviation (`14:30 EST`), or a separate `--timezone "America/New_York"` flag.
 
-## How It Works Under the Hood
+## How it's put together
 
-The architecture is split into two independent pieces: a long-running headless daemon and a fast terminal client. They talk to each other over a local Unix domain socket.
+There are two parts: a daemon that runs tasks, and the CLI/TUI you interact with. They don't talk to each other directly. Both read and write the same SQLite database at `~/.config/bcron/bcron.db`.
 
 ```text
+┌──────────────┐        ┌──────────────────────┐
+│  bcron TUI   │        │     bcron daemon     │
+│  bcron CLI   │        │  checks every 30s,   │
+└──────┬───────┘        │  max 10 running      │
+       │                └──────────┬───────────┘
+       │   read / write            │   read / write
+       ▼                           ▼
 ┌──────────────────────────────────────────────┐
-│                  bcron TUI                   │
-│         (Bubbletea + Lipgloss loop)          │
-└──────────────────────┬───────────────────────┘
-                       │ Unix Domain Socket (/tmp/bcron.sock)
-                       ▼
-┌──────────────────────────────────────────────┐
-│                 bcron Daemon                 │
-│      ├── Internal Scheduler Clock            │
-│      ├── Worker Pool (bounded concurrency)   │
-│      └── SQLite Execution & Output Store     │
-└──────────────────────┬───────────────────────┘
-                       │ fork/exec
-                       ▼
-┌──────────────────────────────────────────────┐
-│               Child Scripts                  │
-│       (.sh, .py, .go, binaries, etc.)        │
+│        SQLite  ~/.config/bcron/bcron.db      │
+│        tasks, executions, stdout/stderr      │
 └──────────────────────────────────────────────┘
 ```
 
-This separation was non-negotiable:
-1. **Closing your terminal cannot kill your jobs.** If you close your laptop or exit the terminal session, the daemon doesn't care.
-2. **The TUI needs to be instant.** When you run `bcron`, it shouldn't spin up a heavy runtime; it just connects to the socket, reads the current task state from SQLite, and starts rendering.
+The upside is that a whole class of problems goes away. There's no socket or protocol to maintain, the UI opens instantly because it's just a query, and if the daemon is down you can still see and edit your tasks.
 
----
+### Starting the daemon
 
-## 1. Detaching the Daemon (No Systemd Required)
-
-On macOS or development Linux machines, you don't always want to configure a systemd service just to test a daemon. In Go, properly detaching a process so it survives terminal closures requires calling `Setsid` to create an independent session:
+`bcron daemon start` re-runs its own binary with a `--daemon-mode` flag, doesn't wait for it, and records the PID in `~/.config/bcron/bcron.pid`:
 
 ```go
-package daemon
+startCmd := exec.Command(binaryPath, "--daemon-mode", "--daemon-pid-file", pidFile)
+startCmd.Stdout = nil
+startCmd.Stderr = nil
+startCmd.Stdin = nil
 
-import (
-	"os"
-	"os/exec"
-	"syscall"
-)
+if err := startCmd.Start(); err != nil {
+	return fmt.Errorf("failed to start daemon: %w", err)
+}
 
-func StartBackgroundDaemon(binPath string, args []string) (*os.Process, error) {
-	cmd := exec.Command(binPath, args...)
-	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Setsid: true, // Creates a new session; detaches from controlling TTY
-	}
+// Don't wait for the process (let it run in background)
+go startCmd.Wait()
+```
 
-	// Capture initial daemon output in case of early panics
-	logSink, err := os.OpenFile("/tmp/bcron-daemon.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
-	if err != nil {
-		return nil, err
-	}
-	cmd.Stdout = logSink
-	cmd.Stderr = logSink
+You mostly don't have to think about it. Adding a task when the daemon isn't running starts it for you.
 
-	if err := cmd.Start(); err != nil {
-		return nil, err
-	}
-	return cmd.Process, nil
+### Checking for work
+
+The daemon wakes up every 30 seconds and asks SQLite for anything that's due:
+
+```sql
+SELECT id, name, command, scheduled_time, timezone, status, created_at, updated_at
+FROM tasks
+WHERE status = ?
+AND datetime(scheduled_time) <= datetime('now')
+ORDER BY scheduled_time ASC
+```
+
+Each due task runs in its own goroutine, with a limit of 10 at a time. When that limit is reached, the remaining tasks stay `pending` and get picked up on the next check:
+
+```go
+if currentRunning >= s.maxConcurrent {
+	log.Printf("Max concurrent tasks (%d) reached, skipping task %d", s.maxConcurrent, task.ID)
+	continue
 }
 ```
 
----
+That's simpler than a proper queue, and for a few scripts a day, a 30-second delay doesn't matter. The trade-off is that nothing runs at an exact second. Anything scheduled can start up to 30 seconds late.
 
-## 2. Preventing Thundering Herds with a Worker Pool
+Commands run through `sh -c`. Scripts get their interpreter from the shebang or the file extension (`.sh`, `.py`, `.rb`, `.pl`, `.js`, `.php`), and every run has a one-hour timeout.
 
-Standard cron will gladly launch 40 jobs at the exact same second if their schedules align, maxing out your CPU and memory. 
+### Notifications
 
-In `bcron`, tasks are fed through a buffered semaphore channel that caps concurrent executions:
-
-```go
-func (e *Engine) DispatchJobs(ctx context.Context, readyJobs []Job, maxConcurrent int) {
-	sem := make(chan struct{}, maxConcurrent) // e.g. cap at 8 concurrent jobs
-
-	for _, job := range readyJobs {
-		select {
-		case <-ctx.Done():
-			return
-		case sem <- struct{}{}:
-			go func(j Job) {
-				defer func() { <-sem }()
-				e.executeJob(ctx, j)
-			}(job)
-		}
-	}
-}
-```
-
----
-
-## 3. Native macOS Desktop Notifications
-
-One feature I use constantly: native desktop notifications when long-running scripts fail. When a job exits with a non-zero exit code, `bcron` sends a notification directly to macOS Notification Center:
+One feature I use constantly: desktop notifications. On macOS, bcron sends a notification when a task starts, succeeds or fails, using `osascript`, so there's nothing extra to install:
 
 ```go
-func notifyFailure(jobName string, exitCode int) {
-	script := fmt.Sprintf(
-		`display notification "Task '%s' failed with exit code %d" with title "bcron alert" sound name "Basso"`,
-		jobName, exitCode,
-	)
-	exec.Command("osascript", "-e", script).Run()
-}
+script := fmt.Sprintf(`display notification "%s" with title "%s"`, message, title)
+cmd := exec.Command("osascript", "-e", script)
 ```
 
----
+On Linux it skips notifications quietly instead of erroring.
 
-## The Comparison
+## An MCP server, too
 
-| Feature | Standard crontab | bcron |
-| :--- | :--- | :--- |
-| **Interface** | Raw text editor (`crontab -e`) | Interactive split-pane TUI |
-| **Inspect Logs** | Dig through `/var/log` | Built-in per-task log viewer (`Enter`) |
-| **Manual One-Off Run** | Copy/paste command into terminal | Hit `r` on any task |
-| **Memory Footprint** | ~2MB | ~12MB |
-| **Binary Size** | Pre-installed | Single static binary (~15MB) |
+bcron also ships a small [MCP](https://modelcontextprotocol.io) server (in `mcp/`), so an AI assistant like Claude can schedule tasks, list and cancel them, read their logs, and start the daemon. Whatever it schedules shows up in the TUI like any other task.
 
-If you want to try it out or install it via Go:
+## Limitations
+
+- Tasks are one-off. There are no recurring schedules.
+- Timing is accurate to about 30 seconds.
+- Notifications only work on macOS.
+
+## Try it
 
 ```bash
 git clone https://github.com/pawiromitchel/bcron.git
 cd bcron
 ./build.sh
+./bin/bcron daemon start
 ./bin/bcron
 ```
 
-Source code is available on [GitHub](https://github.com/pawiromitchel/bcron).
+The source is on [GitHub](https://github.com/pawiromitchel/bcron).
