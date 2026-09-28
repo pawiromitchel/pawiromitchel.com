@@ -4,6 +4,7 @@ import { personalInfo } from "@/app/data/personal";
 import { Container } from "../layout/Container";
 import { SectionHeading } from "../ui/SectionHeading";
 import { Reveal } from "../ui/Reveal";
+import { ScrollTimeline, TimelineDot } from "../ui/ScrollTimeline";
 
 export function ExperienceSection() {
   return (
@@ -24,57 +25,60 @@ export function ExperienceSection() {
           }
         />
 
-        <ol className="divide-y border-y">
-          {experience.map((job) => (
-            <li key={job.id}>
-              <Reveal className="grid gap-4 py-8 md:grid-cols-[220px_1fr] md:gap-10">
-                <div>
-                  <h3 className="font-semibold">
-                    {job.url ? (
-                      <a href={job.url} target="_blank" rel="noopener noreferrer" className="hover:text-brand">
-                        {job.company}
-                      </a>
-                    ) : (
-                      job.company
-                    )}
-                  </h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{job.period}</p>
-                  <p className="text-sm text-muted-foreground">{job.location}</p>
-                </div>
-
-                <div className="space-y-6">
-                  {job.roles.map((role, i) => (
-                    <div key={role.title} className={job.roles.length > 1 ? "relative border-l pl-5" : undefined}>
-                      {job.roles.length > 1 && (
-                        <span
-                          aria-hidden
-                          className={`absolute top-1.5 -left-[5px] size-2.5 rounded-full border-2 border-background ${
-                            i === 0 ? "bg-brand" : "bg-muted-foreground/40"
-                          }`}
-                        />
+        <ScrollTimeline>
+          <ol className="divide-y border-y">
+            {experience.map((job) => (
+              <li key={job.id} className="relative">
+                <TimelineDot className="top-11" />
+                <Reveal className="grid gap-4 py-8 md:grid-cols-[220px_1fr] md:gap-10">
+                  <div>
+                    <h3 className="font-semibold">
+                      {job.url ? (
+                        <a href={job.url} target="_blank" rel="noopener noreferrer" className="hover:text-brand">
+                          {job.company}
+                        </a>
+                      ) : (
+                        job.company
                       )}
-                      <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-                        <h4 className="font-medium">{role.title}</h4>
+                    </h3>
+                    <p className="mt-1 text-sm text-muted-foreground">{job.period}</p>
+                    <p className="text-sm text-muted-foreground">{job.location}</p>
+                  </div>
+
+                  <div className="space-y-6">
+                    {job.roles.map((role, i) => (
+                      <div key={role.title} className={job.roles.length > 1 ? "relative border-l pl-5" : undefined}>
                         {job.roles.length > 1 && (
-                          <span className="font-mono text-xs text-muted-foreground">{role.period}</span>
+                          <span
+                            aria-hidden
+                            className={`absolute top-1.5 -left-[5px] size-2.5 rounded-full border-2 border-background ${
+                              i === 0 ? "bg-brand" : "bg-muted-foreground/40"
+                            }`}
+                          />
                         )}
+                        <div className="flex flex-wrap items-baseline justify-between gap-x-4">
+                          <h4 className="font-medium">{role.title}</h4>
+                          {job.roles.length > 1 && (
+                            <span className="font-mono text-xs text-muted-foreground">{role.period}</span>
+                          )}
+                        </div>
+                        <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-muted-foreground">
+                          {role.highlights.map((point) => (
+                            <li key={point} className="flex gap-2.5">
+                              <span aria-hidden className="mt-2.5 h-px w-2.5 shrink-0 bg-muted-foreground/50" />
+                              <span className="text-pretty">{point}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
-                      <ul className="mt-2 space-y-1.5 text-sm leading-relaxed text-muted-foreground">
-                        {role.highlights.map((point) => (
-                          <li key={point} className="flex gap-2.5">
-                            <span aria-hidden className="mt-2.5 h-px w-2.5 shrink-0 bg-muted-foreground/50" />
-                            <span className="text-pretty">{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                  <p className="font-mono text-xs text-muted-foreground">{job.stack.join(" · ")}</p>
-                </div>
-              </Reveal>
-            </li>
-          ))}
-        </ol>
+                    ))}
+                    <p className="font-mono text-xs text-muted-foreground">{job.stack.join(" · ")}</p>
+                  </div>
+                </Reveal>
+              </li>
+            ))}
+          </ol>
+        </ScrollTimeline>
 
         <div className="mt-10">
           <h3 className="mb-3 text-sm font-medium text-muted-foreground">Also</h3>
