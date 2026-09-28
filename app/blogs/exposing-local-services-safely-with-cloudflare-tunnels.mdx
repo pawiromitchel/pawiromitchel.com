@@ -1,0 +1,137 @@
+export const metadata = {
+  title: "Exposing local services with Cloudflare Tunnel",
+  description: "No port forwarding, no dynamic DNS, no home IP on the internet. How to put a local service on a real domain with cloudflared, and the catches worth knowing first.",
+  date: "2026-09-21",
+  tags: ["infrastructure", "devops", "networking", "homelab", "security"],
+};
+
+Putting something from your own machine on the internet used to mean the same three chores: forward ports 80 and 443 on the router, set up dynamic DNS because the ISP keeps changing your IP, and then accept that your home IP is now out there getting port-scanned.
+
+Cloudflare Tunnel skips all of that. You run a small daemon, `cloudflared`, next to your service. It opens an outbound connection to Cloudflare, and requests for your hostname come back down that connection. Nothing listens on your router. [Cashly](/blogs/building-cashly-multi-asset-financial-intelligence-engine) runs behind one of these.
+
+## How it works
+
+```text
+Visitor
+   │
+   ▼
+Cloudflare edge (TLS, WAF, DDoS protection)
+   │
+   │  outbound tunnel opened by cloudflared (QUIC or HTTP/2)
+   ▼
+cloudflared on your machine
+   │
+   ▼
+Your service (localhost:3000, a container, ...)
+```
+
+Because your side opens the connection, this also works behind CGNAT, double NAT and networks where you couldn't forward a port even if you wanted to.
+
+## The quick version: no account, no domain
+
+If you just need to show someone a local build or point a Stripe or GitHub webhook at your laptop, a quick tunnel is enough.
+
+Install `cloudflared`:
+
+```bash
+# macOS
+brew install cloudflared
+```
+
+On Linux, add Cloudflare's package repository first (the [install docs](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/) have the commands per distro), then install it with your package manager.
+
+Then:
+
+```bash
+cloudflared tunnel --url http://localhost:3000
+```
+
+You get a random `https://something-something.trycloudflare.com` URL with HTTPS already sorted. `Ctrl+C` and it's gone.
+
+Keep in mind that the URL is public. Anyone who has it can reach whatever is on that port, so don't leave one running in front of something with no auth.
+
+## A permanent tunnel on your own domain
+
+For things that should stay up, like a dashboard or a small API, you want a stable hostname such as `app.yourdomain.com`. The domain needs to be on Cloudflare DNS.
+
+**1. Log in**
+
+```bash
+cloudflared tunnel login
+```
+
+A browser window opens and asks you to pick the domain. When you approve, a certificate lands in `~/.cloudflared/cert.pem`.
+
+**2. Create the tunnel**
+
+```bash
+cloudflared tunnel create homelab
+```
+
+This gives the tunnel a UUID and writes its credentials to `~/.cloudflared/<UUID>.json`.
+
+**3. Point a hostname at it**
+
+```bash
+cloudflared tunnel route dns homelab app.yourdomain.com
+```
+
+That creates a `CNAME` from `app.yourdomain.com` to `<UUID>.cfargotunnel.com`.
+
+**4. Tell cloudflared where to send traffic**
+
+`~/.cloudflared/config.yml`:
+
+```yaml
+tunnel: homelab
+credentials-file: /Users/you/.cloudflared/<UUID>.json
+
+ingress:
+  - hostname: app.yourdomain.com
+    service: http://localhost:3000
+
+  - hostname: portainer.yourdomain.com
+    service: http://localhost:9000
+
+  # Required catch-all for anything that doesn't match above
+  - service: http_status:404
+```
+
+One tunnel can serve as many hostnames as you like. Each one just needs its own `route dns`.
+
+**5. Run it**
+
+```bash
+cloudflared tunnel run homelab
+```
+
+Once that works, install it as a service so it survives reboots:
+
+```bash
+sudo cloudflared service install
+```
+
+Check where the service expects its config. On Linux it reads `/etc/cloudflared/config.yml`, not the one in your home directory, so copy it (and the credentials file) over or the service will start with nothing to route.
+
+## Running it in Docker
+
+If everything else is already in containers, `cloudflared` can be one too. Create the tunnel in the Zero Trust dashboard instead of the CLI, copy its token, and run:
+
+```yaml
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+```
+
+With a token-based tunnel the hostnames and routes live in the dashboard, so there's no `config.yml` to keep in sync. To reach other containers, put them on the same Docker network and use their service names as targets (`http://portainer:9000`), not `localhost`.
+
+## Things to know before you rely on it
+
+- **Cloudflare sees your traffic.** TLS ends at their edge, and they open a new connection to you. That's how the WAF and caching work, but it means your requests pass through Cloudflare unencrypted on their side.
+- **Protect admin tools with Access.** A tunnel makes a service reachable, not private. For things like Portainer, add a Cloudflare Access policy so visitors have to log in with Google, GitHub or a one-time email code before they ever reach your app.
+- **Uploads are capped.** The free plan limits request bodies to 100 MB, which you'll notice if you tunnel a file-sharing or photo app.
+- **It's a dependency.** If Cloudflare has a bad day, so does your service. That's fine for a homelab and worth a thought for anything else.
