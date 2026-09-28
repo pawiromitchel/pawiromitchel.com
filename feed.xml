@@ -6,39 +6,46 @@
     <description>Writing on infrastructure, Go tooling and side projects.</description>
     <language>en</language>
     <item>
-      <title>Ditching Docker Desktop: Lightweight Containers with Colima and Portainer</title>
+      <title>Exposing local services with Cloudflare Tunnel</title>
+      <link>https://pawiromitchel.com/blogs/exposing-local-services-safely-with-cloudflare-tunnels</link>
+      <guid>https://pawiromitchel.com/blogs/exposing-local-services-safely-with-cloudflare-tunnels</guid>
+      <pubDate>Mon, 21 Sep 2026 00:00:00 GMT</pubDate>
+      <description>No port forwarding, no dynamic DNS, no home IP on the internet. How to put a local service on a real domain with cloudflared, and the catches worth knowing first.</description>
+    </item>
+    <item>
+      <title>Ditching Docker Desktop for Colima and Portainer</title>
       <link>https://pawiromitchel.com/blogs/replacing-docker-desktop-with-colima-and-portainer</link>
       <guid>https://pawiromitchel.com/blogs/replacing-docker-desktop-with-colima-and-portainer</guid>
       <pubDate>Sat, 19 Sep 2026 00:00:00 GMT</pubDate>
-      <description>Docker Desktop on macOS eats gigabytes of RAM just sitting idle. Here is how I replaced it with Colima for the container runtime and Portainer for the UI.</description>
+      <description>Docker Desktop is a lot of app for what I actually use. Colima gives me the Docker daemon, Portainer gives me the dashboard, and my compose files didn't notice the difference.</description>
     </item>
     <item>
-      <title>Building CryptoWatcher: Bringing macOS Stocks Widgets into the Terminal with Go</title>
+      <title>Building CryptoWatcher: the macOS Stocks widget, in my terminal</title>
       <link>https://pawiromitchel.com/blogs/building-cryptowatcher-macos-stocks-terminal-dashboard</link>
       <guid>https://pawiromitchel.com/blogs/building-cryptowatcher-macos-stocks-terminal-dashboard</guid>
       <pubDate>Sat, 14 Mar 2026 00:00:00 GMT</pubDate>
-      <description>I wanted the glanceability of macOS Stocks widgets inside my tmux session. Here is how I built CryptoWatcher in Go using Bubble Tea, Lipgloss, high-definition Braille line charts, and composite multi-feed asset routing.</description>
+      <description>A weekend project in Go with Bubble Tea: widget cards, Braille line charts and one watchlist for crypto and stocks, pulled from three different price feeds.</description>
     </item>
     <item>
-      <title>Building Cashly: Architecting a Multi-Asset Financial Intelligence Engine &amp; AI Copilot</title>
+      <title>Building Cashly, my self-hosted finance tracker</title>
       <link>https://pawiromitchel.com/blogs/building-cashly-multi-asset-financial-intelligence-engine</link>
       <guid>https://pawiromitchel.com/blogs/building-cashly-multi-asset-financial-intelligence-engine</guid>
       <pubDate>Thu, 12 Mar 2026 00:00:00 GMT</pubDate>
-      <description>Why I stopped using third-party budget apps and built a self-hosted financial operating system with a Go daemon, Next.js 14, automated bank email ingestion, dynamic cashflow models, and an autonomous AI copilot.</description>
+      <description>Why I stopped using budget apps and built my own: a Go daemon on SQLite that reads bank alert emails, tracks fiat and crypto in one place, and has an assistant that can undo its own mistakes.</description>
     </item>
     <item>
-      <title>Why I Built bcron: Fixing Everything That Annoys Me About Crontab</title>
+      <title>Why I built bcron: a scheduler I can actually see</title>
       <link>https://pawiromitchel.com/blogs/architecting-bcron-go-tui-task-scheduler</link>
       <guid>https://pawiromitchel.com/blogs/architecting-bcron-go-tui-task-scheduler</guid>
       <pubDate>Thu, 05 Mar 2026 00:00:00 GMT</pubDate>
-      <description>I got tired of silent cron failures, digging through syslog, and guessing whether background jobs were still running. Here is how I built bcron in Go.</description>
+      <description>Scheduled jobs that fail silently, with output nobody kept. bcron is a small Go scheduler with a background daemon, SQLite history and a terminal UI.</description>
     </item>
     <item>
-      <title>Scraping 8 Surinamese Banks Without Losing My Mind: The ForexSU Story</title>
+      <title>Scraping 8 Surinamese banks without losing my mind</title>
       <link>https://pawiromitchel.com/blogs/resilient-scraping-and-pwa-architecture-forexsu</link>
       <guid>https://pawiromitchel.com/blogs/resilient-scraping-and-pwa-architecture-forexsu</guid>
       <pubDate>Mon, 02 Mar 2026 00:00:00 GMT</pubDate>
-      <description>Why I built ForexSU to track foreign currency rates across Suriname, and how to write resilient web scrapers that survive constant HTML breaking changes.</description>
+      <description>None of the banks in Suriname have a rates API, so I built ForexSU to scrape them. Notes on parsers that survive redesigns, serving stale data on purpose, and why it's a PWA.</description>
     </item>
   </channel>
 </rss>
