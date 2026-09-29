@@ -5,59 +5,82 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Two accents carry the "build → operate" story: operate (green) for ops work and
+   primary actions, build (amber) for software work. Brand aliases operate. */
 :root {
-  --background: oklch(0.99 0.002 250);
-  --foreground: oklch(0.18 0.01 260);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.01 260);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.01 260);
-  --primary: oklch(0.2 0.01 260);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.96 0.004 250);
-  --secondary-foreground: oklch(0.2 0.01 260);
-  --muted: oklch(0.96 0.004 250);
-  --muted-foreground: oklch(0.5 0.015 260);
-  --accent: oklch(0.955 0.006 250);
-  --accent-foreground: oklch(0.2 0.01 260);
+  --background: #fafaf8;
+  --foreground: #141517;
+  --card: #ffffff;
+  --card-foreground: #141517;
+  --popover: #ffffff;
+  --popover-foreground: #141517;
+  --primary: #1f8a4c;
+  --primary-foreground: #ffffff;
+  --secondary: #f0f0ec;
+  --secondary-foreground: #141517;
+  --muted: #f0f0ec;
+  --muted-foreground: #5a6068;
+  --subtle: #6e747b;
+  --accent: #efefea;
+  --accent-foreground: #141517;
+  --surface: #f4f4f0;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.915 0.006 250);
-  --input: oklch(0.915 0.006 250);
-  --ring: oklch(0.55 0.17 255);
-  --brand: oklch(0.52 0.19 258);
-  --brand-soft: oklch(0.52 0.19 258 / 10%);
-  --success: oklch(0.6 0.15 155);
+  --border: #e3e3de;
+  --input: #d8d8d2;
+  --ring: #1f8a4c;
+  --operate: #1f8a4c;
+  --operate-foreground: #ffffff;
+  --operate-soft: rgb(31 138 76 / 10%);
+  --build: #9a5606;
+  --build-bar: #d08a2a;
+  --build-foreground: #ffffff;
+  --brand: var(--operate);
+  --brand-soft: var(--operate-soft);
+  --success: var(--operate);
   --radius: 0.625rem;
 }
 
 .dark {
-  --background: oklch(0.145 0.006 260);
-  --foreground: oklch(0.96 0.003 250);
-  --card: oklch(0.18 0.007 260);
-  --card-foreground: oklch(0.96 0.003 250);
-  --popover: oklch(0.18 0.007 260);
-  --popover-foreground: oklch(0.96 0.003 250);
-  --primary: oklch(0.96 0.003 250);
-  --primary-foreground: oklch(0.18 0.01 260);
-  --secondary: oklch(0.23 0.008 260);
-  --secondary-foreground: oklch(0.96 0.003 250);
-  --muted: oklch(0.23 0.008 260);
-  --muted-foreground: oklch(0.7 0.012 260);
-  --accent: oklch(0.24 0.009 260);
-  --accent-foreground: oklch(0.96 0.003 250);
+  --background: #0e0f10;
+  --foreground: #edeeef;
+  --card: #15171a;
+  --card-foreground: #edeeef;
+  --popover: #15171a;
+  --popover-foreground: #edeeef;
+  --primary: #4fc27f;
+  --primary-foreground: #0b1a11;
+  --secondary: #1b1e22;
+  --secondary-foreground: #edeeef;
+  --muted: #1b1e22;
+  --muted-foreground: #a0a6ad;
+  --subtle: #858c94;
+  --accent: #1b1e22;
+  --accent-foreground: #edeeef;
+  --surface: #121416;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 9%);
-  --input: oklch(1 0 0 / 14%);
-  --ring: oklch(0.7 0.15 255);
-  --brand: oklch(0.72 0.15 255);
-  --brand-soft: oklch(0.72 0.15 255 / 12%);
-  --success: oklch(0.75 0.15 155);
+  --border: #272b30;
+  --input: #33383e;
+  --ring: #4fc27f;
+  --operate: #4fc27f;
+  --operate-foreground: #0b1a11;
+  --operate-soft: rgb(79 194 127 / 12%);
+  --build: #e9a23b;
+  --build-bar: #e9a23b;
+  --build-foreground: #2a1b04;
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-geist-sans);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+  --font-heading: var(--font-bricolage);
+  --color-subtle: var(--subtle);
+  --color-surface: var(--surface);
+  --color-operate: var(--operate);
+  --color-operate-foreground: var(--operate-foreground);
+  --color-operate-soft: var(--operate-soft);
+  --color-build: var(--build);
+  --color-build-bar: var(--build-bar);
+  --color-build-foreground: var(--build-foreground);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -99,7 +122,6 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
-    font-feature-settings: "ss01", "cv11";
   }
   ::selection {
     background: var(--brand-soft);
@@ -157,6 +179,15 @@
     linear-gradient(to right, color-mix(in oklch, var(--brand) 45%, transparent) 1px, transparent 1px),
     linear-gradient(to bottom, color-mix(in oklch, var(--brand) 45%, transparent) 1px, transparent 1px);
   background-size: 48px 48px;
+}
+
+/* The "support" stretch of the career bar: stripes of the operate color. */
+.bg-stripes-operate {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--operate) 0 6px,
+    color-mix(in oklch, var(--operate) 25%, var(--background)) 6px 12px
+  );
 }
 
 /* Blog code: inline snippets get a chip, fenced blocks get one surface.

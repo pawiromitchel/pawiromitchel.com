@@ -14,7 +14,7 @@ import { ThemeToggle } from "../ui/ThemeToggle";
 
 const links = [
   { id: "work", label: "Work", href: "/#work" },
-  { id: "experience", label: "Experience", href: "/#experience" },
+  { id: "experience", label: "Career", href: "/#experience" },
   { id: "writing", label: "Writing", href: "/blog" },
   { id: "about", label: "About", href: "/#about" },
 ];
@@ -71,7 +71,12 @@ export function Navigation() {
       )}
     >
       <Container className="flex h-16 items-center justify-between">
-        <Link href="/" className="font-semibold tracking-tight" aria-label={`${personalInfo.name}, home`}>
+        <Link
+          href="/"
+          className="flex items-center gap-2.5 font-semibold tracking-tight"
+          aria-label={`${personalInfo.name}, home`}
+        >
+          <span aria-hidden className="size-2 rounded-full bg-operate" />
           {personalInfo.name}
         </Link>
 
@@ -98,7 +103,7 @@ export function Navigation() {
           ))}
           <div className="ml-2 flex items-center gap-1 border-l pl-3">
             <ThemeToggle />
-            <Button asChild size="sm" className="ml-1">
+            <Button asChild size="sm" variant="outline" className="ml-1 h-8 px-3">
               <Link href="/#contact">Get in touch</Link>
             </Button>
           </div>

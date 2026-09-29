@@ -1,7 +1,14 @@
+// What kind of work a role was: building software, supporting it, or running it.
+export type RoleKind = "dev" | "support" | "ops";
+
 export interface Role {
   title: string;
   period: string;
+  kind: RoleKind;
+  promotedFrom?: string;
   highlights: string[];
+  // Overrides the company stack when roles at one company used different tools.
+  stack?: string[];
 }
 
 export interface Company {
@@ -27,21 +34,38 @@ export const experience: Company[] = [
       {
         title: "Technical Operations Engineer II",
         period: "Aug 2025 – Present",
+        kind: "ops",
+        promotedFrom: "Senior Support Engineer, 2025",
         highlights: [
-          "Leading the Kubernetes migration to modernize the infrastructure architecture and make deployments scale.",
-          "Own blockchain client upgrades and new chain deployments, and share the on-call rotation that keeps node infrastructure up.",
+          "Leading the migration of our node infrastructure to Kubernetes, to make deployments easier to scale and manage.",
+          "Run and upgrade nodes on a fleet serving 79 chains and 138 networks, including Solana, Ethereum, Bitcoin, Base and Robinhood Chain.",
+          "Roll out client releases and hard forks, bring new chains into production, and share on-call.",
         ],
       },
       {
         title: "Senior Support Engineer",
         period: "Feb 2022 – Aug 2025",
+        kind: "support",
+        promotedFrom: "Support Engineer, 2023",
         highlights: [
           "Resolved technical issues for developers across Zendesk, Slack, Discord and X within SLA.",
           "Picked up DevOps and infrastructure work across multiple chains: system upgrades, configuration changes and infrastructure health.",
         ],
+        stack: ["Docker", "Ansible", "Pylon", "Zendesk", "Discord", "JavaScript", "Go", "Python"],
       },
     ],
-    stack: ["Kubernetes", "Docker", "Linux", "Prometheus", "Go"],
+    stack: [
+      "Kubernetes",
+      "Docker",
+      "Linux",
+      "CI/CD",
+      "Prometheus",
+      "VictoriaMetrics",
+      "Grafana",
+      "Datadog",
+      "Tailscale",
+      "Go",
+    ],
   },
   {
     id: "alembo",
@@ -52,9 +76,11 @@ export const experience: Company[] = [
       {
         title: "Lead Software Engineer",
         period: "Feb 2017 – Feb 2022",
+        kind: "dev",
         highlights: [
-          "Proposed and led the migration of an internal C# desktop tool to an Angular + MySQL web app, tripling development speed by letting more developers contribute.",
-          "Led server deployments and built websites, web apps and mobile apps.",
+          "Led the migration of a legacy desktop application to a modern web app, bringing double-entry data capture and customer review into a single flow. More of the team could contribute, which roughly tripled development speed.",
+          "Built an in-house import tool that loads datasets of millions of records into the application for data entry.",
+          "Built and maintained websites and mobile apps, from development and content management to keeping the servers up.",
         ],
       },
     ],
@@ -69,12 +95,14 @@ export const experience: Company[] = [
       {
         title: "Web Developer",
         period: "Aug 2016 – Feb 2017",
+        kind: "dev",
         highlights: [
           "Built client websites, e-commerce stores and Ionic mobile apps.",
+          "Set up and maintained the servers that hosted client websites.",
         ],
       },
     ],
-    stack: ["AngularJS", "Ionic", "PHP"],
+    stack: ["WordPress", "Magento", "PHP", "AngularJS", "Ionic", "Linux"],
   },
 ];
 
@@ -90,6 +118,7 @@ export const earlierRoles: Company[] = [
       {
         title: "Web3 Lead Developer",
         period: "Feb 2022 – Dec 2022",
+        kind: "dev",
         highlights: ["Smart contract and dApp architecture for a proof-of-concept platform."],
       },
     ],
@@ -105,9 +134,25 @@ export const earlierRoles: Company[] = [
       {
         title: "Application Developer Intern",
         period: "Mar 2016 – Jul 2016",
+        kind: "dev",
         highlights: ["Web modules and Linux server automation with shell scripts."],
       },
     ],
     stack: ["Linux", "Bash"],
+  },
+  {
+    id: "suralco",
+    company: "Suralco",
+    location: "Suriname",
+    period: "2014",
+    roles: [
+      {
+        title: "IT Assistant",
+        period: "2014",
+        kind: "support",
+        highlights: [],
+      },
+    ],
+    stack: [],
   },
 ];

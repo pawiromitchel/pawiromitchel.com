@@ -7,7 +7,7 @@ import { SocialLinks } from "../ui/SocialLinks";
 export function Footer() {
   return (
     <footer className="border-t">
-      <Container className="flex flex-col gap-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+      <Container className="flex flex-col gap-4 py-8 font-mono text-xs text-subtle sm:flex-row sm:items-center sm:justify-between">
         <p>
           © {new Date().getFullYear()} {personalInfo.name}
         </p>
