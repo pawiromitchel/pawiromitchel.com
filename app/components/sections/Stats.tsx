@@ -6,8 +6,8 @@ import { CountUp } from "../ui/CountUp";
 const highlights = [
   { value: "10 years", count: 10, suffix: " years", label: "shipping software since 2016", href: "#experience" },
   { value: "Kubernetes", label: "migration lead at QuickNode", href: "#experience" },
-  { value: "2× winner", count: 2, suffix: "× winner", label: "IT Core Hackathon, 2017 & 2019", href: "#about" },
-  { value: "CEH", label: "Certified Ethical Hacker", href: "#about" },
+  { value: "3× winner", count: 3, suffix: "× winner", label: "hackathons, 2016 – 2018", href: "#credentials" },
+  { value: "CEH", label: "Certified Ethical Hacker", href: "#credentials" },
 ];
 
 export function Highlights() {
@@ -17,8 +17,8 @@ export function Highlights() {
         <ul className="grid grid-cols-2 gap-px bg-border sm:border-x md:grid-cols-4">
           {highlights.map((item) => (
             <li key={item.value} className="bg-background">
-              <a href={item.href} className="group block h-full px-5 py-6 transition-colors hover:bg-accent/50 sm:px-8">
-                <span className="block text-lg font-semibold tracking-tight transition-colors group-hover:text-brand">
+              <a href={item.href} className="group block h-full px-5 py-6 transition-colors hover:bg-accent/50 sm:px-8 sm:py-8">
+                <span className="block font-heading text-2xl font-bold tracking-[-0.02em] transition-colors group-hover:text-operate sm:text-[32px]">
                   {item.count !== undefined ? (
                     <>
                       <CountUp to={item.count} />
@@ -28,7 +28,7 @@ export function Highlights() {
                     item.value
                   )}
                 </span>
-                <span className="mt-0.5 block text-sm text-muted-foreground">{item.label}</span>
+                <span className="mt-1 block text-sm text-muted-foreground">{item.label}</span>
               </a>
             </li>
           ))}

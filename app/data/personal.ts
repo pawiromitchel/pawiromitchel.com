@@ -21,3 +21,12 @@ export const personalInfo = {
 };
 
 export const profileImage = "/pfp.jpg";
+export const headshotImage = "/headshot.jpg";
+
+// Default social share card, generated at build time by app/og.png/route.tsx.
+export const shareImage = {
+  url: "/og.png",
+  width: 1200,
+  height: 630,
+  alt: `${personalInfo.name}, ${personalInfo.title} at ${personalInfo.currentCompany}`,
+};

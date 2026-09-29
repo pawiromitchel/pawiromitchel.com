@@ -1,5 +1,6 @@
 import { ArrowUpRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { personalInfo } from "@/app/data/personal";
 import { Container } from "../layout/Container";
 import { Reveal } from "../ui/Reveal";
@@ -8,33 +9,35 @@ import { SocialLinks } from "../ui/SocialLinks";
 
 export function ContactSection() {
   return (
-    <section id="contact" className="py-20 sm:py-28">
+    <section id="contact" className="pb-20 sm:pb-28">
       <Container>
-        <Reveal className="relative overflow-hidden rounded-2xl border bg-card px-6 py-12 text-center shadow-sm sm:px-12 sm:py-16">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 -top-24 mx-auto h-48 w-2/3 rounded-full bg-brand/15 blur-3xl"
-          />
-          <p className="mb-2 font-mono text-xs font-medium tracking-wider text-brand uppercase">Contact</p>
-          <h2 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">Let&apos;s talk</h2>
-          <p className="mx-auto mt-3 max-w-lg text-muted-foreground text-pretty">
-            Open to conversations about infrastructure and operations roles, advisory work, or anything you read here.
-            Email is the fastest way to reach me.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
-            <Button asChild size="lg" className="h-10 px-4">
-              <a href={`mailto:${personalInfo.email}`}>
-                <Mail /> {personalInfo.email}
-              </a>
-            </Button>
-            <CopyEmailButton email={personalInfo.email} />
-            <Button asChild variant="outline" size="lg" className="h-10 px-4">
-              <a href={personalInfo.cvUrl} target="_blank" rel="noopener noreferrer">
-                View CV <ArrowUpRight />
-              </a>
-            </Button>
-          </div>
-          <SocialLinks className="mt-6 justify-center" />
+        <Reveal>
+          <Card className="relative gap-6 overflow-hidden rounded-3xl px-6 py-12 ring-border sm:px-12 sm:py-16 lg:px-20 lg:py-24">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -top-32 -right-20 size-96 rounded-full bg-operate/10 blur-3xl"
+            />
+            <p className="font-mono text-xs font-medium tracking-widest text-operate uppercase sm:text-[13px]">Contact</p>
+            <h2 className="font-heading text-4xl font-bold tracking-[-0.035em] sm:text-6xl">Get in touch</h2>
+            <p className="max-w-xl text-muted-foreground text-pretty sm:text-lg">
+              Happy to talk about infrastructure and operations work, Go tooling, or anything you read here. Email is the
+              best way to reach me.
+            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button asChild size="lg" className="h-12 px-6 text-[15px] font-semibold">
+                <a href={`mailto:${personalInfo.email}`}>
+                  <Mail /> {personalInfo.email}
+                </a>
+              </Button>
+              <CopyEmailButton email={personalInfo.email} />
+              <Button asChild variant="outline" size="lg" className="h-12 px-5 text-[15px]">
+                <a href={personalInfo.cvUrl} target="_blank" rel="noopener noreferrer">
+                  View CV <ArrowUpRight />
+                </a>
+              </Button>
+            </div>
+            <SocialLinks className="-ml-2" />
+          </Card>
         </Reveal>
       </Container>
     </section>

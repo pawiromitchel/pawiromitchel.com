@@ -26,7 +26,11 @@ export const certifications: Credential[] = [
 ];
 
 export const awards: Credential[] = [
-  { title: "3rd place, CTF", issuer: "Secured by Design", year: "2019" },
-  { title: "Winner", issuer: "IT Core Hackathon", year: "2019" },
+  { title: "Winner", issuer: "Fintech Hackathon", year: "2018" },
   { title: "Winner", issuer: "IT Core Hackathon", year: "2017" },
+  { title: "Winner", issuer: "Hackomation", year: "2016" },
+  { title: "2nd place", issuer: "Guyana Hackathon", year: "2016" },
+  { title: "3rd place, CTF", issuer: "Secured by Design", year: "2019" },
+  { title: "4th place", issuer: "Caribbean Code Challenge", year: "2017" },
+  { title: "4th place", issuer: "Fishackathon", year: "2016" },
 ];
