@@ -102,8 +102,8 @@ export async function homeImage() {
                 letterSpacing: "-0.03em",
               }}
             >
-              <span>I used to ship the software.</span>
-              <span style={{ color: og.operate }}>Now I keep it running.</span>
+              <span>I ship software.</span>
+              <span style={{ color: og.operate }}>I also run blockchain infra.</span>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               <span style={{ fontSize: 30, fontWeight: 500 }}>{personalInfo.name}</span>
