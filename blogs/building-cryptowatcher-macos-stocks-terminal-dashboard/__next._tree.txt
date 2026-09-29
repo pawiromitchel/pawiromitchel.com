@@ -1,5 +1,7 @@
-:HL["/_next/static/chunks/8736693d279a7d89.css","style"]
-:HL["/_next/static/media/797e433ab948586e-s.p.29207c2f.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-:HL["/_next/static/media/caa3a2e1cccd8315-s.p.3b6cae6d.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/chunks/d62c398c861a9160.css","style"]
+:HL["/_next/static/media/017d9bea37084d9b-s.p.a6d6de71.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/03fc1b4a8d284b5e-s.p.af4fcd24.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/99e609270109b47d-s.p.64b9304e.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/effe91970fc4db64-s.p.19510058.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/images/projects/cryptowatcher.png","image"]
-0:{"buildId":"6pkfqVek1TMt1JMtme-kH","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"blogs","paramType":null,"paramKey":"blogs","hasRuntimePrefetch":false,"slots":{"children":{"name":"slug","paramType":"d","paramKey":"building-cryptowatcher-macos-stocks-terminal-dashboard","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
+0:{"buildId":"X-V84HchkR1_HpUifqqMo","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"blogs","paramType":null,"paramKey":"blogs","hasRuntimePrefetch":false,"slots":{"children":{"name":"slug","paramType":"d","paramKey":"building-cryptowatcher-macos-stocks-terminal-dashboard","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
