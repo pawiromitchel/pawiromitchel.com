@@ -1,0 +1,128 @@
+export const metadata = {
+  title: "Building Onchain Stocks, a portfolio view for tokenized stocks on Base",
+  description: "Coinbase now issues stock tokens on Base, but wallets show them next to every airdropped scam token. So I built a static, read-only viewer that shows those 40 tokens and nothing else, and made it load in about half a second on a slow phone.",
+  date: "2026-09-30",
+  tags: ["react", "typescript", "web3", "base", "vite", "performance"],
+};
+
+Coinbase issues tokenized stocks on Base: ERC-20 tokens like `NVDAc` and `AAPLc` that track a listed company's share price and trade around the clock on DEXs like Aerodrome and Uniswap. Buying a few is easy. Seeing what you hold is annoying.
+
+Open MetaMask or Rabby and those stocks sit between your ETH, some USDC and whatever look-alike tokens got airdropped into your wallet this week. There's no total for just the stocks, no allocation, and nothing stops a fake `NVDAc` at a different address from showing up with a made-up balance.
+
+I wanted one screen with my stock tokens and nothing else, plus a link to buy more. That became [Onchain Stocks](https://onchainstocks.pawiromitchel.com/).
+
+![Onchain Stocks landing page: "Only your stocks. Nothing else." with a connect button, a view-only lookup field and a how-it-works column](/images/projects/onchainstocks-landing.jpg)
+
+## What it does
+
+- **Connect any EVM wallet** (MetaMask, Rabby, anything that announces itself through EIP-6963) and see your balance of every Coinbase stock token on Base, sorted by value, with a total, the 24h change in dollars and an allocation bar.
+- **Look up any wallet, view only.** Paste a `0x` address or a `name.eth` and you get the same view with no buy buttons and nothing to sign. The URL (`#/view/<address>`) can be shared.
+- **Buy links per stock.** "Buy more" opens Aerodrome with USDC in and the stock out. A menu next to it has Uniswap, Matcha, 1inch and CoW Swap. The swap itself happens on their site.
+- **A stock list** with all 40 tokens, their DEX price, 24h change and pool liquidity, plus a page per stock.
+
+![A connected demo wallet in light mode: total value, 24h change, allocation bar and a table of held stocks with Buy more buttons](/images/projects/onchainstocks-portfolio-light.jpg)
+
+The site never asks for a signature or an approval. It only reads. Here's my own wallet in view-only mode, at [#/view/mitchel.eth](https://onchainstocks.pawiromitchel.com/#/view/mitchel.eth):
+
+![View-only mode for mitchel.eth: a yellow banner with Copy link and Look up another, the stock portfolio value, allocation between NVDAc and GOOGLc, and the held stocks without buy buttons](/images/projects/onchainstocks-view.jpg)
+
+## No backend at all
+
+The whole thing is a static Vite + React build on GitHub Pages. Everything happens in the browser:
+
+```text
+                    GitHub Pages (static files)
+                               │
+                               ▼
+                         React app in the browser
+        ┌──────────────────────┼──────────────────────┐
+        ▼                      ▼                      ▼
+   Base RPC               DexScreener            Ethereum RPC
+   balanceOf × 40         prices, 24h change,    ENS names only
+   (one multicall)        pool liquidity
+```
+
+- **Balances**: wagmi and viem call `balanceOf` for all 40 tokens in a single multicall on Base, every 30 seconds.
+- **Prices**: DexScreener returns every pool for a token. I take the deepest one, since a $500 pool can print any price it likes.
+- **ENS**: resolved on mainnet, and only when you type a name.
+
+There's no server to run and nothing to leak, which suits an app whose whole selling point is "we only read".
+
+One nice side effect: balances are always read on Base, whatever network your wallet is set to. There's no "please switch network" screen, because the app never needs your wallet to be on any network. It only needs your address.
+
+## The allowlist is the security model
+
+Anyone can deploy an ERC-20 called `NVDAc`. So the app never discovers tokens. It reads exactly the contract addresses Coinbase publishes, and ignores everything else.
+
+That list comes from Coinbase's tokenized stocks API. The catch: that API sends no CORS headers, so a browser can't call it. Instead, a small script snapshots it into `src/stocks.json`:
+
+```js
+const res = await fetch('https://api.coinbase.com/v1/tokenized-stocks')
+const { tokens } = await res.json()
+
+const stocks = tokens
+  .map((t) => ({
+    symbol: t.symbol,
+    name: t.name,
+    address: t.contract_address.toLowerCase(),
+    decimals: t.decimals,
+    icon: t.icon_url ?? null,
+  }))
+  .sort((a, b) => a.symbol.localeCompare(b.symbol))
+```
+
+A GitHub Actions workflow runs that every morning. If the list changed, it commits the new JSON and triggers a deploy, so new listings show up without me touching the code. If the API is down, the old snapshot is kept and nothing breaks.
+
+Two details from that API that are easy to get wrong: these tokens use **8 decimals**, not the usual 18, and there are 40 of them, while base.org's own stocks page only shows a subset.
+
+![The stock list in light mode: all 40 tokenized stocks with DEX price, 24h change, pool liquidity and a Buy button, sorted by liquidity](/images/projects/onchainstocks-stocks.jpg)
+
+## Being honest about prices
+
+A DEX price is not a stock exchange price. The pools trade 24/7, including weekends when Nasdaq is closed, and a thin pool drifts. So the app says so wherever it matters:
+
+- Pools under $25k of liquidity get a **"thin"** flag, in the table and in the buy menu.
+- A token with no pool at all has no price and **no buy button**. Linking someone to a swap that can't fill is worse than no link.
+- The 24h change of the whole portfolio is worked out per token from each one's own % change, not from a snapshot I'd have to store somewhere.
+- A freshness line ("Updated 7s ago") shows the age of the *older* of the two sources, balances or prices, because that's what the screen really reflects.
+
+![The NVDAc stock page in dark mode: DEX price, pool liquidity, and a list of exchanges to swap on](/images/projects/onchainstocks-stock.jpg)
+
+## Making it fast on a bad connection
+
+I measured on a throttled phone profile (1.6 Mbps, 150 ms latency, 4x slower CPU). The first version needed about 1.7 seconds before anything showed up. The network was the bottleneck, not the CPU, so the fixes were all about what's on the critical path.
+
+**A static shell.** `index.html` contains the real header and the landing headline, so they paint before any JavaScript arrives. A tiny inline script adjusts it to the current route and drops the headline if `wagmi.store` says a wallet is already connected. React then takes over without replaying the intro animation. An e2e test fails if the shell and the React version drift apart.
+
+**Prices start in the HTML.** Every screen shows prices, so a Vite plugin injects a script at the top of `<head>` that fires the DexScreener requests right away, while the app bundle is still downloading:
+
+```ts
+function prefetchQuotes(): Plugin {
+  const urls = JSON.stringify(quoteUrls(stocks.map((s) => s.address)))
+  const code = `window.__quotes=Promise.all(${urls}.map(function(u){return fetch(u).then(function(r){if(!r.ok)throw new Error('Price API returned '+r.status);return r.json()})}));window.__quotes.catch(function(){});`
+  return {
+    name: 'prefetch-quotes',
+    transformIndexHtml: () => [{ tag: 'script', children: code, injectTo: 'head-prepend' }],
+  }
+}
+```
+
+The price hook picks up that promise once, then fetches normally. On a slow phone, prices arrive about 1.5 seconds earlier.
+
+**Cached prices.** The last quotes stay in `localStorage` for up to an hour and are used as TanStack Query's `initialData`, so a repeat visit shows numbers immediately (with their age) while fresh ones load.
+
+**Chunks that match how often things change.** React, Motion and the web3 libraries each get their own long-cached chunk, so a deploy only invalidates the small app chunk. The ENS normalizer is about 25 KB gzipped and only needed when you type a name, so it's loaded on demand.
+
+The result: first paint went from about 1.7 s to 0.55 s, and layout shift from 0.013 to 0.
+
+## Testing a wallet app without a wallet
+
+The Playwright suite runs on a desktop and a Pixel 7 viewport with no network at all. A fake EIP-6963 provider announces itself the way MetaMask does, the Base RPC is mocked down to decoding the multicall and answering each `balanceOf`, and DexScreener returns fixed prices. That makes the tests fast (around 15 seconds) and deterministic, and they cover connect, disconnect, reconnect on reload, view-only lookups, the venue menu, theme persistence and horizontal overflow on phones.
+
+What it can't cover: real ENS resolution, and whether each exchange's deep link still opens the right pair. Those I click through by hand.
+
+## Try it
+
+Open [onchainstocks.pawiromitchel.com](https://onchainstocks.pawiromitchel.com/) and connect a wallet, or paste any address to look around. The code is on [GitHub](https://github.com/pawiromitchel/onchainstocks).
+
+Tokenized stocks aren't available in every region, DEX prices can differ from the stock market, and none of this is financial advice.
