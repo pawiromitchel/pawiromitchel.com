@@ -6,6 +6,13 @@
     <description>Writing on infrastructure, Go tooling and side projects.</description>
     <language>en</language>
     <item>
+      <title>Building Onchain Stocks, a portfolio view for tokenized stocks on Base</title>
+      <link>https://pawiromitchel.com/blogs/building-onchainstocks-tokenized-stock-portfolio-on-base</link>
+      <guid>https://pawiromitchel.com/blogs/building-onchainstocks-tokenized-stock-portfolio-on-base</guid>
+      <pubDate>Wed, 30 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Coinbase now issues stock tokens on Base, but wallets show them next to every airdropped scam token. So I built a static, read-only viewer that shows those 40 tokens and nothing else, and made it load in about half a second on a slow phone.</description>
+    </item>
+    <item>
       <title>Exposing local services with Cloudflare Tunnel</title>
       <link>https://pawiromitchel.com/blogs/exposing-local-services-safely-with-cloudflare-tunnels</link>
       <guid>https://pawiromitchel.com/blogs/exposing-local-services-safely-with-cloudflare-tunnels</guid>
