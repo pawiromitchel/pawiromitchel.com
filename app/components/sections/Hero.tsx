@@ -18,8 +18,8 @@ const enter = (ms: number, className?: string) => ({
   style: { "--delay": ms } as CSSProperties,
 });
 
-const LINE_ONE = "I used to ship the software.";
-const LINE_TWO = "Now I keep it running.";
+const LINE_ONE = "I ship software.";
+const LINE_TWO = "I also run blockchain infra.";
 const LETTER_STAGGER = 18;
 
 function Highlight({ children }: { children: React.ReactNode }) {

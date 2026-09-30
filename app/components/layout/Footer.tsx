@@ -1,5 +1,3 @@
-import Link from "next/link";
-import { Rss } from "lucide-react";
 import { personalInfo } from "@/app/data/personal";
 import { Container } from "./Container";
 import { SocialLinks } from "../ui/SocialLinks";
@@ -11,16 +9,7 @@ export function Footer() {
         <p>
           © {new Date().getFullYear()} {personalInfo.name}
         </p>
-        <div className="flex items-center gap-1">
-          <Link
-            href="/feed.xml"
-            className="inline-flex size-9 items-center justify-center rounded-md transition-colors hover:bg-accent hover:text-foreground"
-            aria-label="RSS feed"
-          >
-            <Rss className="size-4" />
-          </Link>
-          <SocialLinks />
-        </div>
+        <SocialLinks />
       </Container>
     </footer>
   );

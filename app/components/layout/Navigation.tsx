@@ -24,14 +24,15 @@ function useActiveSection(enabled: boolean) {
 
   useEffect(() => {
     if (!enabled) return;
-    const sections = links
-      .map((link) => document.getElementById(link.id))
-      .filter((el): el is HTMLElement => el !== null);
+    // Watch every section, not just the linked ones, so the pill clears in sections
+    // without a nav link (hero, credentials, contact) instead of sticking to the last one.
+    const sections = document.querySelectorAll<HTMLElement>("main section");
+    const linked = new Set(links.map((link) => link.id));
 
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) setActive(entry.target.id);
+          if (entry.isIntersecting) setActive(linked.has(entry.target.id) ? entry.target.id : null);
         }
       },
       { rootMargin: "-45% 0px -50% 0px" }

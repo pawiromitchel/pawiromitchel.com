@@ -2,17 +2,19 @@ export interface Credential {
   title: string;
   issuer: string;
   year?: string;
+  note?: string;
 }
 
 export const education: Credential[] = [
   {
-    title: "B.S. Software Engineering",
+    title: "Software Engineering",
     issuer: "UNASAT",
     year: "2016 – 2021",
+    note: "Left in the final year, no degree",
   },
   {
-    title: "Diploma, Application Development",
-    issuer: "Natuurtechnisch Instituut",
+    title: "Diploma, ICT Application Development",
+    issuer: "NATIN",
     year: "2012 – 2016",
   },
 ];

@@ -34,6 +34,7 @@ export function CredentialsSection() {
                         {item.issuer}
                         {item.year && ` · ${item.year}`}
                       </p>
+                      {item.note && <p className="mt-0.5 text-sm text-subtle">{item.note}</p>}
                     </li>
                   ))}
                 </ul>
