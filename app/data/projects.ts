@@ -28,6 +28,20 @@ export const projects: Project[] = [
     year: 2026,
   },
   {
+    id: "onchainstocks",
+    title: "Onchain Stocks",
+    tagline: "Your Coinbase stock tokens on Base, nothing else",
+    description:
+      "A read-only portfolio viewer for the 40 Coinbase-issued stock tokens on Base. Connect any EVM wallet or look up an address or ENS name, see balances priced from the deepest DEX pool, and get swap links per stock. Fully static, no backend.",
+    image: "/images/projects/onchainstocks.jpg",
+    imageAlt: "Onchain Stocks portfolio view with total value, allocation bar and a table of stock tokens with buy buttons",
+    stack: ["React", "TypeScript", "wagmi", "viem", "Vite"],
+    liveUrl: "https://onchainstocks.pawiromitchel.com/",
+    githubUrl: "https://github.com/pawiromitchel/onchainstocks",
+    postSlug: "building-onchainstocks-tokenized-stock-portfolio-on-base",
+    year: 2026,
+  },
+  {
     id: "apexcv",
     title: "ApexCV Builder",
     tagline: "A calm resume builder",
