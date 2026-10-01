@@ -67,6 +67,19 @@ export const projects: Project[] = [
     year: 2026,
   },
   {
+    id: "colimaui",
+    title: "ColimaUI",
+    tagline: "A native macOS app for Colima",
+    description:
+      "Docker Desktop's layout without Docker Desktop. A SwiftUI dashboard and menu bar app for Colima: stacks, containers, live logs, images, volumes and profiles, installable with one Homebrew command.",
+    image: "/images/projects/colimaui.jpg",
+    imageAlt: "ColimaUI dashboard showing CPU and memory, disk usage, top containers and Compose stacks",
+    stack: ["Swift", "SwiftUI", "macOS", "Homebrew"],
+    githubUrl: "https://github.com/pawiromitchel/colimaui",
+    postSlug: "building-colimaui-native-macos-app-for-colima",
+    year: 2026,
+  },
+  {
     id: "cryptowatcher",
     title: "CryptoWatcher",
     tagline: "Stocks-widget dashboard for the terminal",
