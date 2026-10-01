@@ -75,6 +75,7 @@ export const projects: Project[] = [
     image: "/images/projects/colimaui.jpg",
     imageAlt: "ColimaUI dashboard showing CPU and memory, disk usage, top containers and Compose stacks",
     stack: ["Swift", "SwiftUI", "macOS", "Homebrew"],
+    liveUrl: "https://pawiromitchel.github.io/colimaui/",
     githubUrl: "https://github.com/pawiromitchel/colimaui",
     postSlug: "building-colimaui-native-macos-app-for-colima",
     year: 2026,
