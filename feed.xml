@@ -17,35 +17,35 @@
       <link>https://pawiromitchel.com/blogs/building-onchainstocks-tokenized-stock-portfolio-on-base</link>
       <guid>https://pawiromitchel.com/blogs/building-onchainstocks-tokenized-stock-portfolio-on-base</guid>
       <pubDate>Wed, 30 Sep 2026 00:00:00 GMT</pubDate>
-      <description>Coinbase now issues stock tokens on Base, but wallets show them next to every airdropped scam token. So I built a static, read-only viewer that shows those 40 tokens and nothing else, and made it load in about half a second on a slow phone.</description>
+      <description>A static, read-only viewer for Coinbase's 40 stock tokens on Base, with no scam tokens and a half-second load on slow phones.</description>
     </item>
     <item>
       <title>Exposing local services with Cloudflare Tunnel</title>
       <link>https://pawiromitchel.com/blogs/exposing-local-services-safely-with-cloudflare-tunnels</link>
       <guid>https://pawiromitchel.com/blogs/exposing-local-services-safely-with-cloudflare-tunnels</guid>
       <pubDate>Mon, 21 Sep 2026 00:00:00 GMT</pubDate>
-      <description>No port forwarding, no dynamic DNS, no home IP on the internet. How to put a local service on a real domain with cloudflared, and the catches worth knowing first.</description>
+      <description>Put a local service on a real domain with cloudflared: no port forwarding, no dynamic DNS, and the catches to know first.</description>
     </item>
     <item>
       <title>Ditching Docker Desktop for Colima and Portainer</title>
       <link>https://pawiromitchel.com/blogs/replacing-docker-desktop-with-colima-and-portainer</link>
       <guid>https://pawiromitchel.com/blogs/replacing-docker-desktop-with-colima-and-portainer</guid>
       <pubDate>Sat, 19 Sep 2026 00:00:00 GMT</pubDate>
-      <description>Docker Desktop is a lot of app for what I actually use. Colima gives me the Docker daemon, Portainer gives me the dashboard, and my compose files didn't notice the difference.</description>
+      <description>Colima gives me the Docker daemon, Portainer the dashboard, and my compose files didn't notice the difference.</description>
     </item>
     <item>
       <title>Building CryptoWatcher: the macOS Stocks widget, in my terminal</title>
       <link>https://pawiromitchel.com/blogs/building-cryptowatcher-macos-stocks-terminal-dashboard</link>
       <guid>https://pawiromitchel.com/blogs/building-cryptowatcher-macos-stocks-terminal-dashboard</guid>
       <pubDate>Sat, 14 Mar 2026 00:00:00 GMT</pubDate>
-      <description>A weekend project in Go with Bubble Tea: widget cards, Braille line charts and one watchlist for crypto and stocks, pulled from three different price feeds.</description>
+      <description>A weekend Go project: macOS Stocks-style cards with Braille line charts and one watchlist for crypto and stocks.</description>
     </item>
     <item>
       <title>Building Cashly, my self-hosted finance tracker</title>
       <link>https://pawiromitchel.com/blogs/building-cashly-multi-asset-financial-intelligence-engine</link>
       <guid>https://pawiromitchel.com/blogs/building-cashly-multi-asset-financial-intelligence-engine</guid>
       <pubDate>Thu, 12 Mar 2026 00:00:00 GMT</pubDate>
-      <description>Why I stopped using budget apps and built my own: a Go daemon on SQLite that reads bank alert emails, tracks fiat and crypto in one place, and has an assistant that can undo its own mistakes.</description>
+      <description>I stopped using budget apps and built a Go daemon that reads bank alert emails and tracks fiat and crypto in one place.</description>
     </item>
     <item>
       <title>Why I built bcron: a scheduler I can actually see</title>
@@ -59,7 +59,7 @@
       <link>https://pawiromitchel.com/blogs/resilient-scraping-and-pwa-architecture-forexsu</link>
       <guid>https://pawiromitchel.com/blogs/resilient-scraping-and-pwa-architecture-forexsu</guid>
       <pubDate>Mon, 02 Mar 2026 00:00:00 GMT</pubDate>
-      <description>None of the banks in Suriname have a rates API, so I built ForexSU to scrape them. Notes on parsers that survive redesigns, serving stale data on purpose, and why it's a PWA.</description>
+      <description>No Surinamese bank has a rates API, so I scrape them: parsers that survive redesigns, stale data on purpose, and a PWA.</description>
     </item>
   </channel>
 </rss>
