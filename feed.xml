@@ -6,6 +6,13 @@
     <description>Writing on infrastructure, Go tooling and side projects.</description>
     <language>en</language>
     <item>
+      <title>Building ColimaUI, a native macOS app for Colima</title>
+      <link>https://pawiromitchel.com/blogs/building-colimaui-native-macos-app-for-colima</link>
+      <guid>https://pawiromitchel.com/blogs/building-colimaui-native-macos-app-for-colima</guid>
+      <pubDate>Thu, 01 Oct 2026 00:00:00 GMT</pubDate>
+      <description>I dropped Docker Desktop for Colima and missed the dashboard. So I built one: a SwiftUI app that lays out stacks, containers, logs and disk use like Docker Desktop, as a thin window over the CLI tools I already had.</description>
+    </item>
+    <item>
       <title>Building Onchain Stocks, a portfolio view for tokenized stocks on Base</title>
       <link>https://pawiromitchel.com/blogs/building-onchainstocks-tokenized-stock-portfolio-on-base</link>
       <guid>https://pawiromitchel.com/blogs/building-onchainstocks-tokenized-stock-portfolio-on-base</guid>
