@@ -61,6 +61,7 @@ export default async function PostPage({ params }: PostPageProps) {
     headline: metadata.title,
     description: metadata.description,
     datePublished: metadata.date,
+    dateModified: metadata.date,
     keywords: metadata.tags.join(", "),
     url,
     mainEntityOfPage: url,
