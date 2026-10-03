@@ -76,12 +76,6 @@ const ticks = [
   { year: "2026", left: 93.4, onPhone: false },
 ];
 
-const legend = [
-  { label: "Building web and mobile apps", swatch: "bg-build-bar" },
-  { label: "Support, then infrastructure work", swatch: "bg-stripes-operate" },
-  { label: "Running node infrastructure", swatch: "bg-operate" },
-];
-
 const ease = [0.22, 1, 0.36, 1] as const;
 const bar: Variants = { hidden: {}, show: { transition: { staggerChildren: 0.12 } } };
 const segment: Variants = {
@@ -93,18 +87,10 @@ export function CareerBar() {
   return (
     <section aria-label="Career at a glance" className="pb-16 sm:pb-24">
       <Container>
-        <div className="mb-5 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3">
+        <div className="mb-5">
           <h2 className="font-mono text-xs font-medium tracking-widest text-subtle uppercase sm:text-[13px]">
             Career so far
           </h2>
-          <ul className="flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-muted-foreground max-md:hidden">
-            {legend.map((item) => (
-              <li key={item.label} className="flex items-center gap-2">
-                <span aria-hidden className={cn("size-3 rounded-[3px]", item.swatch)} />
-                {item.label}
-              </li>
-            ))}
-          </ul>
         </div>
 
         <motion.div
@@ -135,36 +121,25 @@ export function CareerBar() {
                     style={{ flexGrow: s.months, flexBasis: 0 }}
                     className={cn(
                       "flex min-w-0 flex-col justify-center transition-[filter] hover:brightness-110 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring",
-                      s.tiny ? "px-0" : "px-3 md:px-4",
+                      
                       s.className
                     )}
                   >
-                    {s.label && (
-                      <span
-                        className={cn(
-                          "hidden truncate text-sm font-semibold md:block",
-                          s.chip && "self-start rounded bg-background px-2 py-0.5 text-foreground"
-                        )}
-                      >
-                        {s.label}
-                      </span>
-                    )}
-                    {s.detail && <span className="hidden font-mono text-[11px] md:block">{s.detail}</span>}
                   </a>
                 ))}
                 {mark?.logo && (
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute inset-0 flex items-center justify-center md:hidden"
+                    className="pointer-events-none absolute inset-0 flex items-center justify-center"
                   >
                     <span
                       className={cn(
                         "flex items-center justify-center",
-                        mark.chip ? "rounded-md bg-background p-1 text-foreground" : "text-[#2a1b04]"
+                        mark.chip ? "rounded-md bg-background p-1 text-foreground md:rounded-lg md:p-1.5" : "text-[#2a1b04]"
                       )}
                     >
                       <span
-                        className={cn("block bg-current", mark.tiny ? "size-3" : "size-5")}
+                        className={cn("block bg-current", mark.tiny ? "size-3 md:size-4" : "size-5 md:size-7")}
                         style={{
                           maskImage: `url(${mark.logo})`,
                           WebkitMaskImage: `url(${mark.logo})`,
@@ -192,8 +167,8 @@ export function CareerBar() {
           ))}
         </div>
 
-        {/* Bar labels need room; phones get the same names as a list. */}
-        <ul className="mt-5 space-y-2.5 md:hidden">
+        {/* Logos carry the bar; this names each stretch and doubles as the colour key. */}
+        <ul className="mt-5 space-y-2.5 md:grid md:grid-cols-3 md:gap-x-8 md:space-y-0">
           {segments
             .filter((s) => s.short)
             .map((s) => (
@@ -206,11 +181,6 @@ export function CareerBar() {
               </li>
             ))}
         </ul>
-
-        <p className="mt-4 text-[15px] text-muted-foreground text-pretty">
-          <span className="font-medium text-foreground">2022:</span> joined QuickNode as a Support Engineer. Promoted to
-          Senior in 2023, took on infrastructure work across chains, and moved into technical operations in 2025.
-        </p>
       </Container>
     </section>
   );
