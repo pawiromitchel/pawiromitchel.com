@@ -18,8 +18,7 @@ const enter = (ms: number, className?: string) => ({
   style: { "--delay": ms } as CSSProperties,
 });
 
-const LINE_ONE = "I ship software.";
-const LINE_TWO = "I also run blockchain infra.";
+const GREETING = "Hello!";
 const LETTER_STAGGER = 18;
 
 function Highlight({ children }: { children: React.ReactNode }) {
@@ -33,31 +32,44 @@ export function Hero() {
       <Spotlight className="pointer-events-none absolute inset-0 -z-10" />
       <Container className="grid items-center gap-10 py-16 sm:py-24 md:grid-cols-[minmax(0,1fr)_280px] md:gap-12 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-16">
         <div className="flex flex-col gap-7 sm:gap-8">
-          {/* Who and where first; the tagline below carries the story. */}
-          <div {...enter(0, "flex flex-wrap items-center gap-x-4 gap-y-3")}>
-            <h1 className="text-lg font-semibold tracking-tight sm:text-xl">{personalInfo.name}</h1>
-            <a
-              href={personalInfo.currentCompanyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1 text-xs text-muted-foreground shadow-xs transition-colors hover:text-foreground sm:text-[13px]"
-            >
-              <span className="relative flex size-2">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-operate opacity-60 motion-reduce:hidden" />
-                <span className="relative inline-flex size-2 rounded-full bg-operate" />
+          <h1 className="font-heading flex flex-col gap-5 sm:gap-6">
+            <span className="text-[2.75rem] leading-[0.98] font-bold tracking-[-0.035em] sm:text-6xl lg:text-[84px]">
+              <SplitText text={GREETING} delay={80} stagger={LETTER_STAGGER} />{" "}
+              <span aria-hidden className="animate-wave inline-block" style={{ "--delay": 600 } as CSSProperties}>
+                👋
               </span>
-              {personalInfo.currentRole} at {personalInfo.currentCompany}
-            </a>
-          </div>
-
-          <p className="font-heading text-[2.75rem] leading-[0.98] font-bold tracking-[-0.035em] text-balance sm:text-6xl lg:text-[84px]">
-            <span className="block">
-              <SplitText text={LINE_ONE} delay={80} stagger={LETTER_STAGGER} />
             </span>
-            <span className="block text-operate">
-              <SplitText text={LINE_TWO} delay={80 + LINE_ONE.length * LETTER_STAGGER} stagger={LETTER_STAGGER} />
+            <span
+              {...enter(
+                350,
+                "text-[2rem] leading-[1.05] font-bold tracking-[-0.03em] text-balance sm:text-5xl lg:text-[56px]",
+              )}
+            >
+              I&apos;m <span className="text-operate">{personalInfo.name}</span>
             </span>
-          </p>
+            <span
+              {...enter(
+                500,
+                "flex flex-wrap items-center gap-x-3 gap-y-1 text-lg font-medium tracking-tight text-muted-foreground sm:text-2xl",
+              )}
+            >
+              <span className="relative flex size-2.5">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-operate opacity-60 motion-reduce:hidden" />
+                <span className="relative inline-flex size-2.5 rounded-full bg-operate" />
+              </span>
+              <span>
+                {personalInfo.currentRole} @{" "}
+                <a
+                  href={personalInfo.currentCompanyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-foreground underline decoration-border decoration-2 underline-offset-4 transition-colors hover:decoration-operate"
+                >
+                  {personalInfo.currentCompany}
+                </a>
+              </span>
+            </span>
+          </h1>
 
           <p {...enter(650, "max-w-2xl text-base leading-relaxed text-muted-foreground text-pretty sm:text-[19px]")}>
             Ten years in, from building <Highlight>web platforms</Highlight> to running{" "}
@@ -85,7 +97,7 @@ export function Hero() {
 
           <p {...enter(820, "flex items-center gap-1.5 text-sm text-subtle")}>
             <MapPin className="size-4" />
-            {personalInfo.location} · Remote · {personalInfo.timezone}
+            Suriname <span aria-hidden>🇸🇷</span>
           </p>
         </div>
 

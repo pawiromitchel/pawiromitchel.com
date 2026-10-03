@@ -4,26 +4,47 @@ import { motion, type Variants } from "motion/react";
 import { cn } from "@/lib/utils";
 import { Container } from "../layout/Container";
 
-// Months spent in each stretch, from Mar 2016 to now. Widths are proportional.
+// Months spent in each stretch, from Aug 2016 to now. Widths are proportional. Stretches with
+// the same `group` at one company share a single bar and one logo.
 const segments = [
-  { id: "careerit", months: 5, className: "bg-build-bar opacity-55", title: "CareerIT, intern" },
-  { id: "bitdynamics", months: 6, className: "bg-build-bar opacity-75", title: "BitDynamics, web developer" },
+  {
+    id: "bitdynamics",
+    logo: "/images/bitdynamics.svg",
+    tiny: true,
+    href: "#role-earlier",
+    months: 6,
+    className: "bg-build-bar text-[#2a1b04] opacity-75",
+    title: "BitDynamics, web developer",
+    short: "BitDynamics · Web Developer",
+    years: "2016 – 2017",
+  },
   {
     id: "alembo",
+    logo: "/images/alembo.svg",
+    href: "#role-alembo-0",
     months: 60,
     className: "bg-build-bar text-[#2a1b04]",
     label: "Alembo · Lead Software Engineer",
+    short: "Alembo · Lead Software Engineer",
+    years: "2017 – 2022",
     detail: "2017 – 2022",
   },
   {
     id: "support",
+    group: "quicknode",
+    logo: "/images/quicknode.svg",
+    href: "#role-quicknode-1",
     months: 42,
     className: "bg-stripes-operate",
     label: "QuickNode · Support → Senior Support",
+    short: "QuickNode · Support → Tech Ops II",
+    years: "2022 – now",
     chip: true,
   },
   {
     id: "ops",
+    group: "quicknode",
+    href: "#role-quicknode-0",
     months: 13,
     className: "bg-operate text-operate-foreground",
     label: "Tech Ops II",
@@ -31,14 +52,28 @@ const segments = [
   },
 ];
 
-// Jan of each even year, as a share of the Mar 2016 → now span. Phones get every other one.
+type Segment = (typeof segments)[number];
+
+// One bar per company stretch; the logo comes from whichever segment carries one.
+const bars = segments.reduce<{ id: string; months: number; items: Segment[] }[]>((acc, s) => {
+  const last = acc[acc.length - 1];
+  if (s.group && last?.id === s.group) {
+    last.months += s.months;
+    last.items.push(s);
+  } else {
+    acc.push({ id: s.group ?? s.id, months: s.months, items: [s] });
+  }
+  return acc;
+}, []);
+
+// Jan of each even year, as a share of the Aug 2016 → now span. Phones get every other one.
 const ticks = [
   { year: "2016", left: 0, onPhone: true },
-  { year: "2018", left: 17.5, onPhone: false },
-  { year: "2020", left: 36.5, onPhone: true },
-  { year: "2022", left: 55.6, onPhone: false },
-  { year: "2024", left: 74.6, onPhone: true },
-  { year: "2026", left: 93.7, onPhone: false },
+  { year: "2018", left: 14, onPhone: false },
+  { year: "2020", left: 34, onPhone: true },
+  { year: "2022", left: 53.7, onPhone: false },
+  { year: "2024", left: 73.6, onPhone: true },
+  { year: "2026", left: 93.4, onPhone: false },
 ];
 
 const legend = [
@@ -62,7 +97,7 @@ export function CareerBar() {
           <h2 className="font-mono text-xs font-medium tracking-widest text-subtle uppercase sm:text-[13px]">
             Career so far
           </h2>
-          <ul className="flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-muted-foreground">
+          <ul className="flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-muted-foreground max-md:hidden">
             {legend.map((item) => (
               <li key={item.label} className="flex items-center gap-2">
                 <span aria-hidden className={cn("size-3 rounded-[3px]", item.swatch)} />
@@ -78,33 +113,75 @@ export function CareerBar() {
           whileInView="show"
           viewport={{ once: true, margin: "0px 0px -80px 0px" }}
           className="flex h-10 gap-1 md:h-16"
-          aria-hidden
         >
-          {segments.map((s, i) => (
-            <motion.div
-              key={s.id}
-              variants={segment}
-              title={s.title ?? s.label}
-              style={{ flexGrow: s.months, flexBasis: 0 }}
-              className={cn(
-                "flex origin-left flex-col justify-center overflow-hidden px-3 md:px-4",
-                i === 0 ? "rounded-l-lg rounded-r-sm" : i === segments.length - 1 ? "rounded-l-sm rounded-r-lg" : "rounded-sm",
-                s.className
-              )}
-            >
-              {s.label && (
-                <span
-                  className={cn(
-                    "hidden truncate text-sm font-semibold md:block",
-                    s.chip && "self-start rounded bg-background px-2 py-0.5 text-foreground"
-                  )}
-                >
-                  {s.label}
-                </span>
-              )}
-              {s.detail && <span className="hidden font-mono text-[11px] md:block">{s.detail}</span>}
-            </motion.div>
-          ))}
+          {bars.map((bar, i) => {
+            const mark = bar.items.find((s) => s.logo);
+            return (
+              <motion.div
+                key={bar.id}
+                variants={segment}
+                style={{ flexGrow: bar.months, flexBasis: 0 }}
+                className={cn(
+                  "relative flex origin-left overflow-hidden",
+                  i === 0 ? "rounded-l-lg rounded-r-sm" : i === bars.length - 1 ? "rounded-l-sm rounded-r-lg" : "rounded-sm"
+                )}
+              >
+                {bar.items.map((s) => (
+                  <a
+                    key={s.id}
+                    href={s.href}
+                    aria-label={s.title ?? s.short ?? s.label}
+                    title={s.title ?? s.label}
+                    style={{ flexGrow: s.months, flexBasis: 0 }}
+                    className={cn(
+                      "flex min-w-0 flex-col justify-center transition-[filter] hover:brightness-110 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring",
+                      s.tiny ? "px-0" : "px-3 md:px-4",
+                      s.className
+                    )}
+                  >
+                    {s.label && (
+                      <span
+                        className={cn(
+                          "hidden truncate text-sm font-semibold md:block",
+                          s.chip && "self-start rounded bg-background px-2 py-0.5 text-foreground"
+                        )}
+                      >
+                        {s.label}
+                      </span>
+                    )}
+                    {s.detail && <span className="hidden font-mono text-[11px] md:block">{s.detail}</span>}
+                  </a>
+                ))}
+                {mark?.logo && (
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 flex items-center justify-center md:hidden"
+                  >
+                    <span
+                      className={cn(
+                        "flex items-center justify-center",
+                        mark.chip ? "rounded-md bg-background p-1 text-foreground" : "text-[#2a1b04]"
+                      )}
+                    >
+                      <span
+                        className={cn("block bg-current", mark.tiny ? "size-3" : "size-5")}
+                        style={{
+                          maskImage: `url(${mark.logo})`,
+                          WebkitMaskImage: `url(${mark.logo})`,
+                          maskSize: "contain",
+                          WebkitMaskSize: "contain",
+                          maskRepeat: "no-repeat",
+                          WebkitMaskRepeat: "no-repeat",
+                          maskPosition: "center",
+                          WebkitMaskPosition: "center",
+                        }}
+                      />
+                    </span>
+                  </span>
+                )}
+              </motion.div>
+            );
+          })}
         </motion.div>
 
         <div className="relative mt-2.5 h-5 font-mono text-xs text-subtle">
@@ -114,6 +191,21 @@ export function CareerBar() {
             </span>
           ))}
         </div>
+
+        {/* Bar labels need room; phones get the same names as a list. */}
+        <ul className="mt-5 space-y-2.5 md:hidden">
+          {segments
+            .filter((s) => s.short)
+            .map((s) => (
+              <li key={s.id}>
+                <a href={s.href} className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <span aria-hidden className={cn("size-3 shrink-0 rounded-[3px]", s.className)} />
+                  <span className="text-foreground">{s.short}</span>
+                  <span className="ml-auto font-mono text-xs whitespace-nowrap text-subtle">{s.years}</span>
+                </a>
+              </li>
+            ))}
+        </ul>
 
         <p className="mt-4 text-[15px] text-muted-foreground text-pretty">
           <span className="font-medium text-foreground">2022:</span> joined QuickNode as a Support Engineer. Promoted to

@@ -154,7 +154,24 @@
   animation-duration: 0.7s;
 }
 
+@keyframes wave {
+  0%, 60%, 100% { transform: rotate(0); }
+  10%, 30% { transform: rotate(14deg); }
+  20%, 40% { transform: rotate(-8deg); }
+  50% { transform: rotate(10deg); }
+}
+.animate-wave {
+  transform-origin: 70% 70%;
+  animation:
+    enter-letter 0.7s cubic-bezier(0.22, 1, 0.36, 1) both,
+    wave 2s ease-in-out 1.4s 2;
+  animation-delay: calc(var(--delay, 0) * 1ms), calc(var(--delay, 0) * 1ms + 700ms);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .animate-wave {
+    animation: none;
+  }
   html {
     scroll-behavior: auto;
   }
@@ -181,12 +198,13 @@
   background-size: 48px 48px;
 }
 
-/* The "support" stretch of the career bar: stripes of the operate color. */
+/* The "support" stretch of the career bar: fades up into the solid operate color, so the
+   move from support to running infrastructure reads as one continuous bar. */
 .bg-stripes-operate {
-  background: repeating-linear-gradient(
-    135deg,
-    var(--operate) 0 6px,
-    color-mix(in oklch, var(--operate) 25%, var(--background)) 6px 12px
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--operate) 45%, var(--background)),
+    var(--operate)
   );
 }
 
