@@ -19,6 +19,7 @@ const entries = experience.flatMap((job) => {
   const companyStackAt = job.roles.findIndex((role) => !role.stack);
   return job.roles.map((role, i) => ({
     ...role,
+    anchor: `role-${job.id}-${i}`,
     key: `${job.id}-${role.title}`,
     company: job.company,
     companyUrl: job.url,
@@ -48,7 +49,7 @@ export function ExperienceSection() {
         <div>
           <ol className="border-t">
             {entries.map((role) => (
-              <li key={role.key} className="border-b">
+              <li key={role.key} id={role.anchor} className="scroll-mt-24 border-b">
                 <Reveal className="grid gap-3 py-8 sm:grid-cols-[170px_minmax(0,1fr)] sm:gap-8">
                   <div className="flex items-center gap-3 sm:flex-col sm:items-start">
                     <span className="font-mono text-[13px]">{role.period}</span>
@@ -102,7 +103,7 @@ export function ExperienceSection() {
             ))}
           </ol>
 
-          <div className="grid gap-3 pt-6 text-sm sm:grid-cols-[170px_minmax(0,1fr)] sm:gap-8">
+          <div id="role-earlier" className="grid scroll-mt-24 gap-3 pt-6 text-sm sm:grid-cols-[170px_minmax(0,1fr)] sm:gap-8">
             <span className="font-mono text-[13px] text-subtle">also</span>
             <ul className="space-y-2 text-muted-foreground">
               {earlierRoles.map((job) => (

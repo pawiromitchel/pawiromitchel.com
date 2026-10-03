@@ -1,10 +1,10 @@
-import { ArrowUpRight, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { personalInfo } from "@/app/data/personal";
 import { Container } from "../layout/Container";
 import { Reveal } from "../ui/Reveal";
-import { CopyEmailButton } from "../ui/CopyEmailButton";
 import { SocialLinks } from "../ui/SocialLinks";
 
 export function ContactSection() {
@@ -26,17 +26,12 @@ export function ContactSection() {
             <div className="flex flex-wrap items-center gap-2">
               <Button asChild size="lg" className="h-12 px-6 text-[15px] font-semibold">
                 <a href={`mailto:${personalInfo.email}`}>
-                  <Mail /> {personalInfo.email}
+                  <Mail /> Email me
                 </a>
               </Button>
-              <CopyEmailButton email={personalInfo.email} />
-              <Button asChild variant="outline" size="lg" className="h-12 px-5 text-[15px]">
-                <a href={personalInfo.cvUrl} target="_blank" rel="noopener noreferrer">
-                  View CV <ArrowUpRight />
-                </a>
-              </Button>
+              <Separator orientation="vertical" className="mx-2 hidden h-7 sm:block" />
+              <SocialLinks />
             </div>
-            <SocialLinks className="-ml-2" />
           </Card>
         </Reveal>
       </Container>
