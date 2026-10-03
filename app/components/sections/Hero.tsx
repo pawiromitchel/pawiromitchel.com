@@ -1,12 +1,11 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import { ArrowUpRight, Mail, MapPin } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { headshotImage, personalInfo } from "@/app/data/personal";
 import { Container } from "../layout/Container";
-import { CopyEmailButton } from "../ui/CopyEmailButton";
 import { SocialLinks } from "../ui/SocialLinks";
 import { SplitText } from "../ui/SplitText";
 import { Spotlight } from "../ui/Spotlight";
@@ -85,12 +84,6 @@ export function Hero() {
                 <Mail /> Email me
               </a>
             </Button>
-            <Button asChild variant="outline" size="lg" className="h-11 px-5 text-[15px]">
-              <a href={personalInfo.cvUrl} target="_blank" rel="noopener noreferrer">
-                View CV <ArrowUpRight />
-              </a>
-            </Button>
-            <CopyEmailButton email={personalInfo.email} />
             <Separator orientation="vertical" className="mx-2 hidden h-7 sm:block" />
             <SocialLinks />
           </div>
