@@ -168,16 +168,72 @@
   animation-delay: calc(var(--delay, 0) * 1ms), calc(var(--delay, 0) * 1ms + 700ms);
 }
 
+/* Reduced motion keeps the entrance, minus the movement: a short cross-fade. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .animate-wave {
-    animation: none;
+    animation: fade-in 0.3s ease both;
+    animation-delay: calc(var(--delay, 0) * 1ms);
   }
   html {
     scroll-behavior: auto;
   }
   .animate-enter,
   .animate-enter-letter {
+    animation: fade-in 0.3s ease both;
+    animation-delay: calc(var(--delay, 0) * 1ms);
+  }
+}
+
+/* Theme switches cross-fade through a view transition instead of flashing. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.3s;
+  animation-timing-function: ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
     animation: none;
+  }
+}
+
+/* Sticky nav as a translucent layer that content scrolls under. Instead of a hard
+   divider, a soft fade marks where page content meets the bar. */
+.material-bar {
+  @apply bg-background/70 backdrop-blur-xl backdrop-saturate-[1.8];
+}
+.material-bar::after {
+  content: "";
+  position: absolute;
+  inset: 100% 0 auto;
+  height: 12px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, var(--border), transparent);
+  transition: opacity 0.3s;
+}
+.material-bar-clear {
+  @apply bg-transparent backdrop-blur-none backdrop-saturate-100;
+}
+.material-bar-clear::after {
+  opacity: 0;
+}
+@media (prefers-reduced-transparency: reduce) {
+  .material-bar:not(.material-bar-clear) {
+    @apply bg-background backdrop-blur-none;
+  }
+}
+@media (prefers-contrast: more) {
+  .material-bar:not(.material-bar-clear) {
+    background: var(--background);
+    border-bottom: 1px solid var(--foreground);
+  }
+  .material-bar::after {
+    display: none;
   }
 }
 

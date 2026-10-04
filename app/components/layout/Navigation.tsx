@@ -67,8 +67,8 @@ export function Navigation() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 border-b transition-colors duration-300",
-        scrolled ? "border-border bg-background/80 backdrop-blur-lg" : "border-transparent bg-transparent"
+        "material-bar sticky top-0 z-50 transition-[background-color,backdrop-filter,box-shadow] duration-300",
+        !scrolled && "material-bar-clear"
       )}
     >
       <Container className="flex h-16 items-center justify-between">
@@ -96,7 +96,7 @@ export function Navigation() {
                 <motion.span
                   layoutId="nav-pill"
                   className="absolute inset-0 -z-10 rounded-md bg-accent"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.45 }}
+                  transition={{ type: "spring", bounce: 0, duration: 0.4 }}
                 />
               )}
               {link.label}
