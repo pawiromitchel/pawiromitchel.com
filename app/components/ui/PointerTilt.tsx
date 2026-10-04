@@ -3,9 +3,10 @@
 import { useEffect, useRef } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
 
-const spring = { stiffness: 120, damping: 18, mass: 0.6 };
+// Critically damped and a little lazy, so the tilt trails the pointer without wobbling.
+const spring = { bounce: 0, duration: 0.6 };
 
-// Leans its content toward the pointer anywhere on the page, with a slow idle float.
+// Leans its content toward the pointer anywhere on the page.
 // Skipped for touch input and reduced motion.
 export function PointerTilt({ children, className, max = 10 }: { children: React.ReactNode; className?: string; max?: number }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -42,12 +43,7 @@ export function PointerTilt({ children, className, max = 10 }: { children: React
       style={{ rotateX, rotateY, transformPerspective: 800 }}
       className={className}
     >
-      <motion.div
-        animate={{ y: [0, -6, 0] }}
-        transition={{ duration: 6, ease: "easeInOut", repeat: Infinity }}
-      >
-        {children}
-      </motion.div>
+      {children}
     </motion.div>
   );
 }
