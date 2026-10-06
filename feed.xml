@@ -6,6 +6,13 @@
     <description>Writing on infrastructure, Go tooling and side projects.</description>
     <language>en</language>
     <item>
+      <title>Reviving Dozer, a menu bar hider nobody maintained</title>
+      <link>https://pawiromitchel.com/blogs/reviving-dozer-menu-bar-hider-for-macos-26</link>
+      <guid>https://pawiromitchel.com/blogs/reviving-dozer-menu-bar-hider-for-macos-26</guid>
+      <pubDate>Tue, 06 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Dozer hides menu bar icons, has about 8,700 stars and hasn't been updated in years. It also crashed whenever the screen locked. I forked it, fixed the crash, moved it to a Swift package that builds without Xcode, and ran into what macOS 26 does to menu bar items.</description>
+    </item>
+    <item>
       <title>Building ColimaUI, a native macOS app for Colima</title>
       <link>https://pawiromitchel.com/blogs/building-colimaui-native-macos-app-for-colima</link>
       <guid>https://pawiromitchel.com/blogs/building-colimaui-native-macos-app-for-colima</guid>
