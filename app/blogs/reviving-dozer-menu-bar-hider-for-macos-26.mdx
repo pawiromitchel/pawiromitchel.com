@@ -1,0 +1,65 @@
+export const metadata = {
+  title: "Reviving Dozer, a menu bar hider nobody maintained",
+  description: "Dozer hides menu bar icons, has about 8,700 stars and hasn't been updated in years. It also crashed whenever the screen locked. I forked it, fixed the crash, moved it to a Swift package that builds without Xcode, and ran into what macOS 26 does to menu bar items.",
+  date: "2026-10-06",
+  tags: ["swift", "macos", "appkit", "menu-bar", "open-source", "homebrew"],
+};
+
+My menu bar had grown the way everyone's does: a handful of icons I want every day and a pile I look at once a week. [Dozer](https://github.com/Mortennn/Dozer) is the small app that fixes that. You drag icons to the left of its icon, and one click hides all of them. It has about 8,700 stars on GitHub.
+
+It also hasn't been updated in years. The issue tracker is a long run of "+1" under the same bug (it crashes whenever the screen locks), plus titles like "Is this project dead?" and "Is Dozer still maintained? I'd love to help". So I forked it: [pawiromitchel/Dozer](https://github.com/pawiromitchel/Dozer).
+
+![Dozer 5: ⌘-drag icons to the left of the bulldozer, click to hide them, and a badge shows how many are hidden](/images/projects/dozer-demo.gif)
+
+## The crash
+
+The most discussed issue (46 comments) comes with a crash report, and the stack points at a timer callback casting a dictionary. Dozer's auto-hide checks whether you're using the menu bar by listing every window on screen and reading each window's bounds, with a force cast to `[String: Int]`. Usually the numbers are whole. Apparently around the lock screen some aren't, the cast fails and the app dies.
+
+The fix is to stop casting: bounds are now parsed with `CGRect(dictionaryRepresentation:)`, and a regression test feeds it fractional values. While I was in there I replaced two timers (one of them scanned the window list twice a second) with a single one-second tick. The old check also assumed a 22pt menu bar, so it never noticed you using the menu bar on a notched MacBook, where it's 33pt. It now compares your pointer against the real menu bar height and looks for open menus.
+
+## A build that needs no Xcode
+
+The project used Carthage, XcodeGen, SwiftGen and XIB files, and my Mac only has the Command Line Tools. So I turned it into a plain Swift package. Five dependencies became one:
+
+- Launch at login uses `SMAppService`.
+- The updater is a check against GitHub Releases.
+- Settings are `UserDefaults` and a SwiftUI window.
+- The hotkey library, KeyboardShortcuts, is vendored with its SwiftUI `#Preview` blocks removed, because the macro behind them ships only with Xcode.
+
+`make run`, `make test` and `make app` are the whole workflow, and it builds a universal arm64 and x86_64 binary, so Apple Silicon is native now. Settings and the saved shortcut from Dozer 4 migrate on first launch.
+
+## What macOS 26 does to menu bar items
+
+Dozer hides icons with an old trick. A status item can have any length, so you make one 10,000 points long and every item to its left is pushed off the screen. The visible icon was that item. On macOS 26 that stopped working, and I measured why:
+
+- **An item stretched past the screen edge isn't drawn at all.** A bulldozer that stretches itself simply vanishes. So the job is split: the bulldozer never changes size, and an invisible "wall" glued to its left does the stretching.
+- **Even at zero width, an item takes about 16pt of padding.** That showed up as a gap. So while icons are shown, the wall is taken out of the menu bar entirely.
+- **macOS forgets the position of an item you remove.** Before each hide, Dozer writes the bulldozer's saved position plus one into the preference macOS uses to place the wall, so it lands right next to it.
+- **Showing takes about half a second.** Hiding takes about 25 ms, but bringing the pushed-off icons back takes about 530 ms. I tried shrinking the wall, removing it, and removing it while stretched. It's the same every time, so it's the system's cost, not the app's.
+
+The badge on the bulldozer shows how many icons are hidden. On macOS 26 every status item is a window owned by Control Center, and it stays in the window list while it's pushed off screen. Reading those bounds needs no permissions, so counting what sits left of the wall gives the number. The glyph is traced from the app icon and drawn as a template image, so it follows light and dark menu bars, and the badge is cut out of it. The image is the same size with or without a badge, because menu bar items grow leftwards and a wider image would shift the bulldozer when the number appears. I checked the two-digit case by adding eight throwaway menu bar items: the count read 11.
+
+## What I got wrong
+
+Most of my checking happened without screenshots. The app has a `dozer://` URL scheme (`toggle`, `show`, `hide`), and I read positions from the unified log and the window list. That tests the logic well and the drawing not at all. Twice I had a build where the log said the bulldozer was exactly where it should be, and it wasn't visible on my menu bar. Check what's drawn, not where it is.
+
+The same drawing code now renders the demo GIF at the top (`make demo-gif`), at 150 KB instead of the old 3 MB.
+
+## Releasing
+
+It works like [ColimaUI](/blogs/building-colimaui-native-macos-app-for-colima): the repo is its own Homebrew tap. Pushing a `v*` tag runs the tests, builds a universal zip, publishes the release and commits `Casks/dozer.rb` with the new version and checksum. Homebrew 7 rejects the old `postflight` block in casks and wants `postflight_steps` with a restricted set of calls, so the cask clears the quarantine flag with a `run "/usr/bin/xattr", ...` step there.
+
+```bash
+brew tap pawiromitchel/dozer https://github.com/pawiromitchel/Dozer
+brew install --cask pawiromitchel/dozer/dozer
+```
+
+If Homebrew asks you to trust the third-party tap first, `brew trust pawiromitchel/dozer` does it.
+
+## What I'd do next
+
+The app is ad hoc signed rather than notarized, which is why the cask clears the quarantine flag. I've only run it on macOS 26 on Apple Silicon with a notched display. It targets macOS 13 and later, but I haven't tried 13 to 15. A report in the original repo says hiding is broken on macOS 27, and I haven't tested that either.
+
+The half-second reveal is the price of the stretch trick. The alternative is what Bartender and Ice do: never bring the icons back into the menu bar, and show them in a small panel under it instead. That would be instant and would also help on notched Macs, where icons get lost behind the notch. It needs Screen Recording and Accessibility permissions, though, and it's the part of macOS that's changing next. It might be Dozer 6. For now the old tool works again.
+
+Dozer is MPL-2.0 like the original, and lives at [github.com/pawiromitchel/Dozer](https://github.com/pawiromitchel/Dozer).
